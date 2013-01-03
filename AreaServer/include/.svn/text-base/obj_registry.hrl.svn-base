@@ -1,0 +1,1 @@
+-record(obj_registry, {ref, pid}).

@@ -1,0 +1,3 @@
+-module(living).
+
+-extends(movable).

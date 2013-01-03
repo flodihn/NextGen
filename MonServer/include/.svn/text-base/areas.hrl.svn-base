@@ -1,0 +1,1 @@
+-record(areas, {area, nodes=[]}).

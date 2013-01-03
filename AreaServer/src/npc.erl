@@ -1,0 +1,5 @@
+-module(npc).
+
+-extends(living).
+
+

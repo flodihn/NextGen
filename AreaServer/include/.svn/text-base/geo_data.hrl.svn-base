@@ -1,0 +1,1 @@
+-record(geo_data, {key, value}).

@@ -1,0 +1,5 @@
+% Note that behaviours must be compiled first.
+{[
+	"src/*", 
+    "src/states/*"
+	], [{outdir, "./ebin"}, {i, "include"}]}. 

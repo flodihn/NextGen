@@ -1,0 +1,4 @@
+-module(stationary).
+
+-extend(obj).
+

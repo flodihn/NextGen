@@ -1,0 +1,1 @@
+-record(area_registry, {area, nodes}).

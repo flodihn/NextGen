@@ -1,0 +1,92 @@
+10
+
+dir
+309
+svn://svn.next-gen.cc/NextGen/AreaServer/trunk/ebin
+svn://svn.next-gen.cc/NextGen/AreaServer
+
+
+
+2010-05-03T20:28:08.079006Z
+305
+flodis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7a025036-4cdc-4b87-acca-967ad6a87aa7
+
+libenv
+dir
+
+libgod
+dir
+
+libobj
+dir
+
+libstd
+dir
+
+libid
+dir
+
+libplayer
+dir
+
+libsave
+dir
+
+libtest
+dir
+
+libtree
+dir
+
+libdist
+dir
+
+areasrv.app.example
+file
+
+
+
+
+2010-05-19T10:23:08.000000Z
+7ee14afc6a4633397415816faa571655
+2010-05-03T20:28:08.079006Z
+305
+flodis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+489
+

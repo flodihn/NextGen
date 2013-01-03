@@ -1,0 +1,1 @@
+-record(libstd_reg, {ref, pid}).

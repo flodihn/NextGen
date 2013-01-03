@@ -1,0 +1,2 @@
+-record(charinfo, {id, pid}).
+

@@ -1,0 +1,1 @@
+-record(neighbour, {slot, area}).

@@ -1,0 +1,1 @@
+-record(area_count, {area, count}).
