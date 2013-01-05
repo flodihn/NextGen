@@ -37,19 +37,19 @@ event(<<?CHAR_LOGIN>>, State) ->
     %Result = rpc:call(NewCharData#char.area, libplayer.player_funs, login, 
     %    [NewCharData]),
 
-    {ok, DefaultAreaSrv} = application:get_env(default_areasrv),
+    {ok, DefaultAreaSrv} = application:get_env(start_area),
+	error_logger:info_report({char_login, DefaultAreaSrv}),
     %{Time, _Result} = timer:tc(rpc, call, [DefaultAreaSrv, libplayer.srv, 
     %    create, [self()]]),
     %error_logger:info_report([{"libplayer.srv:create time: ", Time/1001}]),
-    rpc:call(DefaultAreaSrv, libplayer.srv, create, 
-        [self()]),
+    rpc:call(DefaultAreaSrv, libplayer.srv, create, [self()]),
     receive 
         {char_login, {pid, Pid}, {id, Id}} ->
             %error_logger:info_report([{char_login_success, Id}]),
             CharInfo = #charinfo{id=Id, pid=Pid},
             NewState = State#state{charinfo=CharInfo},
             IdLen = byte_size(Id),
-            {reply,<<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>> , playing, 
+            {reply,<<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>>, playing, 
                 NewState}
     end;
 

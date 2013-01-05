@@ -61,7 +61,7 @@ test_case1(Host) ->
     init(),
     RunTime = ?TEST_CASE1_RUNTIME,
     io:format("Spawning clients...~n"),
-    ClientList = spawn_clients(10000),
+    ClientList = spawn_clients(1000),
     io:format("Connecting clients...~n"),
     connect_clients(ClientList, Host),
     io:format("Account login clients...~n"),

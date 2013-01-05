@@ -247,6 +247,8 @@ recv(Socket) ->
         Other ->
             error_logger:info_report([{recv, Other}]),
             recv(Socket)
+	after 10000 ->
+		error_logger:error_report({"No response from server"})
     end.
 
 str_to_binary(Str) ->

@@ -4,7 +4,7 @@
 -include("vec.hrl").
 
 %-define(NEXT_TICK, random:uniform(5000) + 5000.
--define(NEXT_TICK, 1000.
+-define(NEXT_TICK, 1000).
 
 -import(timer).
 -import(io).
