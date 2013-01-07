@@ -67,7 +67,7 @@ You should be given an Erlang shell in which you can start the application:
 
 Monitor Server
 -----------
-Go into the MonitorServer directory and run:
+Go into the MonServer directory and run:
 
 	erl -pa ebin -sname monsrv
 
@@ -103,4 +103,4 @@ Notes
 * When increasing the clients to larger number, be mindful about the system limit for max open files (On linux check the ulimit -n).
 * The different servers may run on different computers, you just have to edit the app files accordingly.
 * When running large tests, the testsuite should run on a separate node not to interfer with the server performance.
-
+* During a test, you can monitor the number of connected clients and the CPU and memory consumption for all nodes by running the monsrv:start_log() and monsrv:stop_log() functions (Currenlty this only works on Linux systems).
