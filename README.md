@@ -91,7 +91,7 @@ From the shell, you can execute a test with 100 simulated clients by running thi
 
 The argument is the number of clients and can be tweaked according to how powerful system you have.
 
-You can also specify the hostname if you are connection to a remote connection server:
+You can also specify the hostname if you are connecting to a remote connection server:
 
 	testsuite:run_test("10.0.0.1", 14000).
 
