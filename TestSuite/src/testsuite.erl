@@ -5,11 +5,8 @@
     spawn_clients/1,
     auto_spawn_clients/1,
     report/0,
-    run_all/0,
-    test_case1/0,
-    test_case1/1,
-    test_case2/1,
-    tmp_test/0,
+    run_test/1,
+    run_test/2,
     connect_clients/2,
     account_login_clients/1,
     char_login_clients/1,
@@ -18,10 +15,7 @@
 
 -include("report.hrl").
 
--define(TEST_CASE1_RUNTIME, 60000).
-
-run_all() ->
-    test_case1().
+-define(TEST_RUNTIME, 60000).
 
 init() ->
     case lists:member(test_clients, ets:all()) of
@@ -31,71 +25,28 @@ init() ->
             ets:new(test_clients, [named_table])
     end.
 
-tmp_test() ->
-    Host = "10.0.0.30",
-    init(),
-    RunTime = 60000,
-    io:format("Spawning clients...~n"),
-    ClientList = spawn_clients(100),
-    io:format("Connecting clients...~n"),
-    connect_clients(ClientList, Host),
-    io:format("Account login clients...~n"),
-    account_login_clients(ClientList),
-    io:format("Character login clients...~n"),
-    char_login_clients(ClientList),
-    %Start = now(),
-    io:format("Start playing clients...~n"),
-    start_play_clients(ClientList),
-    io:format("Running test for ~p seconds, please wait...~n", 
-        [RunTime/1000]),
-    timer:sleep(RunTime),
-    report(),
-    exit_clients(ClientList).
+run_test(NrClients) ->
+    run_test("localhost", NrClients).
 
-
-test_case1() ->
-    test_case1("localhost").
-
-test_case1(Host) ->
+run_test(Host, NrClients) ->
     io:format("Running testcase 1.~n"),
     init(),
-    RunTime = ?TEST_CASE1_RUNTIME,
+    RunTime = ?TEST_RUNTIME,
     io:format("Spawning clients...~n"),
-    ClientList = spawn_clients(1000),
+    ClientList = spawn_clients(NrClients),
     io:format("Connecting clients...~n"),
     connect_clients(ClientList, Host),
-    io:format("Account login clients...~n"),
+    io:format("Logging in client accounts...~n"),
     account_login_clients(ClientList),
-    io:format("Character login clients...~n"),
+    io:format("Logging in client characters...~n"),
     char_login_clients(ClientList),
     %Start = now(),
-    io:format("Start playing clients...~n"),
+    io:format("Simulating player behaviour...~n"),
     start_play_clients(ClientList),
     io:format("Running test for ~p seconds, please wait...~n", 
         [RunTime/1000]),
     timer:sleep(RunTime),
     report().
-
-test_case2(Host) ->
-    io:format("Running testcase 2.~n"),
-    init(),
-    RunTime = ?TEST_CASE1_RUNTIME,
-    io:format("Spawning clients...~n"),
-    ClientList = spawn_clients(10),
-    io:format("Connecting clients...~n"),
-    connect_clients(ClientList, Host),
-    io:format("Account login clients...~n"),
-    account_login_clients(ClientList),
-    io:format("Character login clients...~n"),
-    char_login_clients(ClientList),
-    %Start = now(),
-    io:format("Start playing clients...~n"),
-    start_play_clients(ClientList),
-    io:format("Running test for ~p seconds, please wait...~n", 
-        [RunTime/1000]),
-    timer:sleep(RunTime),
-    report().
-
 
 auto_spawn_clients(Nr) ->
     auto_spawn_clients(Nr, []).
