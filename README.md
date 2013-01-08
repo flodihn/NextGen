@@ -2,7 +2,7 @@ Overview
 ========
 The NextGen MMO architecture is a proof of concept that high scalability for a online game can be achieved rather easily when choosing Erlang as programming language.
 
-GThe NextGen code based is separated into 5 different servers and a test suite:
+The NextGen code based is separated into 5 different servers and a test suite:
 * Connection Server
 * Account Server
 * Character Server
