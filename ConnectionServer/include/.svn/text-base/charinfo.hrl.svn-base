@@ -1,2 +1,0 @@
--record(charinfo, {id, pid}).
-

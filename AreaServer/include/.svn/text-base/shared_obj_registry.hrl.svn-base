@@ -1,1 +1,0 @@
--record(shared_obj_registry, {ref, pid}).
