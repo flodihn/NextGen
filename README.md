@@ -7,7 +7,7 @@ The NextGen code based is separated into 5 different servers and a test suite:
 * Account Server
 * Character Server
 * Area Server
-* Monitor Server (Only necessary for when area servers are distributed across two or more machines).
+* Monitor Server (Only necessary when area servers are distributed across two or more machines).
 * TestSuite
 
 Compiling
@@ -19,7 +19,7 @@ For each server, go into its directory and run:
 
 Running
 =======
-For each server, go into the ebin directory and remove the .example extension on the servername.app.example file.
+For the ConnectionServer, CharacterServer and AreaServer, go into the ebin directory and remove the .example extension on the servername.app.example file.
 
 Edit those files to make the host name suite your system. You can see your node name by running:
 
