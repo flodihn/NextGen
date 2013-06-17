@@ -12,10 +12,11 @@ The NextGen code based is separated into 5 different servers and a test suite:
 
 Compiling
 =========
+To compile everything, just run the compileall.sh script:
 
-For each server, go into its directory and run:
+	./compileall.sh
 
-	erl -make
+* Note: You can also go into each server and type "erl -make"
 
 Running
 =======
