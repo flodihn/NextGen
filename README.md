@@ -25,75 +25,28 @@ Edit those files to make the node name suite your system. You can see your node 
 
 	erl -sname test
 
-Connection Server
------------------
-Go into the ConnectionServer directory and run:
+Running a testing with TCP clients.
+===================================
+Start all the server by either executing the startall.sh script (You can also go into the ConnectionServer, AccountServer, CharacterServer and AreaServer directories and run start.sh from there):
 
-	erl -pa ebin -sname conn1
+	./startall.sh 
 
-You should be given an Erlang shell in which you can start the application:
+Now enter the TestSuite directory and start an Erlang node:
 
-	application:start(connsrv).
+	cd TestSuite
+	erl -pa ebin/
 
-Account Server
---------------
-Go into the AccountServer directory and run:
+Before running a test, you need to initialise the test suite (in the Erlang shell):
 
-	erl -pa ebin -sname accsrv
+	testsuite:init().
 
-You should be given an Erlang shell in which you can start the application:
+Now you are ready to run a test with a number of simulated clients:
+	testsuite:run_test(1000).
 
-	application:start(accsrv).
-
-Character Server
-----------------
-Go into the CharacterServer directory and run:
-
-	erl -pa ebin -sname charsrv
-
-You should be given an Erlang shell in which you can start the application:
-
-	application:start(charsrv).
-
-Area Server
------------
-Go into the AreaServer directory and run:
-
-	erl -pa ebin -sname start_area 
-
-You should be given an Erlang shell in which you can start the application:
-
-	application:start(areasrv).
-
-Monitor Server
------------
-Go into the MonServer directory and run:
-
-	erl -pa ebin -sname monsrv
-
-You should be given an Erlang shell in which you can start the application:
-
-	application:start(monsrv).
-
-Testing
-=======
-Go into the TestSuite directory and compile:
-
-	erl -make
-
-Then start a shell:
-
-	erl -pa ebin
-
-From the shell, you can execute a test with 100 simulated clients by running this function:
-
-	testsuite:run_test(100).
-
-The argument is the number of clients and can be tweaked according to how powerful system you have.
 
 You can also specify the hostname if you are connecting to a remote connection server:
 
-	testsuite:run_test("10.0.0.1", 14000).
+	testsuite:run_test("10.0.0.1", 1000).
 
 When the test is done, a report file will be written, this make take some time for larger tests.
 
@@ -102,5 +55,5 @@ Notes
 * The largest amount of clients on a successful test (response times below 50 ms) is currenlty 14,000. This was tested on a AMD Quad Core with 3Ghz CPU and 8 GB of RAM.
 * When increasing the clients to larger number, be mindful about the system limit for max open files (On linux check the ulimit -n).
 * The different servers may run on different computers, you just have to edit the app files accordingly.
-* When running large tests, the testsuite should run on a separate node not to interfer with the server performance.
+* When running large tests, the testsuite should run on a separate node on a different machine not to interfere with the server performance.
 * During a test, you can monitor the number of connected clients and the CPU and memory consumption for all nodes by running the monsrv:start_log() and monsrv:stop_log() functions (Currenlty this only works on Linux systems).
