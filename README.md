@@ -19,11 +19,13 @@ For each server, go into its directory and run:
 
 Running
 =======
-For each server, go into the ebin directory and copy the servername.app.example file to servername.app (where servername is connsrv, accsrv, charsrv, areasrv or monsrv).
+For each server, go into the ebin directory and remove the .example extension on the servername.app.example file.
 
-Edit those files to make the node name suite your system. You can see your node name by running:
+Edit those files to make the host name suite your system. You can see your node name by running:
 
 	erl -sname test
+
+* Note: Only change the host name, the node name (connsrv, charsrv etc) must remain the same. Do not change the node name unless you know what you are doing.
 
 Running a testing with TCP clients.
 ===================================
