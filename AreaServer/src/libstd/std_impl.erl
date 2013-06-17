@@ -83,7 +83,7 @@ init() ->
         true ->
             monsrv_rpc(monsrv, register_node, [node()]);
         false ->
-            pass
+            create_area()
     end.
 
 %%----------------------------------------------------------------------

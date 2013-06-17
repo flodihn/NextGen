@@ -7,7 +7,7 @@ The NextGen code based is separated into 5 different servers and a test suite:
 * Account Server
 * Character Server
 * Area Server
-* Monitor Server
+* Monitor Server (Only necessary for when area servers are distributed across two or more machines).
 * TestSuite
 
 Compiling
