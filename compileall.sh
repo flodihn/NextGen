@@ -18,5 +18,8 @@ cd MonServer
 erl -make
 cd ..
 
+cd TestSuite
+erl -make
+cd ..
 
 
