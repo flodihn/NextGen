@@ -27,7 +27,7 @@ Edit those files to make the node name suite your system. You can see your node 
 
 Running a testing with TCP clients.
 ===================================
-Start all the server by either executing the startall.sh script (You can also go into the ConnectionServer, AccountServer, CharacterServer and AreaServer directories and run start.sh from there):
+Start all the server by executing the startall.sh script (You can also go into the ConnectionServer, AccountServer, CharacterServer and AreaServer directories and run start.sh from there):
 
 	./startall.sh 
 
