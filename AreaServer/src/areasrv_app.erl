@@ -3,13 +3,18 @@
 
 -export([
     start/0,
+    start/1,
     start/2,
     stop/1,
     auto_load_libs/0
     ]).
 
+
 start() ->
-    application:start(areasrv).
+	start([], []).
+
+start([]) ->
+	start([], []).
 
 start(_Type, StartArgs) ->
     Result = areasrv_sup:start_link(StartArgs),
@@ -24,9 +29,9 @@ auto_load_libs() ->
 	case Result of
 		{ok, Libs} ->
 			load_libs(Libs);
-		_Error ->
+		Error ->
 			error_logger:info_report([{?MODULE, warning,
-				no_auto_loadings_libs_in_app_file}])
+				no_auto_loadings_libs_in_app_file, Error}])
 	end.
 
 load_libs([]) ->

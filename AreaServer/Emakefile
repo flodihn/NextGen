@@ -1,38 +1,25 @@
 % Note that behaviours must be compiled first.
 {["src/*"], [debug_info, {outdir, "./ebin"}, {i, "include"}]}.
 
-{["src/libplayer/*"], [debug_info, {outdir, "./ebin/libplayer"}, 
-    {i, "include"}]}.
+{["src/libplayer/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libstd/*"], [debug_info, {outdir, "./ebin/libstd"}, 
-    {i, "include"}]}.
+{["src/libstd/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libenv/*"], [debug_info, {outdir, "./ebin/libenv"}, 
-    {i, "include"}]}.
+{["src/libenv/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libtree/*"], [debug_info, {outdir, "./ebin/libtree"}, 
-    {i, "include"}]}.
+{["src/libtree/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libid/*"], [debug_info, {outdir, "./ebin/libid"}, 
-    {i, "include"}]}.
+{["src/libid/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libdist/*"], [debug_info, {outdir, "./ebin/libdist"}, 
-    {i, "include"}]}.
+{["src/libdist/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libobj/*"], [debug_info, {outdir, "./ebin/libobj"}, 
-    {i, "include"}]}.
+{["src/libobj/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libsave/*"], [debug_info, {outdir, "./ebin/libsave"}, 
-    {i, "include"}]}.
+{["src/libsave/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libgod/*"], [debug_info, {outdir, "./ebin/libgod"}, 
-    {i, "include"}]}.
+{["src/libgod/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{["src/libtest/*"], [debug_info, {outdir, "./ebin/libtest"}, 
-    {i, "include"}]}.
+{["src/libtest/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
-{[
-	"src/libchat/*",
-	"src/libgeo/*"
-	], [debug_info, {outdir, "./ebin"}, {i, "include"}]}.
+{["src/libchat/*", "src/libgeo/*"], [debug_info, {outdir, "./ebin"}, {i, "include"}]}.
 

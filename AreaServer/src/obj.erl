@@ -35,10 +35,6 @@
 -include("vec.hrl").
 
 -import(obj_loop, [loop_init/2]).
--import(error_logger).
--import(dict).
--import(io).
-
 -import(obj_loop, [has_fun/3]).
 
 % Interface.
@@ -115,7 +111,7 @@
     ]).
 
 create_state(Type) ->
-    {ok, Id} = libid.srv:generate_id(),
+    {ok, Id} = libid_srv:generate_id(),
     State = #obj{
         id=Id,
         type=Type,
@@ -133,8 +129,8 @@ create_state(Type) ->
 %% @end
 %%----------------------------------------------------------------------
 init(#obj{id=Id} = State) ->
-    libstd.srv:register_obj(Id, self()),
-    libdist.srv:register_obj(Id, self()),
+    libstd_srv:register_obj(Id, self()),
+    libdist_srv:register_obj(Id, self()),
     {ok, State}.
 
 post_init(_From, State) ->
@@ -318,7 +314,7 @@ event(From, Fun, Args, State) when is_pid(From) ->
         {ok, no_quad, _State} ->
             error_logger:error_report([{obj, event_error, "No quad"}]);
         {ok, Quad, _State} ->
-            libtree.srv:event(self(), Quad, Fun, Args)
+            libtree_srv:event(self(), Quad, Fun, Args)
     end,
     {noreply, State}.
 
@@ -658,7 +654,7 @@ info(_From, #obj{id=Id, type=Type, parents=Parents} = State) ->
 
 
 save(_From, #obj{id=Id} = State) ->
-    libsave.srv:save(Id, State),
+    libsave_srv:save(Id, State),
     {noreply, State}.
 
 %%----------------------------------------------------------------------
@@ -733,13 +729,13 @@ quadtree_assign(_From, #obj{id=Id} = State) ->
     {ok, CurrentQuad, _State} = call_self(get_quad, State),
     case call_self(get_pos, State) of
         {ok, undefined, _State} ->
-            Quad = libtree.srv:assign(Id, self(), #vec{}, CurrentQuad),
+            Quad = libtree_srv:assign(Id, self(), #vec{}, CurrentQuad),
             {ok, _Reply, NewState} = call_self(set_quad, 
                 [Quad], State),
             exit(quadtree_assign_failed),
             {noreply, NewState};
         {ok, Pos, _State} ->
-            NewQuad = libtree.srv:assign(Id, self(), Pos, CurrentQuad),
+            NewQuad = libtree_srv:assign(Id, self(), Pos, CurrentQuad),
             case CurrentQuad == NewQuad of
                 true ->
                     {noreply, State};
@@ -759,7 +755,7 @@ migrate(_From, Node, State) ->
     % need to return.
     % For the future, we also need to get process dictionary
     % to our state.
-    libdist.migrate:migrate(Node, State).
+    libdist_migrate:migrate(Node, State).
 
 foobar(_From, State) ->
     {noreply, State}.

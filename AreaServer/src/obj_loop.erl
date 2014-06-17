@@ -8,9 +8,6 @@
 -module(obj_loop).
 -author("christian@flodihn.se").
 
--import(timer).
--import(dict).
-
 %% @headerfile "obj.hrl"
 -include("obj.hrl").
 

@@ -6,10 +6,7 @@
 %-define(NEXT_TICK, random:uniform(5000) + 5000.
 %-define(NEXT_TICK, 5000).
 
--import(timer).
--import(io).
-
--import(obj, [call_self/2, call_self/3]).
+%-import(obj, [call_self/2, call_self/3]).
 
 -export([
     init/1,

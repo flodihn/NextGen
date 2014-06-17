@@ -6,11 +6,7 @@
 %% and year. The time daemon is started by the supervisor libenv.sup.
 %% @end
 %%----------------------------------------------------------------------
--module(libenv.time_daemon).
--import(error_logger).
--import(mnesia).
-
--import(libstd).
+-module(time_daemon).
 
 -export([
     init/0,
@@ -128,31 +124,31 @@ calc_next_time_of_day(Time, TimeOfDay) ->
 %%----------------------------------------------------------------------
 next_time_of_day(morning) ->
     %SkyBox = get_skybox(noon),
-    libstd.srv:area_event({new_time_of_day, noon}),
+    libstd_srv:area_event({new_time_of_day, noon}),
     %error_logger:info_report([{time_of_day_change, noon, SkyBox}]),
     set_time_of_day(noon);
 
 next_time_of_day(noon) ->
     %SkyBox = get_skybox(afternoon),
-    libstd.srv:area_event({new_time_of_day, afternoon}),
+    libstd_srv:area_event({new_time_of_day, afternoon}),
     %error_logger:info_report([{time_of_day_change, afternoon, SkyBox}]),
     set_time_of_day(afternoon);
 
 next_time_of_day(afternoon) ->
     %SkyBox = get_skybox(evening),
-    libstd.srv:area_event({new_time_of_day, evening}),
+    libstd_srv:area_event({new_time_of_day, evening}),
     %error_logger:info_report([{time_of_day_change, evening, SkyBox}]),
     set_time_of_day(evening);
 
 next_time_of_day(evening) ->
     %SkyBox = get_skybox(night),
-    libstd.srv:area_event({new_time_of_day, night}),
+    libstd_srv:area_event({new_time_of_day, night}),
     %error_logger:info_report([{time_of_day_change, night, SkyBox}]),
     set_time_of_day(night);
 
 next_time_of_day(night) ->
     %SkyBox = get_skybox(morning),
-    libstd.srv:area_event({new_time_of_day, morning}),
+    libstd_srv:area_event({new_time_of_day, morning}),
     %error_logger:info_report([{time_of_day_change, morning, SkyBox}]),
     set_time_of_day(morning).
 

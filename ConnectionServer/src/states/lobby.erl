@@ -17,7 +17,8 @@ event(<<?GET_CHAR_LIST>>, State) ->
     {noreply, lobby, State};
 
 event(<<?CHAR_LOGIN, IdLen/integer, Id:IdLen/binary>>, State) ->
-    rpc:call(start_area@christian, libplayer.srv, login, 
+	{ok, StartArea} = application:get_env(start_area),
+    rpc:call(StartArea, libplayer_srv, login, 
         [self(), Id]),
     receive 
         {char_login, {pid, Pid}, {id, Id}} ->
@@ -42,7 +43,7 @@ event(<<?CHAR_LOGIN>>, State) ->
     %{Time, _Result} = timer:tc(rpc, call, [DefaultAreaSrv, libplayer.srv, 
     %    create, [self()]]),
     %error_logger:info_report([{"libplayer.srv:create time: ", Time/1001}]),
-    rpc:call(DefaultAreaSrv, libplayer.srv, create, [self()]),
+    rpc:call(DefaultAreaSrv, libplayer_srv, create, [self()]),
     receive 
         {char_login, {pid, Pid}, {id, Id}} ->
             %error_logger:info_report([{char_login_success, Id}]),

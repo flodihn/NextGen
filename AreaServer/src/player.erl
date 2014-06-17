@@ -15,12 +15,6 @@
 -include("obj.hrl").
 -include("vec.hrl").
 
--import(error_logger).
-
-
--import(libplayer).
--import(obj, [async_call/2, call_self/2, call_self/3]).
-
 -export([
     create_state/1,
     init/1,
@@ -59,11 +53,11 @@
 create_state(Type) ->
     {ok, State} = movable:create_state(Type),
     State2 = update_parents(State),
-    {ok, _Reply, State3} = call_self(set_mesh, ["robot.mesh"], State2),
-    {ok, _Reply, State4} = call_self(set_name, [<<"Unnamed soul">>], 
+    {ok, _Reply, State3} = obj:call_self(set_mesh, ["robot.mesh"], State2),
+    {ok, _Reply, State4} = obj:call_self(set_name, [<<"Unnamed soul">>], 
         State3),
-    {ok, _Reply, State5} = call_self(set_heart_beat, [1000], State4),
-    {ok, _Reply, State6} = call_self(set_max_speed, [10], State5),
+    {ok, _Reply, State5} = obj:call_self(set_heart_beat, [1000], State4),
+    {ok, _Reply, State6} = obj:call_self(set_max_speed, [10], State5),
     {ok, State6}.
 
 %%----------------------------------------------------------------------
@@ -118,9 +112,9 @@ is(From, Other, State) ->
 logout(_From, #obj{id=Id} = State) ->
     % This should be standard in the base obj.erl, also make objects exit
     % by sending stop msg to obj_loop.
-    libstd.srv:unregister_obj(Id),
-    {ok, Quad, _State} = call_self(get_quad, State),
-    libtree.srv:handle_exit(Id, Quad),
+    libstd_srv:unregister_obj(Id),
+    {ok, Quad, _State} = obj:call_self(get_quad, State),
+    libtree_srv:handle_exit(Id, Quad),
     %error_logger:info_report([{player, Id, logout}]),
     exit(normal).
 
@@ -137,16 +131,16 @@ logout(_From, #obj{id=Id} = State) ->
 %%----------------------------------------------------------------------
 pulse(_From, State) ->
     %error_logger:info_report([{pulse_from, self()}]),
-    call_self(event, [query_entity], State),
+    obj:call_self(event, [query_entity], State),
     %obj:event(self(), event, [test, ["foobar"]], State),
     %obj:event(self(), event, [test, ["foobar"]], State),
     {noreply, State}.
 
 pulse(_From, Id, State) ->
     %error_logger:info_report([{"Pulsing object", Id}]),
-    case libstd.srv:get_obj(Id) of
+    case libstd_srv:get_obj(Id) of
         {ok, _Id, Pid} ->
-            async_call(Pid, query_entity);
+            obj:async_call(Pid, query_entity);
         {error, no_obj} ->
             error_logger:error_report([{?MODULE, pulse, error, no_obj, Id}])
     end,
@@ -175,45 +169,45 @@ query_entity(From, State) ->
 %% @end
 %%----------------------------------------------------------------------
 queried_entity(_From, {id, Id}, {key, pos}, {value, Pos}, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "pos", Pos, Conn}]),
     Conn ! {new_pos, [Id, Pos]}, 
     {noreply, State};
 
 queried_entity(_From, {id, Id}, {key, billboard}, {value, Billboard}, 
     State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "billboard", Billboard, 
     %    Conn}]),
     Conn ! {billboard, [Id, Billboard]}, 
     {noreply, State};
 
 queried_entity(_From, {id, Id}, {key, mesh}, {value, Mesh}, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "mesh", Mesh, Conn}]),
     Conn ! {mesh, [Id, Mesh]}, 
     {noreply, State};
 
 queried_entity(_From, {id, Id}, {key, dir}, {value, Dir}, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "dir", Dir, Conn}]),
     Conn ! {obj_dir, {id, Id}, {dir, Dir}}, 
     {noreply, State};
 
 queried_entity(_From, {id, Id}, {key, speed}, {value, Speed}, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "speed", Speed, Conn}]),
     Conn ! {obj_speed, {id, Id}, {speed, Speed}}, 
     {noreply, State};
 
 queried_entity(_From, {id, Id}, {key, anim}, {value, Anim}, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "anim", Anim, Conn}]),
     Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, 0}},
     {noreply, State};
 
 queried_entity(_From, {id, Id}, {key, flying}, {value, true}, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "anim", Anim, Conn}]),
     Conn ! {{notify_flying, flying}, {id, Id}},
     {noreply, State}.
@@ -229,14 +223,14 @@ queried_entity(_From, {id, Id}, {key, flying}, {value, true}, State) ->
 %% @end
 %%----------------------------------------------------------------------
 query_env(_From, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
-    case libenv.srv:get_skybox() of
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    case libenv_srv:get_skybox() of
         {skybox, Skybox} ->
             Conn ! {skybox, Skybox};
         {error, _} ->
             pass
     end,
-    case libenv.srv:get_terrain() of
+    case libenv_srv:get_terrain() of
         {terrain, Terrain} ->
             Conn ! {terrain, Terrain};
         {error, _} ->
@@ -245,25 +239,25 @@ query_env(_From, State) ->
     {noreply, State}.
 
 save(_From, Account, #obj{id=Id} = State) ->
-    {ok, Name, _State} = call_self(get_name, State),
-    Result = libsave.srv:save_player(Id, Account, Name, State),
+    {ok, Name, _State} = obj:call_self(get_name, State),
+    Result = libsave_srv:save_player(Id, Account, Name, State),
     {reply, Result, State}.
 
 obj_created(_From, Id, #obj{id=MyId} = State) ->
-    error_logger:info_report([{gaylord, obj_created, Id, MyId}]),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    error_logger:info_report([{obj_created, Id, MyId}]),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_created, {id, Id}},
     {noreply, State}.
 
 obj_pos(_From, Id, Pos, State) ->
     %error_logger:info_report(obj_pos),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_pos, {id, Id}, {pos, Pos}},
     {noreply, State}.
 
 obj_dir(_From, Id, Vec, TimeStamp, State) ->
     %error_logger:info_report([{State#obj.id, obj_dir, Id}]),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_dir, {id, Id}, {dir, Vec}, {timestamp, TimeStamp}},
     {noreply, State}.
 
@@ -272,38 +266,38 @@ obj_leave(From, _Id, State) when From == self() ->
 
 obj_leave(_From, Id, State) ->
     %error_logger:info_report(obj_leave),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_leave, {id, Id}},
     {noreply, State}.
 
 obj_enter(_From, Id, State) ->
     %error_logger:info_report([{obj_enter, Id}]),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_enter, {id, Id}},
     {noreply, State}.
 
 obj_anim(_From, Id, Anim, State) ->
     %error_logger:info_report(obj_anim),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, 0}},
     {noreply, State}.
 
 
 obj_anim(_From, Id, Anim, Nr, State) ->
     %error_logger:info_report(obj_anim),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, Nr}},
     {noreply, State}.
 
 obj_stop_anim(_From, Id, Anim, State)->
     %error_logger:info_report(obj_stop_anim),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_stop_anim, {id, Id}, {anim, Anim}},
     {noreply, State}.
 
 obj_speed(_From, Id, Speed, TimeStamp, State) ->
     %&error_logger:info_report([{test, obj_speed}]),
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_speed, {id, Id}, {speed, Speed}, {timestamp, TimeStamp}},
     {noreply, State}.
 
@@ -347,7 +341,7 @@ set_dir(From, Dir, TimeStamp, State) ->
     obj:set_dir(From, Dir#vec{y=0}, TimeStamp, State).
 
 get_name(_From, Id, #obj{id=Id} = State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     case obj:call_self(get_name, State) of
         {ok, undefined, _State} -> 
                 pass;
@@ -357,12 +351,12 @@ get_name(_From, Id, #obj{id=Id} = State) ->
     {noreply, State}.
 
 notify_flying(_From, Id, Mode, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {{notify_flying, Mode}, {id, Id}},
     {noreply, State}.
 
 ping(_From, Time, State) ->
-    {ok, Conn, _State} = call_self(get_conn, State),
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
     %call_self(event, [foobar], State),
     Conn ! {pong, Time},
     {noreply, State}.
