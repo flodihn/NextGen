@@ -198,6 +198,7 @@ async_call(To, Fun, Args) ->
 %%----------------------------------------------------------------------
 async_call(From, To, Fun, Args) ->
     To ! {execute, {from, From}, {call, Fun}, {args, Args}},
+	%error_logger:info_report({async_call, To, Fun}),
     ok.
 
 

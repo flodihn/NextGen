@@ -100,9 +100,12 @@ create_seed() ->
             
     end.
 
-normalize(#vec{x=X, y=Y, z=Z}) ->
+normalize(#vec{x=X, y=Y, z=Z} = Vec) ->
     L = math:sqrt((X*X) + (Y*Y) + (Z*Z)),
-    #vec{x=X/L, y=Y/L, z=Z/L}.
+	case L of 
+		0.0 -> Vec;
+    	_NonZero -> #vec{x=X/L, y=Y/L, z=Z/L}
+	end.
 
 floor(X) ->
     T = erlang:trunc(X),

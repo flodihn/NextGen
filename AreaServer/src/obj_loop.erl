@@ -91,13 +91,15 @@ loop(#obj{properties=Dict} = State) ->
         % An execute call without an event id calls apply_fun/4
         % which does not send anything back to the calling process "From".
         {execute, {from, From}, {call, Fun}, {args, Args}} ->
+			%error_logger:info_report({execute, Fun, Args}),
             {ok, NewState2} = apply_async_inheritance(
                 From, Fun, Args, NewState),
             loop(NewState2);
         % An execute call with an event id will try to send back
         % the result to the calling process "From".
         {execute, {from, From}, {call, Fun}, {args, Args}, 
-            {event_id, EventId}} ->
+        		{event_id, EventId}} ->
+			%error_logger:info_report({execute, Fun, Args}),
             {ok, NewState2} = apply_sync_inheritance(
                 From, Fun, Args, NewState, EventId),
             loop(NewState2);
