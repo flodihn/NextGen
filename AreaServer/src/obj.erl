@@ -315,6 +315,7 @@ event(From, Fun, Args, State) when is_pid(From) ->
         {ok, no_quad, _State} ->
             error_logger:error_report([{obj, event_error, "No quad"}]);
         {ok, Quad, _State} ->
+            error_logger:error_report([{sending_event_to_quad, Fun, Quad}]),
             libtree_srv:event(self(), Quad, Fun, Args)
     end,
     {noreply, State}.

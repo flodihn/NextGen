@@ -74,7 +74,8 @@ init(State) ->
 post_init(From, State) ->
     movable:post_init(From, State),
     %obj:async_call(self(), query_env),
-    %obj:async_call(self(), pulse),
+	error_logger:info_report({sending_pulse, State#obj.id}),
+    obj:async_call(self(), pulse),
     {noreply, State}.
 
 update_parents(State) ->
@@ -130,7 +131,7 @@ logout(_From, #obj{id=Id} = State) ->
 %% @end
 %%----------------------------------------------------------------------
 pulse(_From, State) ->
-    %error_logger:info_report([{pulse_from, self()}]),
+    error_logger:info_report([{pulse_from, self()}]),
     obj:call_self(event, [query_entity], State),
     %obj:event(self(), event, [test, ["foobar"]], State),
     %obj:event(self(), event, [test, ["foobar"]], State),

@@ -64,16 +64,11 @@ create(Conn) ->
 async_create(Conn) ->
     %error_logger:info_report([{?MODULE, async_create, Conn}]),
     {ok, Pid} = obj_sup:start(player),
-    X = rand:int(1, 10000),
+    X = rand:int(1, 10),
     Y = 0,
-    Z = rand:int(1, 10000),
-    %%X = 4886,
-    %%Y = 494,
-    %%Z = 5853,
+    Z = rand:int(1, 10),
     obj:call(Pid, set_conn, [Conn]),
     {ok, Id} = obj:call(Pid, get_id, []),
-    %%{ok, Pos} = obj:call(Pid, get_pos),
-    %%Conn ! {new_pos, [Id, Pos]},
     %%{ok, CharSrv} = application:get_env(charsrv),
     %%case rpc:call(CharSrv, charsrv, get_char_count, []) of
     %%    0 ->
