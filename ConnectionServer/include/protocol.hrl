@@ -45,6 +45,8 @@
 -define(PING, 44).
 -define(NOTIFY_PONG, 45).
 -define(NOTIFY_DELAY, 46).
+-define(OBJ_DEAD, 47).
+-define(SET_SHOT, 48).
 % God commands
 -define(SET_MESH, 252).
 -define(CREATE_OBJECT, 253).

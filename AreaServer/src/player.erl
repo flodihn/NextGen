@@ -147,6 +147,25 @@ pulse(_From, Id, State) ->
     end,
     {noreply, State}.
 
+shot(_From, Id, #obj{id=Id} = State) ->
+    obj:call_self(event, [obj_dead, Id], State),
+	obj:call_self(logout, State);
+
+shot(_From, Id, #obj{id=MyId} = State) ->
+    error_logger:info_report([{MyId, shot, Id}]),
+    case libstd_srv:get_obj(Id) of
+        {ok, _Id, Pid} ->
+            obj:async_call(Pid, query_entity);
+        {error, no_obj} ->
+            error_logger:error_report([{?MODULE, shot, error, no_obj, Id}])
+    end,
+    {noreply, State}.
+
+
+
+
+
+
 % Abort queries on ourself.
 query_entity(From, State) when From == self() ->
     {noreply, State};
