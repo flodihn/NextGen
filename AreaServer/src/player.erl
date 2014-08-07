@@ -47,7 +47,8 @@
     get_conn/2,
     quad_changed/2,
     sync_pos/3,
-    ping/3
+    ping/3,
+	set_shot/3
     ]).
 
 create_state(Type) ->
@@ -147,11 +148,11 @@ pulse(_From, Id, State) ->
     end,
     {noreply, State}.
 
-shot(_From, Id, #obj{id=Id} = State) ->
+set_shot(_From, Id, #obj{id=Id} = State) ->
     obj:call_self(event, [obj_dead, Id], State),
 	obj:call_self(logout, State);
 
-shot(_From, Id, #obj{id=MyId} = State) ->
+set_shot(_From, Id, #obj{id=MyId} = State) ->
     error_logger:info_report([{MyId, shot, Id}]),
     case libstd_srv:get_obj(Id) of
         {ok, _Id, Pid} ->
