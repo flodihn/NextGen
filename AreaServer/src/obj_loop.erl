@@ -173,7 +173,7 @@ apply_async_inheritance(From, Fun, Args, #obj{type=Type} = State) ->
 
 apply_async_inheritance([], _From, Fun, Args, #obj{type=Type} = State) ->
     error_logger:error_report([{Type, async_undef, Fun, Args, 
-        State#obj.parents}]),
+        Type, State#obj.parents}]),
     {ok, State};
 
 apply_async_inheritance([Parent | Parents], From, Fun, Args, State) ->

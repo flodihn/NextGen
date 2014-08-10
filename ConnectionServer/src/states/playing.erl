@@ -117,9 +117,9 @@ event({obj_anim, {id, Id}, {anim, Anim}, {repeat, Nr}}, State) ->
     {reply, <<?OBJ_ANIM, IdLen, Id/binary, AnimLen, AnimBin/binary,
         Nr>>, playing, State};
 
-event({obj_dead, {id, Id}, {timestamp, TimeStamp}}, State) ->
+event({obj_dead, {id, Id}}, State) ->
     IdLen = byte_size(Id),
-    {reply, <<?OBJ_DEAD, IdLen, Id/binary, TimeStamp/binary>>, playing, State};
+    {reply, <<?OBJ_DEAD, IdLen, Id/binary>>, playing, State};
 
 
 %event({obj_stop_anim, {id, Id}, {anim, Anim}}, State) ->
@@ -253,13 +253,12 @@ event(<<?PING, Time/binary>>, State) ->
 	rpc:call(node(Pid), obj, async_call, [Pid, ping, [Time]]),
     {noreply, playing, State};
 
-event(<<?SET_SHOT, Time/binary>>, State) ->
+event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary>>, State) ->
+	error_logger:info_report([{?MODULE, <<"SET_SHOT">>}]),
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
-	rpc:call(node(Pid), obj, async_call, [Pid, set_shot, [Time]]),
+	rpc:call(node(Pid), obj, async_call, [Pid, set_shot, [Id]]),
     {noreply, playing, State};
-
-
 
 event(Event, State) ->
     error_logger:info_report([{unknown_event, Event}]),

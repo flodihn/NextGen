@@ -38,6 +38,7 @@
     obj_anim/5,
     obj_stop_anim/4,
     obj_speed/5,
+    obj_dead/3,
     increase_speed/3,
     decrease_speed/3,
     set_dir/4,
@@ -148,24 +149,13 @@ pulse(_From, Id, State) ->
     end,
     {noreply, State}.
 
+% You can not shoot yourself.
 set_shot(_From, Id, #obj{id=Id} = State) ->
-    obj:call_self(event, [obj_dead, Id], State),
-	obj:call_self(logout, State);
+    {noreply, State};
 
-set_shot(_From, Id, #obj{id=MyId} = State) ->
-    error_logger:info_report([{MyId, shot, Id}]),
-    case libstd_srv:get_obj(Id) of
-        {ok, _Id, Pid} ->
-            obj:async_call(Pid, query_entity);
-        {error, no_obj} ->
-            error_logger:error_report([{?MODULE, shot, error, no_obj, Id}])
-    end,
+set_shot(_From, Id, #obj{id=MyId} = State) when Id /= MyId->
+    obj:event(self(), event, [obj_dead, [Id]], State),
     {noreply, State}.
-
-
-
-
-
 
 % Abort queries on ourself.
 query_entity(From, State) when From == self() ->
@@ -303,7 +293,6 @@ obj_anim(_From, Id, Anim, State) ->
     Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, 0}},
     {noreply, State}.
 
-
 obj_anim(_From, Id, Anim, Nr, State) ->
     %error_logger:info_report(obj_anim),
     {ok, Conn, _State} = obj:call_self(get_conn, State),
@@ -317,9 +306,18 @@ obj_stop_anim(_From, Id, Anim, State)->
     {noreply, State}.
 
 obj_speed(_From, Id, Speed, TimeStamp, State) ->
-    %&error_logger:info_report([{test, obj_speed}]),
+    %error_logger:info_report([{test, obj_speed}]),
     {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_speed, {id, Id}, {speed, Speed}, {timestamp, TimeStamp}},
+    {noreply, State}.
+
+obj_dead(_From, Id, #obj{id=Id} = State) ->
+	logout(self(), State),
+    {noreply, State};
+
+obj_dead(_From, Id, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_dead, {id, Id}},
     {noreply, State}.
 
 increase_speed(_From, TimeStamp, #obj{id=Id} = State) ->
