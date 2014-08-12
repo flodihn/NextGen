@@ -101,6 +101,25 @@ get_speed(_From, State) ->
     end.
 
 %% @private
+%update_pos(From, State) ->
+%    {ok, Dir, _State} = call_self(get_dir, State),
+%    {ok, Pos, _State} = call_self(get_pos, State),
+%    {ok, Speed, _State} = call_self(get_speed, State),
+%    if 
+%        Dir == undefined; Pos == undefined; Speed == 0 ->
+%            %call_self(log, [{update_pos, aborted}], State),
+%            {noreply, State};
+%        true ->
+%            % Hmm should not the time also be a factor when calculating
+%            % the new position?
+%            Traveled = util:vector_mult(Dir, Speed),
+%            NewPos = util:vector_add(Pos, Traveled),
+%            %call_self(log, [{update_pos, NewPos}], State), 
+%            {ok, _Reply, NewState} = call_self(set_pos, [NewPos], State),
+%            update_checkpoint(From, NewState)
+%    end.
+
+% TODO: Update this function to sync with the new vector movement
 update_pos(From, State) ->
     {ok, Dir, _State} = call_self(get_dir, State),
     {ok, Pos, _State} = call_self(get_pos, State),
