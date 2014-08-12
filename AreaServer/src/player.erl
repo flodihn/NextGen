@@ -39,6 +39,9 @@
     obj_stop_anim/4,
     obj_speed/5,
     obj_dead/3,
+    obj_logout/3,
+	obj_jump/4,
+	obj_vector/4,
     increase_speed/3,
     decrease_speed/3,
     set_dir/4,
@@ -76,7 +79,7 @@ init(State) ->
 post_init(From, State) ->
     movable:post_init(From, State),
     %obj:async_call(self(), query_env),
-	error_logger:info_report({sending_pulse, State#obj.id}),
+	%error_logger:info_report({sending_pulse, State#obj.id}),
     obj:async_call(self(), pulse),
     {noreply, State}.
 
@@ -115,6 +118,7 @@ is(From, Other, State) ->
 logout(_From, #obj{id=Id} = State) ->
     % This should be standard in the base obj.erl, also make objects exit
     % by sending stop msg to obj_loop.
+    obj:call_self(event, [obj_logout, [Id]], State),
     libstd_srv:unregister_obj(Id),
     {ok, Quad, _State} = obj:call_self(get_quad, State),
     libtree_srv:handle_exit(Id, Quad),
@@ -133,7 +137,7 @@ logout(_From, #obj{id=Id} = State) ->
 %% @end
 %%----------------------------------------------------------------------
 pulse(_From, State) ->
-    error_logger:info_report([{pulse_from, self()}]),
+    %error_logger:info_report([{pulse_from, self()}]),
     obj:call_self(event, [query_entity], State),
     %obj:event(self(), event, [test, ["foobar"]], State),
     %obj:event(self(), event, [test, ["foobar"]], State),
@@ -163,6 +167,11 @@ query_entity(From, State) when From == self() ->
 
 query_entity(From, State) ->
     movable:query_entity(From, State).
+
+obj_logout(_From, Id, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_logout, {id, Id}},
+    {noreply, State}.
 
 %----------------------------------------------------------------------
 %% @spec queried_entity(From, {id, Id}, {key, Key}, {value, Value}, State) 
@@ -320,19 +329,23 @@ obj_dead(_From, Id, State) ->
     Conn ! {obj_dead, {id, Id}},
     {noreply, State}.
 
+obj_jump(_From, Id, Force, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_jump, {id, Id}, {force, Force}},
+    {noreply, State}.
+
+obj_vector(_From, Id, Vector, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_vector, {id, Id}, {vec, Vector}},
+    {noreply, State}.
+
 increase_speed(_From, TimeStamp, #obj{id=Id} = State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),
-    {ok, MaxSpeed, _State} = obj:call_self(get_max_speed, State),
+    %{ok, MaxSpeed, _State} = obj:call_self(get_max_speed, State),
     NewSpeed = OldSpeed + 1,
-    case NewSpeed > MaxSpeed of
-        true ->
-            {noreply, State};
-        false ->  
-            obj:call_self(event, [obj_anim, [Id, "Walk"]], State),
-            {ok, _Reply, NewState} = obj:call_self(set_speed, [NewSpeed,
-                TimeStamp], State),
-            {noreply, NewState}
-    end.
+    {ok, _Reply, NewState} = obj:call_self(set_speed, [NewSpeed,
+    	TimeStamp], State),
+    {noreply, NewState}.
 
 decrease_speed(_From, TimeStamp, #obj{id=Id} = State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),

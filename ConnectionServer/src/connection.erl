@@ -51,8 +51,8 @@ handle_info({tcp_closed, _Socket}, StateName, StateData) ->
     {stop, normal, StateData}; 
 
 handle_info({tcp, Socket, Data}, StateName, 
-    #state{socket=Socket} = State) ->
-    error_logger:info_report([{tcp, Socket, Data}]),
+    	#state{socket=Socket} = State) ->
+    %error_logger:info_report([{tcp, Socket, Data}]),
     case apply(StateName, event, [Data, State]) of
         {reply, Reply, NextState, NewState} ->
             socket_send(Socket, Reply),
@@ -65,7 +65,7 @@ handle_info({tcp, Socket, Data}, StateName,
     end;
 
 handle_info({set_char_pid, Pid}, playing, 
-	#state{charinfo=CharInfo} = StateData) ->
+		#state{charinfo=CharInfo} = StateData) ->
 	NewCharInfo = CharInfo#charinfo{pid=Pid},
 	{next_state, playing, StateData#state{charinfo=NewCharInfo}};
 
@@ -96,7 +96,7 @@ conn_reply(Socket, Reply) ->
     gen_tcp:send(Socket, term_to_binary(Reply)).
 
 socket_send(Socket, Msg) ->
-    error_logger:info_report([{socket_send, Msg, byte_size(Msg)}]),
+    %error_logger:info_report([{socket_send, Msg, byte_size(Msg)}]),
     gen_tcp:send(Socket, Msg).
 
 connected(Event, State) ->

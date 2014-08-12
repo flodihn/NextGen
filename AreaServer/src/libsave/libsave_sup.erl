@@ -18,7 +18,7 @@ init([]) ->
     Restart = permanent, 
     Shutdown = 2000,
 
-    LibSave = {'libsave', {libsave, start_link, [save_funs]},
+    LibSave = {'libsave', {libsave_srv, start_link, [save_funs]},
         Restart, Shutdown, worker, dynamic},
     
     {ok, {SupFlags, [LibSave]}}.

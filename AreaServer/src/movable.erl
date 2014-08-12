@@ -36,6 +36,8 @@
     get_checkpoint/2,
     set_speed/4,
     get_speed/2,
+	jump/3,
+	set_vector/3,
     enable_flying/2,
     disable_flying/2,
     get_max_speed/2,
@@ -204,4 +206,10 @@ set_max_speed(_From, MaxSpeed, State) ->
         State),
     {noreply, NewState}.
 
+jump(_From, Force, #obj{id=Id} = State) ->
+	call_self(event, [obj_jump, [Id, Force]], State),
+    {noreply, State}.
 
+set_vector(_From, Vector, #obj{id=Id} = State) ->
+	call_self(event, [obj_vector, [Id, Vector]], State),
+    {noreply, State}.

@@ -82,6 +82,12 @@ event({obj_pos, {id, Id}, {pos, #vec{x=X, y=Y, z=Z}}}, State) ->
     {reply, <<?OBJ_POS, IdLen, Id/binary, X/little-float,
         Y/little-float, Z/little-float>>, playing, State};
 
+event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}}}, State) ->
+    IdLen = byte_size(Id),
+    %error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
+    {reply, <<?OBJ_DIR, IdLen, Id/binary, X/little-float,
+        Y/little-float, Z/little-float>>, playing, State};
+
 event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}}, 
     {timestamp, TimeStamp}}, State) ->
     IdLen = byte_size(Id),
@@ -91,7 +97,7 @@ event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}},
 
 event({obj_created, {id, Id}}, State) ->
     IdLen = byte_size(Id),
-    error_logger:info_report([{obj_created, Id}]),
+    %error_logger:info_report([{obj_created, Id}]),
     {reply, <<?OBJ_CREATED, IdLen, Id/binary>>, 
         playing, State};
 
@@ -102,6 +108,11 @@ event({obj_leave, {id, Id}}, State) ->
 event({obj_enter, {id, Id}}, State) ->
     IdLen = byte_size(Id),
     {reply, <<?OBJ_ENTER, IdLen, Id/binary>>, playing, State};
+
+event({obj_speed, {id, Id}, {speed, Speed}}, State) ->
+        IdLen = byte_size(Id),
+    {reply, <<?OBJ_SPEED, IdLen, Id/binary, Speed/little-float>>,
+        playing, State};
 
 event({obj_speed, {id, Id}, {speed, Speed}, {timestamp, TimeStamp}}, 
     State) ->
@@ -121,6 +132,19 @@ event({obj_dead, {id, Id}}, State) ->
     IdLen = byte_size(Id),
     {reply, <<?OBJ_DEAD, IdLen, Id/binary>>, playing, State};
 
+event({obj_logout, {id, Id}}, State) ->
+    IdLen = byte_size(Id),
+    {reply, <<?OBJ_LOGOUT, IdLen, Id/binary>>, playing, State};
+
+event({obj_vector, {id, Id}, {vector, #vec{x=X, y=Y, z=Z}}}, State) ->
+    IdLen = byte_size(Id),
+    {reply, <<?OBJ_VECTOR, IdLen, Id/binary, X/little-float,
+        Y/little-float, Z/little-float>>, playing, State};
+
+event({obj_jump, {id, Id}, {force, #vec{x=X, y=Y, z=Z}}}, State) ->
+    IdLen = byte_size(Id),
+    {reply, <<?OBJ_JUMP, IdLen, Id/binary, X/little-float,
+        Y/little-float, Z/little-float>>, playing, State};
 
 %event({obj_stop_anim, {id, Id}, {anim, Anim}}, State) ->
 %    IdLen = byte_size(Id),
@@ -162,8 +186,8 @@ event(<<?PULSE>>, #state{charinfo=CharInfo} = State) ->
     {noreply, playing, State};
 
 event(<<?SYNC_Y_MOVE, X/little-float, Y/little-float, Z/little-float>>, 
-    State) ->
-    error_logger:info_report([{sync_y_ugly_hack_for_player_pos, Y}]),
+    	State) ->
+    %error_logger:info_report([{sync_y_ugly_hack_for_player_pos, Y}]),
     CharInfo = State#state.charinfo,
 	CharInfo#charinfo.pid ! {sync_y_move, {X, Y, Z}},
     {noreply, playing, State};
@@ -215,6 +239,21 @@ event(<<?SET_DIR, X/little-float, Y/little-float, Z/little-float,
         [#vec{x=X, y=Y, z=Z}, TimeStamp]]),
     {noreply, playing, State};
 
+event(<<?SET_VECTOR, X/little-float, Y/little-float, Z/little-float>>, State) ->
+    CharInfo = State#state.charinfo,
+    Pid = CharInfo#charinfo.pid,
+	rpc:call(node(Pid), obj, async_call, [Pid, set_vector, 
+        [#vec{x=X, y=Y, z=Z}]]),
+    {noreply, playing, State};
+
+event(<<?JUMP, X/little-float, Y/little-float, Z/little-float>>, State) ->
+    CharInfo = State#state.charinfo,
+    Pid = CharInfo#charinfo.pid,
+	rpc:call(node(Pid), obj, async_call, [Pid, jump, 
+        [#vec{x=X, y=Y, z=Z}]]),
+    {noreply, playing, State};
+
+
 %event(<<?SET_NAME, NameLen:8/integer, Name:NameLen/binary>>, State) ->
 %    CharInfo = State#state.charinfo,
 %    Pid = CharInfo#charinfo.pid,
@@ -254,7 +293,7 @@ event(<<?PING, Time/binary>>, State) ->
     {noreply, playing, State};
 
 event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary>>, State) ->
-	error_logger:info_report([{?MODULE, <<"SET_SHOT">>}]),
+	%error_logger:info_report([{?MODULE, <<"SET_SHOT">>}]),
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
 	rpc:call(node(Pid), obj, async_call, [Pid, set_shot, [Id]]),

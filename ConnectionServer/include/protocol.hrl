@@ -47,6 +47,11 @@
 -define(NOTIFY_DELAY, 46).
 -define(OBJ_DEAD, 47).
 -define(SET_SHOT, 48).
+-define(OBJ_JUMP, 49).
+-define(JUMP, 51).
+-define(OBJ_VECTOR, 52).
+-define(SET_VECTOR, 53).
+-define(OBJ_LOGOUT, 99).
 % God commands
 -define(SET_MESH, 252).
 -define(CREATE_OBJECT, 253).

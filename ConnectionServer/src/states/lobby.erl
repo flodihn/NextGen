@@ -39,7 +39,7 @@ event(<<?CHAR_LOGIN>>, State) ->
     %    [NewCharData]),
 
     {ok, DefaultAreaSrv} = application:get_env(start_area),
-	error_logger:info_report({char_login, DefaultAreaSrv}),
+	%error_logger:info_report({char_login, DefaultAreaSrv}),
     %{Time, _Result} = timer:tc(rpc, call, [DefaultAreaSrv, libplayer.srv, 
     %    create, [self()]]),
     %error_logger:info_report([{"libplayer.srv:create time: ", Time/1001}]),

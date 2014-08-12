@@ -39,10 +39,11 @@ init() ->
 create_area(State) ->
     % Create a quadtree of 256 quads (16 * 16) by default.
     {ok, NewState} = increase(State),
-    {ok, NewState2} = increase(NewState),
-    {ok, NewState3} = increase(NewState2),
-    {ok, NewState4} = increase(NewState3),
-    {ok, NewState4}.
+    %{ok, NewState2} = increase(NewState),
+    %{ok, NewState3} = increase(NewState2),
+    %{ok, NewState4} = increase(NewState3),
+    %{ok, NewState4}.
+    {ok, NewState}.
 
 join_area(Node) ->
     libstd_srv:monsrv_rpc(monsrv, get_area, 
