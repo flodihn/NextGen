@@ -42,6 +42,7 @@
     obj_logout/3,
 	obj_jump/4,
 	obj_vector/4,
+	obj_shot/4,
     increase_speed/3,
     decrease_speed/3,
     set_dir/4,
@@ -52,7 +53,7 @@
     quad_changed/2,
     sync_pos/3,
     ping/3,
-	set_shot/3
+	set_shot/4
     ]).
 
 create_state(Type) ->
@@ -154,11 +155,12 @@ pulse(_From, Id, State) ->
     {noreply, State}.
 
 % You can not shoot yourself.
-set_shot(_From, Id, #obj{id=Id} = State) ->
+set_shot(_From, Id, _ShotPos, #obj{id=Id} = State) ->
     {noreply, State};
 
-set_shot(_From, Id, #obj{id=MyId} = State) when Id /= MyId->
+set_shot(_From, Id, ShotPos, #obj{id=MyId} = State) when Id /= MyId->
     obj:event(self(), event, [obj_dead, [Id]], State),
+    obj:event(self(), event, [obj_shot, [MyId, ShotPos]], State),
     {noreply, State}.
 
 % Abort queries on ourself.
@@ -339,7 +341,12 @@ obj_vector(_From, Id, Vector, State) ->
     Conn ! {obj_vector, {id, Id}, {vec, Vector}},
     {noreply, State}.
 
-increase_speed(_From, TimeStamp, #obj{id=Id} = State) ->
+obj_shot(_From, Id, ShotPos, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_shot, {id, Id}, {shot_pos, ShotPos}},
+    {noreply, State}.
+
+increase_speed(_From, TimeStamp, State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),
     %{ok, MaxSpeed, _State} = obj:call_self(get_max_speed, State),
     NewSpeed = OldSpeed + 1,

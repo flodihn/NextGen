@@ -51,6 +51,7 @@
 -define(JUMP, 51).
 -define(OBJ_VECTOR, 52).
 -define(SET_VECTOR, 53).
+-define(OBJ_SHOT, 54).
 -define(OBJ_LOGOUT, 99).
 % God commands
 -define(SET_MESH, 252).

@@ -95,6 +95,12 @@ event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}},
     {reply, <<?OBJ_DIR, IdLen, Id/binary, X/little-float,
         Y/little-float, Z/little-float, TimeStamp/binary>>, playing, State};
 
+event({obj_shot, {id, Id}, {shot_pos, #vec{x=X, y=Y, z=Z}}},  State) ->
+    IdLen = byte_size(Id),
+    %error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
+    {reply, <<?OBJ_SHOT, IdLen, Id/binary, X/little-float,
+        Y/little-float, Z/little-float>>, playing, State};
+
 event({obj_created, {id, Id}}, State) ->
     IdLen = byte_size(Id),
     %error_logger:info_report([{obj_created, Id}]),
@@ -294,11 +300,13 @@ event(<<?PING, Time/binary>>, State) ->
 	rpc:call(node(Pid), obj, async_call, [Pid, ping, [Time]]),
     {noreply, playing, State};
 
-event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary>>, State) ->
+event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary,
+		X/little-float, Y/little-float, Z/little-float>>, State) ->
 	%error_logger:info_report([{?MODULE, <<"SET_SHOT">>}]),
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
-	rpc:call(node(Pid), obj, async_call, [Pid, set_shot, [Id]]),
+	rpc:call(node(Pid), obj, async_call, [Pid, set_shot, [Id, 
+		#vec{x=X, y=Y, z=Z}]]),
     {noreply, playing, State};
 
 event(Event, State) ->
