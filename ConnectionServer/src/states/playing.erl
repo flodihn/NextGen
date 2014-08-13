@@ -136,7 +136,7 @@ event({obj_logout, {id, Id}}, State) ->
     IdLen = byte_size(Id),
     {reply, <<?OBJ_LOGOUT, IdLen, Id/binary>>, playing, State};
 
-event({obj_vector, {id, Id}, {vector, #vec{x=X, y=Y, z=Z}}}, State) ->
+event({obj_vector, {id, Id}, {vec, #vec{x=X, y=Y, z=Z}}}, State) ->
     IdLen = byte_size(Id),
     {reply, <<?OBJ_VECTOR, IdLen, Id/binary, X/little-float,
         Y/little-float, Z/little-float>>, playing, State};
