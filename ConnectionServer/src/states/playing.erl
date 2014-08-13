@@ -239,14 +239,16 @@ event(<<?SET_DIR, X/little-float, Y/little-float, Z/little-float,
         [#vec{x=X, y=Y, z=Z}, TimeStamp]]),
     {noreply, playing, State};
 
-event(<<?SET_VECTOR, X/little-float, Y/little-float, Z/little-float>>, State) ->
+event(<<?SET_VECTOR, X/little-float, Y/little-float, Z/little-float,
+		_TimeStamp/binary>>, State) ->
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
 	rpc:call(node(Pid), obj, async_call, [Pid, set_vector, 
         [#vec{x=X, y=Y, z=Z}]]),
     {noreply, playing, State};
 
-event(<<?JUMP, X/little-float, Y/little-float, Z/little-float>>, State) ->
+event(<<?JUMP, X/little-float, Y/little-float, Z/little-float,
+		_TimeStamp/binary>>, State) ->
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
 	rpc:call(node(Pid), obj, async_call, [Pid, jump, 
