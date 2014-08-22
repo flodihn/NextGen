@@ -76,6 +76,8 @@ async_create(Conn) ->
     %%    _NotZero ->
     %%        pass
     %%end,
+	{ok, {faction, Faction}} = libfaction_srv:assign(),
+    obj:call(Pid, set_faction, [Faction]),
     obj:call(Pid, set_pos, [#vec{x=X, y=Y, z=Z}]),
     obj:async_call(Pid, post_init),
     Conn ! {char_login, {pid, Pid}, {id, Id}}.

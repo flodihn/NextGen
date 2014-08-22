@@ -9,7 +9,8 @@
      {env, [
         {monsrv, ['monsrv@christian']},
         {libs_auto_load, [libstd_sup, libplayer_sup, libenv_sup,
-            libtree_sup, libid_sup, libsave_sup, libdist_sup, libtest_sup]}
+            libtree_sup, libid_sup, libsave_sup, libdist_sup, libtest_sup,
+			libfaction_sup]}
      ]}
     ]}.
 

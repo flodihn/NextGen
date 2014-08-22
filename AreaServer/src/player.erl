@@ -53,7 +53,8 @@
     quad_changed/2,
     sync_pos/3,
     ping/3,
-	set_shot/4
+	set_shot/4,
+	set_faction/3
     ]).
 
 create_state(Type) ->
@@ -163,11 +164,14 @@ set_shot(_From, Id, ShotPos, #obj{id=MyId} = State) when Id /= MyId->
     obj:event(self(), event, [obj_shot, [MyId, ShotPos]], State),
     {noreply, State}.
 
-% Abort queries on ourself.
-query_entity(From, State) when From == self() ->
-    {noreply, State};
-
-query_entity(From, State) ->
+query_entity(From, #obj{id=Id} = State) ->
+	case obj:call_self(get_property, [faction], State) of
+        {ok, undefined, _} ->
+            pass;
+        {ok, Faction, _} ->
+            obj:async_call(From, queried_entity, [{id, Id}, 
+                {key, faction}, {value, Faction}])
+    end,
     movable:query_entity(From, State).
 
 obj_logout(_From, Id, State) ->
@@ -232,6 +236,11 @@ queried_entity(_From, {id, Id}, {key, flying}, {value, true}, State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "anim", Anim, Conn}]),
     Conn ! {{notify_flying, flying}, {id, Id}},
+    {noreply, State};
+
+queried_entity(_From, {id, Id}, {key, faction}, {value, Faction}, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_faction, {id, Id}, {faction, Faction}},
     {noreply, State}.
 
 %%----------------------------------------------------------------------
@@ -414,10 +423,14 @@ quad_changed(_From, State) ->
     obj:call_self(pulse, State),
     {noreply, State}.
 
+set_faction(_From, Faction, State) ->
+	{ok, noreply, NewState} = obj:call_self(
+		set_property, [faction, Faction], State),
+	{noreply, NewState}.
+
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.
 sync_pos(_From, Pos, State) ->
-    error_logger:info_report([{sync_pos, Pos}]),
     {ok, _Reply, NewState} = obj:call_self(set_pos, [Pos], State), 
     {noreply, NewState}.
 

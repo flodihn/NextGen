@@ -21,5 +21,7 @@
 
 {["src/libtest/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
+{["src/libfaction/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
+
 {["src/libchat/*", "src/libgeo/*"], [debug_info, {outdir, "./ebin"}, {i, "include"}]}.
 

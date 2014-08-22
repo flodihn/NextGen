@@ -49,7 +49,6 @@ create_state(Type) ->
     NewState = update_parents(State),
     {ok, NewState}.
 
-
 %%----------------------------------------------------------------------
 %% spec init(State) -> ok
 %% where 
@@ -181,7 +180,6 @@ query_entity(From, #obj{id=Id} = State) ->
             async_call(From, queried_entity, [{id, Id}, {key, dir},
                 {value, Dir}])
     end,
-
     case cache:fetch(flying) of
         true ->
             async_call(From, queried_entity, [{id, Id}, {key, flying},

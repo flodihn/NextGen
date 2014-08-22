@@ -152,6 +152,16 @@ event({obj_jump, {id, Id}, {force, #vec{x=X, y=Y, z=Z}}}, State) ->
     {reply, <<?OBJ_JUMP, IdLen, Id/binary, X/little-float,
         Y/little-float, Z/little-float>>, playing, State};
 
+event({obj_faction, {id, Id}, {faction, red}}, State) ->
+    IdLen = byte_size(Id),
+    {reply, <<?OBJ_FACTION, IdLen, Id/binary, 0>>, 
+		playing, State};
+
+event({obj_faction, {id, Id}, {faction, blue}}, State) ->
+    IdLen = byte_size(Id),
+    {reply, <<?OBJ_FACTION, IdLen, Id/binary, 1>>, 
+		playing, State};
+
 %event({obj_stop_anim, {id, Id}, {anim, Anim}}, State) ->
 %    IdLen = byte_size(Id),
 %    AnimBin = list_to_binary(Anim),
