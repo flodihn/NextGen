@@ -120,40 +120,42 @@ get_speed(_From, State) ->
 
 % TODO: Update this function to sync with the new vector movement
 update_pos(From, State) ->
-    {ok, Dir, _State} = call_self(get_dir, State),
-    {ok, Pos, _State} = call_self(get_pos, State),
-    {ok, Speed, _State} = call_self(get_speed, State),
-    if 
-        Dir == undefined; Pos == undefined; Speed == 0 ->
-            %call_self(log, [{update_pos, aborted}], State),
-            {noreply, State};
-        true ->
-            % Hmm should not the time also be a factor when calculating
-            % the new position?
-            Traveled = util:vector_mult(Dir, Speed),
-            NewPos = util:vector_add(Pos, Traveled),
-            %call_self(log, [{update_pos, NewPos}], State), 
-            {ok, _Reply, NewState} = call_self(set_pos, [NewPos], State),
-            update_checkpoint(From, NewState)
-    end.
+    %{ok, Dir, _State} = call_self(get_dir, State),
+    %{ok, Pos, _State} = call_self(get_pos, State),
+    %{ok, Speed, _State} = call_self(get_speed, State),
+    %if 
+    %    Dir == undefined; Pos == undefined; Speed == 0 ->
+    %        %call_self(log, [{update_pos, aborted}], State),
+    %        {noreply, State};
+    %    true ->
+    %        % Hmm should not the time also be a factor when calculating
+    %        % the new position?
+    %        Traveled = util:vector_mult(Dir, Speed),
+    %        NewPos = util:vector_add(Pos, Traveled),
+    %        %call_self(log, [{update_pos, NewPos}], State), 
+    %        {ok, _Reply, NewState} = call_self(set_pos, [NewPos], State),
+    %        update_checkpoint(From, NewState)
+    %end.
+	{noreply, State}.
 
 update_checkpoint(From, State) ->
-    {ok, Pos, _State} = call_self(get_pos, State),
-    case call_self(get_checkpoint, State) of
-        {ok, undefined, _State} ->
-            {ok, _Reply, NewState} = call_self(set_checkpoint, [Pos], 
-                State),
-            {noreply, NewState};
-        {ok, CheckPoint, _State} ->
-            case util:vector_diff(Pos, CheckPoint) of
-                Diff when Diff > 10 ->
-                    {ok, _Reply, NewState} = call_self(set_checkpoint,
-                        [Pos], State),
-                    obj:quadtree_assign(From, NewState);
-                _Diff  ->
-                    {noreply, State}
-            end
-    end.
+    %{ok, Pos, _State} = call_self(get_pos, State),
+    %case call_self(get_checkpoint, State) of
+    %    {ok, undefined, _State} ->
+    %        {ok, _Reply, NewState} = call_self(set_checkpoint, [Pos], 
+    %            State),
+    %        {noreply, NewState};
+    %    {ok, CheckPoint, _State} ->
+    %        case util:vector_diff(Pos, CheckPoint) of
+    %            Diff when Diff > 10 ->
+    %                {ok, _Reply, NewState} = call_self(set_checkpoint,
+    %                    [Pos], State),
+    %                obj:quadtree_assign(From, NewState);
+    %            _Diff  ->
+    %                {noreply, State}
+    %        end
+    %end.
+	{noreply, State}.
 
 set_checkpoint(_From, Pos, State) ->
     {ok, _Reply, NewState} = call_self(set_property, [checkpoint, Pos],
