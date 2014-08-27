@@ -43,6 +43,7 @@
 	obj_jump/4,
 	obj_vector/4,
 	obj_shot/4,
+	obj_respawn/4,
     increase_speed/3,
     decrease_speed/3,
     set_dir/4,
@@ -54,7 +55,8 @@
     sync_pos/3,
     ping/3,
 	set_shot/4,
-	set_faction/3
+	set_faction/3,
+	set_respawn/2
     ]).
 
 create_state(Type) ->
@@ -160,7 +162,12 @@ set_shot(_From, Id, _ShotPos, #obj{id=Id} = State) ->
     {noreply, State};
 
 set_shot(_From, Id, ShotPos, #obj{id=MyId} = State) when Id /= MyId->
-    obj:event(self(), event, [obj_dead, [Id]], State),
+	case Id of
+        <<>> ->
+            pass;
+		_ValidId ->
+            obj:event(self(), event, [obj_dead, [Id]], State)
+    end,
     obj:event(self(), event, [obj_shot, [MyId, ShotPos]], State),
     {noreply, State}.
 
@@ -355,6 +362,12 @@ obj_shot(_From, Id, ShotPos, State) ->
     Conn ! {obj_shot, {id, Id}, {shot_pos, ShotPos}},
     {noreply, State}.
 
+obj_respawn(_From, Id, {pos, NewPos}, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
+    {noreply, State}.
+
+
 increase_speed(_From, TimeStamp, State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),
     %{ok, MaxSpeed, _State} = obj:call_self(get_max_speed, State),
@@ -426,6 +439,17 @@ quad_changed(_From, State) ->
 set_faction(_From, Faction, State) ->
 	{ok, noreply, NewState} = obj:call_self(
 		set_property, [faction, Faction], State),
+	{noreply, NewState}.
+
+set_respawn(_From, #obj{id=Id} = State) ->
+    {ok, Conn, _State} = obj:call_self(get_property, [conn], 
+        State),
+	{ok, {faction, Faction}} = libfaction_srv:assign(),
+	{ok, noreply, NewState} = obj:call_self(
+		set_faction, [faction, Faction], State),
+    Conn ! {obj_faction, {id, Id}, {faction, Faction}},
+	NewPos = #vec{x=0, y=0, z=0},
+    Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
 	{noreply, NewState}.
 
 % For now we trust the client updating our position, this should be 

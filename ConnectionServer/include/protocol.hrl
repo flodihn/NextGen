@@ -53,6 +53,8 @@
 -define(SET_VECTOR, 53).
 -define(OBJ_SHOT, 54).
 -define(OBJ_FACTION, 55).
+-define(SET_RESPAWN, 56).
+-define(OBJ_RESPAWN, 57).
 -define(OBJ_LOGOUT, 99).
 % God commands
 -define(SET_MESH, 252).

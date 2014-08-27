@@ -162,6 +162,13 @@ event({obj_faction, {id, Id}, {faction, blue}}, State) ->
     {reply, <<?OBJ_FACTION, IdLen, Id/binary, 1>>, 
 		playing, State};
 
+event({obj_respawn, {id, Id}, {pos, #vec{x=X, y=Y, z=Z}}}, State) ->
+    IdLen = byte_size(Id),
+    {reply, <<?OBJ_RESPAWN, IdLen, Id/binary, 
+		X/little-float, Y/little-float, Z/little-float>>, 
+		playing, State};
+
+
 %event({obj_stop_anim, {id, Id}, {anim, Anim}}, State) ->
 %    IdLen = byte_size(Id),
 %    AnimBin = list_to_binary(Anim),
@@ -307,7 +314,7 @@ event(<<?JUMP, X/little-float, Y/little-float, Z/little-float,
 event(<<?PING, Time/binary>>, State) ->
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
-	rpc:call(node(Pid), obj, async_call, [Pid, ping, [Time]]),
+    obj_call(Pid, ping, [Time]),
     {noreply, playing, State};
 
 event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary,
@@ -315,8 +322,13 @@ event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary,
 	%error_logger:info_report([{?MODULE, <<"SET_SHOT">>}]),
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
-	rpc:call(node(Pid), obj, async_call, [Pid, set_shot, [Id, 
-		#vec{x=X, y=Y, z=Z}]]),
+    obj_call(Pid, set_shot, [Id, #vec{x=X, y=Y, z=Z}]),
+    {noreply, playing, State};
+
+event(<<?SET_RESPAWN>>, State) ->
+    CharInfo = State#state.charinfo,
+    Pid = CharInfo#charinfo.pid,
+    obj_call(Pid, set_respawn),
     {noreply, playing, State};
 
 event(Event, State) ->
