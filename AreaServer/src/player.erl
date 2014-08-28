@@ -339,7 +339,7 @@ obj_speed(_From, Id, Speed, TimeStamp, State) ->
     {noreply, State}.
 
 obj_dead(_From, Id, #obj{id=Id} = State) ->
-	logout(self(), State),
+	% The clients will handle reseting the velocity etc upon death.
     {noreply, State};
 
 obj_dead(_From, Id, State) ->

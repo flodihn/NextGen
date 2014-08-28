@@ -157,8 +157,8 @@ loop(Socket, Id) ->
                     io:format("Char login unknown data: ~p.~n", [Data])
             end;
         {From, start_play} ->
-            RecvPid = spawn_link(recv_loop, recv_loop, [self(), Socket, 
-                #recv_state{id=Id}]),
+            RecvPid = spawn_link(recv_loop, recv_loop, [
+				self(), Socket, #recv_state{id=Id}]),
             gen_tcp:controlling_process(Socket, RecvPid),
             From ! {ok, start_play},
             play_loop(Socket, #client_state{recv_proc=RecvPid});
@@ -245,10 +245,9 @@ recv(Socket) ->
         {tcp, Socket, Data} ->
             Data;
         Other ->
-            error_logger:info_report([{recv, Other}]),
-            recv(Socket)
-	after 10000 ->
-		error_logger:error_report({"No response from server"})
+            error_logger:info_report([{recv, Other}])
+    after 10000 ->
+        error_logger:error_report({"No response from server"})
     end.
 
 str_to_binary(Str) ->
