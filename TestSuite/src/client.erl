@@ -112,7 +112,9 @@ report(Pid) ->
                 cmds_sent = State#client_state.cmds_sent,
                 cmds_recv = State#client_state.cmds_recv,
                 bytes_sent = State#client_state.bytes_sent,
-                bytes_recv = State#client_state.bytes_recv}
+                bytes_recv = State#client_state.bytes_recv,
+				resp_times = State#client_state.resp_times,
+				avg_resp_time = State#client_state.avg_resp_time}
     end.
 
 loop() ->

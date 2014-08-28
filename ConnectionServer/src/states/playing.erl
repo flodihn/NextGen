@@ -338,8 +338,6 @@ event(<<?SET_ANIM>>, State) ->
     obj_call(Pid, set_respawn),
     {noreply, playing, State};
 
-
-
 event(Event, State) ->
     error_logger:info_report([{unknown_event, Event}]),
     {noreply, playing, State}.

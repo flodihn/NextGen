@@ -233,12 +233,6 @@ queried_entity(_From, {id, Id}, {key, speed}, {value, Speed}, State) ->
     Conn ! {obj_speed, {id, Id}, {speed, Speed}}, 
     {noreply, State};
 
-%queried_entity(_From, {id, Id}, {key, anim}, {value, Anim}, State) ->
-%    {ok, Conn, _State} = obj:call_self(get_conn, State),
-%    %error_logger:info_report([{queried_entity, Id, "anim", Anim, Conn}]),
-%    Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, 0}},
-%    {noreply, State};
-
 queried_entity(_From, {id, Id}, {key, flying}, {value, true}, State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
     %error_logger:info_report([{queried_entity, Id, "anim", Anim, Conn}]),
