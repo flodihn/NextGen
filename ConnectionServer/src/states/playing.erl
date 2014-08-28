@@ -127,12 +127,10 @@ event({obj_speed, {id, Id}, {speed, Speed}, {timestamp, TimeStamp}},
         TimeStamp/binary>>, 
         playing, State};
 
-event({obj_anim, {id, Id}, {anim, Anim}, {repeat, Nr}}, State) ->
+event({obj_anim, {id, Id}, {xblend, XBlendAmount}, {yblend, YBlendAmount}}, State) ->
     IdLen = byte_size(Id),
-    AnimBin = list_to_binary(Anim),
-    AnimLen = byte_size(AnimBin),
-    {reply, <<?OBJ_ANIM, IdLen, Id/binary, AnimLen, AnimBin/binary,
-        Nr>>, playing, State};
+    {reply, <<?OBJ_ANIM, IdLen, Id/binary, XBlendAmount/little-float/, YBlendAmount/little-float>>,
+        playing, State};
 
 event({obj_dead, {id, Id}}, State) ->
     IdLen = byte_size(Id),
