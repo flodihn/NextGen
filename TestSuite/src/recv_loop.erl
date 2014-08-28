@@ -27,7 +27,7 @@ recv_loop(Owner, Socket, #recv_state{id=Id, bytes_recv=BytesRecv,
                 State#recv_state{bytes_recv=NewBytesRecv, 
                 cmds_recv=CmdsRecv + 1, resp_times=[Diff] ++ RespTimes});
         {tcp, Socket, <<?OBJ_DIR, IdLen/integer, Id:IdLen/binary, 
-            _X/little-float, _Y/little-float, _Z/little-float, 
+            _X/little-float, _Y/little-float, Z/little-float, 
             BinTime/binary>> = Data} ->
             Time = binary_to_term(BinTime),
             Diff = timer:now_diff(now(), Time),

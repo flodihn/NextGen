@@ -149,6 +149,8 @@ report(ClientPid, Report, NrClients, File) ->
         "=== Client " ++ integer_to_list(NrClients) ++ " ===\n" ++
         "Commands sent: " ++ 
             integer_to_list(ClientReport#report.cmds_sent) ++ "\n" ++
+        "Response times: " ++ 
+            integer_to_list(ClientReport#report.cmds_sent) ++ "\n" ++
         "Commands received: " ++ 
             integer_to_list(ClientReport#report.cmds_recv) ++ "\n" ++
         "Bytes sent: " ++

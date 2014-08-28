@@ -201,8 +201,9 @@ do_report(From,
         RecvState ->
             CmdsRecv = RecvState#recv_state.cmds_recv,
             BytesRecv = RecvState#recv_state.bytes_recv,
+			RespTimes = RecvState#recv_state.resp_times,
             From ! State#client_state{bytes_recv=BytesRecv, 
-                cmds_recv=CmdsRecv}
+                cmds_recv=CmdsRecv, resp_times=RespTimes}
     end.
 
 get_rand_cmd() ->

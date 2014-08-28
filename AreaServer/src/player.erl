@@ -34,7 +34,6 @@
     obj_dir/5,
     obj_leave/3,
     obj_enter/3,
-    obj_anim/4,
     obj_anim/5,
     obj_stop_anim/4,
     obj_speed/5,
@@ -56,7 +55,8 @@
     ping/3,
 	set_shot/4,
 	set_faction/3,
-	set_respawn/2
+	set_respawn/2,
+	set_anim/4
     ]).
 
 create_state(Type) ->
@@ -233,11 +233,11 @@ queried_entity(_From, {id, Id}, {key, speed}, {value, Speed}, State) ->
     Conn ! {obj_speed, {id, Id}, {speed, Speed}}, 
     {noreply, State};
 
-queried_entity(_From, {id, Id}, {key, anim}, {value, Anim}, State) ->
-    {ok, Conn, _State} = obj:call_self(get_conn, State),
-    %error_logger:info_report([{queried_entity, Id, "anim", Anim, Conn}]),
-    Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, 0}},
-    {noreply, State};
+%queried_entity(_From, {id, Id}, {key, anim}, {value, Anim}, State) ->
+%    {ok, Conn, _State} = obj:call_self(get_conn, State),
+%    %error_logger:info_report([{queried_entity, Id, "anim", Anim, Conn}]),
+%    Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, 0}},
+%    {noreply, State};
 
 queried_entity(_From, {id, Id}, {key, flying}, {value, true}, State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
@@ -314,16 +314,10 @@ obj_enter(_From, Id, State) ->
     Conn ! {obj_enter, {id, Id}},
     {noreply, State}.
 
-obj_anim(_From, Id, Anim, State) ->
+obj_anim(_From, Id, XBlendAmount, YBlendAmount, State) ->
     %error_logger:info_report(obj_anim),
     {ok, Conn, _State} = obj:call_self(get_conn, State),
-    Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, 0}},
-    {noreply, State}.
-
-obj_anim(_From, Id, Anim, Nr, State) ->
-    %error_logger:info_report(obj_anim),
-    {ok, Conn, _State} = obj:call_self(get_conn, State),
-    Conn ! {obj_anim, {id, Id}, {anim, Anim}, {repeat, Nr}},
+    Conn ! {obj_anim, {id, Id}, {xblend, XBlendAmount}, {yblend, YBlendAmount}},
     {noreply, State}.
 
 obj_stop_anim(_From, Id, Anim, State)->
@@ -382,7 +376,8 @@ decrease_speed(_From, TimeStamp, #obj{id=Id} = State) ->
     case NewSpeed of
         0 ->
             %obj:call_self(event, [obj_stop_anim, [Id, "Walk"]], State);
-            obj:call_self(event, [obj_anim, [Id, "Idle"]], State);
+            %obj:call_self(event, [obj_anim, [Id, "Idle"]], State);
+			pass;
         _Any ->
             pass
     end, 
@@ -451,6 +446,10 @@ set_respawn(_From, #obj{id=Id} = State) ->
 	NewPos = #vec{x=0, y=0, z=0},
     Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
 	{noreply, NewState}.
+
+set_anim(_From, XBlendAmount, YBlendAmount, #obj{id=Id} = State) ->
+    obj:call_self(event, [obj_anim, [Id, XBlendAmount, YBlendAmount]], State),
+	{noreply, State}.
 
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.

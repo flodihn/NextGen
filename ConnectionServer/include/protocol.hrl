@@ -55,6 +55,7 @@
 -define(OBJ_FACTION, 55).
 -define(SET_RESPAWN, 56).
 -define(OBJ_RESPAWN, 57).
+-define(SET_ANIM, 58).
 -define(OBJ_LOGOUT, 99).
 % God commands
 -define(SET_MESH, 252).

@@ -325,11 +325,20 @@ event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary,
     obj_call(Pid, set_shot, [Id, #vec{x=X, y=Y, z=Z}]),
     {noreply, playing, State};
 
-event(<<?SET_RESPAWN>>, State) ->
+event(<<?SET_ANIM, XBlendAmount/little-float, YBlendAmount/little-float>>, 
+		State) ->
+    CharInfo = State#state.charinfo,
+    Pid = CharInfo#charinfo.pid,
+    obj_call(Pid, set_anim, [XBlendAmount, YBlendAmount]),
+    {noreply, playing, State};
+
+event(<<?SET_ANIM>>, State) ->
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
     obj_call(Pid, set_respawn),
     {noreply, playing, State};
+
+
 
 event(Event, State) ->
     error_logger:info_report([{unknown_event, Event}]),
