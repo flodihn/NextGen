@@ -129,7 +129,7 @@ event({obj_speed, {id, Id}, {speed, Speed}, {timestamp, TimeStamp}},
 
 event({obj_anim, {id, Id}, {xblend, XBlendAmount}, {yblend, YBlendAmount}}, State) ->
     IdLen = byte_size(Id),
-    {reply, <<?OBJ_ANIM, IdLen, Id/binary, XBlendAmount/little-float/, YBlendAmount/little-float>>,
+    {reply, <<?OBJ_ANIM, IdLen, Id/binary, XBlendAmount/little-float, YBlendAmount/little-float>>,
         playing, State};
 
 event({obj_dead, {id, Id}}, State) ->
