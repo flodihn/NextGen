@@ -157,10 +157,6 @@ pulse(_From, Id, State) ->
     end,
     {noreply, State}.
 
-% You can not shoot yourself.
-set_shot(_From, Id, _ShotPos, #obj{id=Id} = State) ->
-    {noreply, State};
-
 set_shot(_From, Id, ShotPos, #obj{id=MyId} = State) when Id /= MyId->
 	case Id of
         <<>> ->
