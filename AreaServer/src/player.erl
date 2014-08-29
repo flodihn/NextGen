@@ -432,15 +432,15 @@ set_respawn(_From, #obj{id=Id} = State) ->
     {ok, Conn, _State} = obj:call_self(get_property, [conn], 
         State),
 	{ok, {faction, Faction}} = libfaction_srv:assign(),
-	{ok, noreply, NewState} = obj:call_self(
-		set_faction, [faction, Faction], State),
-    obj:call_self(event, [obj_faction, [{Id, Faction}]], State),
+	%{ok, noreply, NewState} = obj:call_self(
+	%	set_faction, [faction, Faction], State),
+    %obj:call_self(event, [obj_faction, [{Id, Faction}]], State),
 	NewPos = #vec{x=0, y=0, z=0},
-    obj:call_self(event, [obj_respawn, [Id, NewPos]], State),
-    {ok, noreply, NewState2} = obj:call_self(set_pos, [NewPos], NewState),
+    obj:call_self(event, [obj_respawn, [Id, NewPos]], respawnState),
+    %{ok, noreply, NewState2} = obj:call_self(set_pos, [NewPos], NewState),
     %Conn ! {obj_faction, {id, Id}, {faction, Faction}},
     %Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
-	{noreply, NewState2}.
+	{noreply, State}.
 	
 set_anim(_From, XBlendAmount, YBlendAmount, #obj{id=Id} = State) ->
     obj:call_self(event, [obj_anim, [Id, XBlendAmount, YBlendAmount]], State),
