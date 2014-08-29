@@ -35,7 +35,7 @@
 -define(DEFAULT_HOST, "localhost").
 %-define(DEFAULT_HOST, "dev.abydosonline.com").
 -define(DEFAULT_PORT, 2000).
--define(DEFAULT_ACCOUNT_NAME, "Name").
+-define(DEFAULT_ACCOUNT_NAME, "Account").
 -define(DEFAULT_ACCOUNT_PASSWORD, "Password").
 -define(TIMEOUT, 10000).
 

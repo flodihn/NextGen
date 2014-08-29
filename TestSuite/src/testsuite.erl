@@ -150,7 +150,7 @@ report(ClientPid, Report, NrClients, File) ->
         "Commands sent: " ++ 
             integer_to_list(ClientReport#report.cmds_sent) ++ "\n" ++
         "Response times: " ++ 
-            int_list_to_string(lientReport#report.resp_times) ++ "\n" ++
+            int_list_to_string(ClientReport#report.resp_times) ++ "\n" ++
         "Commands received: " ++ 
             integer_to_list(ClientReport#report.cmds_recv) ++ "\n" ++
         "Bytes sent: " ++
@@ -205,8 +205,11 @@ bytes_to_list(Bytes, _Precision) when is_integer(Bytes) ->
 bytes_to_list(Bytes, Precision) when is_float(Bytes) ->
     io_lib:format("~."++integer_to_list(Precision) ++ "f", [Bytes]).
 
+int_to_string(Int) when is_float(Int)->
+	lists:flatten(io_lib:format("~.2fms", [Int]));
+
 int_to_string(Int) ->
-	lists:flatten(io_lib:format("~s)", [Int])).
+	lists:flatten(io_lib:format("~w", [Int])).
 
 int_list_to_string(List) ->
 	string:join(lists:map(fun int_to_string/1, List), ". ").
