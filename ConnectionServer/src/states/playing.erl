@@ -152,12 +152,12 @@ event({obj_jump, {id, Id}, {force, #vec{x=X, y=Y, z=Z}}}, State) ->
 
 event({obj_faction, {id, Id}, {faction, red}}, State) ->
     IdLen = byte_size(Id),
-    {reply, <<?OBJ_FACTION, IdLen, Id/binary, 0>>, 
+    {reply, <<?OBJ_FACTION, IdLen, Id/binary, 0:32/integer>>, 
 		playing, State};
 
 event({obj_faction, {id, Id}, {faction, blue}}, State) ->
     IdLen = byte_size(Id),
-    {reply, <<?OBJ_FACTION, IdLen, Id/binary, 1>>, 
+    {reply, <<?OBJ_FACTION, IdLen, Id/binary, 1:32/integer>>, 
 		playing, State};
 
 event({obj_respawn, {id, Id}, {pos, #vec{x=X, y=Y, z=Z}}}, State) ->
