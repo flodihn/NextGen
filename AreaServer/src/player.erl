@@ -436,7 +436,7 @@ set_respawn(_From, #obj{id=Id} = State) ->
 	%	set_faction, [faction, Faction], State),
     %obj:call_self(event, [obj_faction, [{Id, Faction}]], State),
 	NewPos = #vec{x=0, y=0, z=0},
-    obj:call_self(event, [obj_respawn, [Id, NewPos]], respawnState),
+    obj:call_self(event, [obj_respawn, [Id, NewPos]], State),
     %{ok, noreply, NewState2} = obj:call_self(set_pos, [NewPos], NewState),
     %Conn ! {obj_faction, {id, Id}, {faction, Faction}},
     %Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
