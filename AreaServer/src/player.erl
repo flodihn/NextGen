@@ -43,6 +43,7 @@
 	obj_vector/4,
 	obj_shot/4,
 	obj_respawn/4,
+	obj_faction/4,
     increase_speed/3,
     decrease_speed/3,
     set_dir/4,
@@ -78,6 +79,7 @@ create_state(Type) ->
 %% @end
 %%----------------------------------------------------------------------
 init(State) ->
+    error_logger:info_report([{player, init}]),
     movable:init(State).
 
 post_init(From, State) ->
@@ -91,7 +93,7 @@ update_parents(State) ->
     State#obj{parents=[movable, obj]}.
 
 heart_beat(From, State) ->
-    %error_logger:info_report([{player, heart_beat}]),
+    error_logger:info_report([{player, heart_beat}]),
     movable:heart_beat(From, State).
 
 %%----------------------------------------------------------------------
@@ -347,6 +349,10 @@ obj_respawn(_From, Id, {pos, NewPos}, State) ->
     Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
     {noreply, State}.
 
+obj_faction(_From, Id, {faction, Faction}, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_faction, {id, Id}, {faction, Faction}},
+    {noreply, State}.
 
 increase_speed(_From, TimeStamp, State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),
@@ -428,11 +434,14 @@ set_respawn(_From, #obj{id=Id} = State) ->
 	{ok, {faction, Faction}} = libfaction_srv:assign(),
 	{ok, noreply, NewState} = obj:call_self(
 		set_faction, [faction, Faction], State),
-    Conn ! {obj_faction, {id, Id}, {faction, Faction}},
+    obj:call_self(event, [obj_faction, [Id, Faction]], State),
 	NewPos = #vec{x=0, y=0, z=0},
-    Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
-	{noreply, NewState}.
-
+    obj:call_self(event, [obj_respawn, [Id, NewPos]], State),
+    {ok, noreply, NewState2} = obj:call_self(set_pos, [NewPos], NewState),
+    %Conn ! {obj_faction, {id, Id}, {faction, Faction}},
+    %Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
+	{noreply, NewState2}.
+	
 set_anim(_From, XBlendAmount, YBlendAmount, #obj{id=Id} = State) ->
     obj:call_self(event, [obj_anim, [Id, XBlendAmount, YBlendAmount]], State),
 	{noreply, State}.
