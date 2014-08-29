@@ -322,10 +322,6 @@ obj_speed(_From, Id, Speed, TimeStamp, State) ->
     Conn ! {obj_speed, {id, Id}, {speed, Speed}, {timestamp, TimeStamp}},
     {noreply, State}.
 
-obj_dead(_From, Id, #obj{id=Id} = State) ->
-	% The clients will handle reseting the velocity etc upon death.
-    {noreply, State};
-
 obj_dead(_From, Id, State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {obj_dead, {id, Id}},
