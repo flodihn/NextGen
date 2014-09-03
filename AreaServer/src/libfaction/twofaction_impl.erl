@@ -96,12 +96,13 @@ free({faction, red}) ->
 free({faction, blue}) ->
 	ets:update_counter(factions, blue, -1).
 
-get_spawn_point({faction, red}, #state{red_spawn_points=RedSpawnPoints}) ->
+get_spawn_point(red, #state{red_spawn_points=RedSpawnPoints}) ->
 	get_random_spawn_point(RedSpawnPoints);
 
-get_spawn_point({faction, blue}, #state{blue_spawn_points=BlueSpawnPoints}) ->
+get_spawn_point(blue, #state{blue_spawn_points=BlueSpawnPoints}) ->
 	get_random_spawn_point(BlueSpawnPoints).
 
 get_random_spawn_point(List) ->
 	Index = random:uniform(length(List)),
-	lists:nth(Index, List).
+	SpawnPoint = lists:nth(Index, List),
+	{ok, SpawnPoint}.

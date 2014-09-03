@@ -70,7 +70,7 @@ handle_call({free, Faction}, _From, #state{mod=Mod} = State) ->
 
 handle_call({get_spawn_point, Faction}, _From, 
 		#state{mod=Mod, state=ImplState} = State) ->
-    Result = Mod:free(Faction, ImplState),
+    Result = Mod:get_spawn_point(Faction, ImplState),
     {reply, Result, State};
 
 handle_call(Call, _From, State) ->
