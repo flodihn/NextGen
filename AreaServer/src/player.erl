@@ -435,8 +435,8 @@ set_respawn(_From, #obj{id=Id} = State) ->
 	%{ok, noreply, NewState} = obj:call_self(
 	%	set_faction, [faction, Faction], State),
     %obj:call_self(event, [obj_faction, [{Id, Faction}]], State),
-	NewPos = #vec{x=0, y=0, z=0},
-    obj:call_self(event, [obj_respawn, [Id, {pos, NewPos}]], State),
+	{ok, SpawnPoint} = libfactions_srv:get_spawn_point(Faction),
+    obj:call_self(event, [obj_respawn, [Id, {pos, SpawnPoint}]], State),
     %{ok, noreply, NewState2} = obj:call_self(set_pos, [NewPos], NewState),
     %Conn ! {obj_faction, {id, Id}, {faction, Faction}},
     %Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},

@@ -22,8 +22,11 @@
 % handlers
 -export([
     assign/0,
-	free/1
+	free/1,
+	get_spawn_point/2
     ]).
+
+-record(state, {red_spawn_points=[], blue_spawn_points=[]}).
 
 %%----------------------------------------------------------------------
 %% @spec init() -> ok
@@ -40,7 +43,29 @@ init() ->
     ets:new(factions, [named_table]),
 	ets:insert(factions, {red, 0}),
 	ets:insert(factions, {blue, 0}),
-    ok.
+	State = #state{
+		red_spawn_points=[
+			#vec{x=1650, y=365,z=125},
+			#vec{x=1425, y=330,z=125},
+			#vec{x=1165, y=325,z=80},
+			#vec{x=625, y=235,z=80},
+			#vec{x=415, y=185,z=85},
+			#vec{x=100, y=30,z=50},
+			#vec{x=890, y=300,z=80},
+			#vec{x=18750, y=3500,z=130}
+		],
+		blue_spawn_points=[
+			#vec{x=125, y=175,z=1875},
+			#vec{x=375, y=175,z=1850},
+			#vec{x=625, y=175,z=1850},
+			#vec{x=850, y=175,z=1875},
+			#vec{x=1125, y=175,z=1875},
+			#vec{x=1375, y=175,z=1875},
+			#vec{x=1650, y=175,z=1875},
+			#vec{x=1375, y=175,z=1875}
+		]
+	},
+    {ok, State}.
 
 %%----------------------------------------------------------------------
 %% @doc
@@ -71,3 +96,12 @@ free({faction, red}) ->
 free({faction, blue}) ->
 	ets:update_counter(factions, blue, -1).
 
+get_spawn_point({faction, red}, #state{red_spawn_points=RedSpawnPoints}) ->
+	get_random_spawn_point(RedSpawnPoints);
+
+get_spawn_point({faction, blue}, #state{blue_spawn_points=BlueSpawnPoints}) ->
+	get_random_spawn_point(BlueSpawnPoints).
+
+get_random_spawn_point(List) ->
+	Index = random:uniform(length(List)),
+	lists:nth(Index, List).

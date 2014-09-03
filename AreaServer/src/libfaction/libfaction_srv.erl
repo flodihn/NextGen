@@ -15,7 +15,8 @@
 % API
 -export([
     assign/0,
-	free/1
+	free/1,
+	get_spawn_point/1
     ]).
 
 %external exports
@@ -34,7 +35,7 @@
     code_change/3
     ]).
 
--record(state, {mod, tab}).
+-record(state, {mod, state}).
 
 %% @private
 start_link(Module) ->
@@ -54,8 +55,8 @@ start_link(ServerName, Module) ->
 %% @private
 init(Module) ->
     process_flag(trap_exit, true),
-    Module:init(),
-    {ok, #state{mod=Module}}.
+    {ok, State} = Module:init(),
+    {ok, #state{mod=Module, state=State}}.
 
 %% @doc
 %% @private
@@ -65,6 +66,11 @@ handle_call(assign, _From, #state{mod=Mod} = State) ->
 
 handle_call({free, Faction}, _From, #state{mod=Mod} = State) ->
     Result = Mod:free(Faction),
+    {reply, Result, State};
+
+handle_call({get_spawn_point, Faction}, _From, 
+		#state{mod=Mod, state=ImplState} = State) ->
+    Result = Mod:free(Faction, ImplState),
     {reply, Result, State};
 
 handle_call(Call, _From, State) ->
@@ -99,6 +105,8 @@ terminate(_Reason, #state{mod=_Mod}) ->
 assign() ->
     gen_server:call(?MODULE, assign).
 
-
 free(Faction) ->
     gen_server:call(?MODULE, {free, Faction}).
+
+get_spawn_point(Faction) ->
+    gen_server:call(?MODULE, {get_spawn_point, Faction}).
