@@ -64,9 +64,6 @@ create(Conn) ->
 async_create(Conn) ->
     %error_logger:info_report([{?MODULE, async_create, Conn}]),
     {ok, Pid} = obj_sup:start(player),
-    X = rand:int(1, 10),
-    Y = 0,
-    Z = rand:int(1, 10),
     obj:call(Pid, set_conn, [Conn]),
     {ok, Id} = obj:call(Pid, get_id, []),
     %%{ok, CharSrv} = application:get_env(charsrv),
@@ -77,8 +74,9 @@ async_create(Conn) ->
     %%        pass
     %%end,
 	{ok, {faction, Faction}} = libfaction_srv:assign(),
+	{ok, SpawnPoint} = libfaction_srv:get_spawn_point(Faction),
     obj:call(Pid, set_faction, [Faction]),
-    obj:call(Pid, set_pos, [#vec{x=X, y=Y, z=Z}]),
+    obj:call(Pid, set_pos, [SpawnPoint]),
     obj:async_call(Pid, post_init),
     Conn ! {char_login, {pid, Pid}, {id, Id}}.
     
