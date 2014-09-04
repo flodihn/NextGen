@@ -38,19 +38,7 @@ start_link(Socket) ->
 
 init(Socket) ->
     State = #state{socket=Socket},
-	{ok, DefaultAreaSrv} = application:get_env(start_area),
-    rpc:call(DefaultAreaSrv, libplayer_srv, create, [self()]),
-    receive
-        {char_login, {pid, Pid}, {id, Id}} ->
-            CharInfo = #charinfo{id=Id, pid=Pid},
-            NewState = State#state{charinfo=CharInfo},
-            IdLen = byte_size(Id),
-			conn_reply(Socket, <<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>>),
-            {ok,  NewState};
-		Error ->
-            error_logger:info_report([{?MODULE, unknown_error, Error}]),
-    		{error, player_creation_failed}
-	end.
+	{ok, State}.
 
 handle_event(Event, StateName, StateData) ->
     error_logger:info_report([{event, Event, StateName}]),
