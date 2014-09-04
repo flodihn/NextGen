@@ -47,8 +47,8 @@ init(Socket) ->
             IdLen = byte_size(Id),
             socket_send(Socket, <<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>>),
             {ok, playing, NewState};
-        Error ->
-            {stop, player_login, State)
+        _Error ->
+            {stop, player_login, State}
     end.
 
 handle_event(Event, StateName, StateData) ->
