@@ -2,6 +2,8 @@
 
 -behaviour(gen_fsm).
 
+
+-include("protocol.hrl").
 -include("charinfo.hrl").
 -include("state.hrl").
 -include("char.hrl").
@@ -35,19 +37,19 @@ start_link(Socket) ->
     gen_fsm:start_link(?MODULE, Socket, []).
 
 init(Socket) ->
-    %error_logger:info_report([{new_connection, {socket, Socket}}]),
-    %client_listener:start(self(), Socket),
     State = #state{socket=Socket},
 	{ok, DefaultAreaSrv} = application:get_env(start_area),
     rpc:call(DefaultAreaSrv, libplayer_srv, create, [self()]),
     receive
         {char_login, {pid, Pid}, {id, Id}} ->
-            %error_logger:info_report([{char_login_success, Id}]),
             CharInfo = #charinfo{id=Id, pid=Pid},
             NewState = State#state{charinfo=CharInfo},
-    		{ok, playing, NewState};
+            IdLen = byte_size(Id),
+            {reply,<<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>> , playing, 
+                NewState};
 		Error ->
-            error_logger:info_report([{?MODULE, unknown_error, Error}])
+            error_logger:info_report([{?MODULE, unknown_error, Error}]),
+    		{stop, player_creation_failed, State}
 	end.
 
 handle_event(Event, StateName, StateData) ->
