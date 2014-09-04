@@ -46,10 +46,10 @@ init(Socket) ->
             NewState = State#state{charinfo=CharInfo},
             IdLen = byte_size(Id),
 			conn_reply(Socket, <<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>>),
-            {next_state, playing, NewState};
+            {ok,  NewState};
 		Error ->
             error_logger:info_report([{?MODULE, unknown_error, Error}]),
-    		{stop, player_creation_failed, State}
+    		{error, player_creation_failed}
 	end.
 
 handle_event(Event, StateName, StateData) ->
