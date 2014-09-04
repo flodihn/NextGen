@@ -38,7 +38,17 @@ init(Socket) ->
     %error_logger:info_report([{new_connection, {socket, Socket}}]),
     %client_listener:start(self(), Socket),
     State = #state{socket=Socket},
-    {ok, playing, State}.
+	{ok, DefaultAreaSrv} = application:get_env(start_area),
+    rpc:call(DefaultAreaSrv, libplayer_srv, create, [self()]),
+    receive
+        {char_login, {pid, Pid}, {id, Id}} ->
+            %error_logger:info_report([{char_login_success, Id}]),
+            CharInfo = #charinfo{id=Id, pid=Pid},
+            NewState = State#state{charinfo=CharInfo},
+    		{ok, playing, NewState};
+		Error ->
+            error_logger:info_report([{?MODULE, unknown_error, Error}])
+	end.
 
 handle_event(Event, StateName, StateData) ->
     error_logger:info_report([{event, Event, StateName}]),
