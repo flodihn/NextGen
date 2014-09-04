@@ -45,8 +45,8 @@ init(Socket) ->
             CharInfo = #charinfo{id=Id, pid=Pid},
             NewState = State#state{charinfo=CharInfo},
             IdLen = byte_size(Id),
-            {reply,<<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>> , playing, 
-                NewState};
+			conn_reply(Socket, <<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>>),
+            {next_state, playing, NewState};
 		Error ->
             error_logger:info_report([{?MODULE, unknown_error, Error}]),
     		{stop, player_creation_failed, State}
