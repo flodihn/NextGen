@@ -38,7 +38,7 @@ init(Socket) ->
     %error_logger:info_report([{new_connection, {socket, Socket}}]),
     %client_listener:start(self(), Socket),
     State = #state{socket=Socket},
-    {ok, connected, State}.
+    {ok, playing, State}.
 
 handle_event(Event, StateName, StateData) ->
     error_logger:info_report([{event, Event, StateName}]),
