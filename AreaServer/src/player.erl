@@ -432,14 +432,8 @@ set_respawn(_From, #obj{id=Id} = State) ->
     {ok, Conn, _State} = obj:call_self(get_property, [conn], 
         State),
 	{ok, {faction, Faction}} = libfaction_srv:assign(),
-	%{ok, noreply, NewState} = obj:call_self(
-	%	set_faction, [faction, Faction], State),
-    %obj:call_self(event, [obj_faction, [{Id, Faction}]], State),
 	{ok, SpawnPoint} = libfactions_srv:get_spawn_point(Faction),
     obj:call_self(event, [obj_respawn, [Id, {pos, SpawnPoint}]], State),
-    %{ok, noreply, NewState2} = obj:call_self(set_pos, [NewPos], NewState),
-    %Conn ! {obj_faction, {id, Id}, {faction, Faction}},
-    %Conn ! {obj_respawn, {id, Id}, {pos, NewPos}},
 	{noreply, State}.
 	
 set_anim(_From, XBlendAmount, YBlendAmount, #obj{id=Id} = State) ->
@@ -448,7 +442,8 @@ set_anim(_From, XBlendAmount, YBlendAmount, #obj{id=Id} = State) ->
 
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.
-sync_pos(_From, Pos, State) ->
+sync_pos(_From, Pos, #obj{id=Id} = State) ->
+    obj:call_self(event, [obj_pos, [Id, Pos]], State),
     {ok, _Reply, NewState} = obj:call_self(set_pos, [Pos], State), 
     {noreply, NewState}.
 

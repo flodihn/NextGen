@@ -210,11 +210,11 @@ event(<<?PULSE>>, #state{charinfo=CharInfo} = State) ->
     obj_call(CharInfo#charinfo.pid, pulse),
     {noreply, playing, State};
 
-event(<<?SYNC_Y_MOVE, X/little-float, Y/little-float, Z/little-float>>, 
+event(<<?SYNC_POS, X/little-float, Y/little-float, Z/little-float>>, 
     	State) ->
     %error_logger:info_report([{sync_y_ugly_hack_for_player_pos, Y}]),
     CharInfo = State#state.charinfo,
-	CharInfo#charinfo.pid ! {sync_y_move, {X, Y, Z}},
+    obj_call(CharInfo#charinfo.pid, sync_pos, [#vec{x=X, y=Y, z=Z}]),
     {noreply, playing, State};
 
 % Perhaps gods should have their own connection module?

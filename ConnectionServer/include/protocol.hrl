@@ -56,11 +56,8 @@
 -define(SET_RESPAWN, 56).
 -define(OBJ_RESPAWN, 57).
 -define(SET_ANIM, 58).
+-define(SYNC_POS, 59).
 -define(OBJ_LOGOUT, 99).
 % God commands
 -define(SET_MESH, 252).
 -define(CREATE_OBJECT, 253).
-
-% temporary hack, the client can decide their y pos, this because
-% the area server can not handle terrain and collision detection yet.
--define(SYNC_Y_MOVE, 254).
