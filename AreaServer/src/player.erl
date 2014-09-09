@@ -432,7 +432,7 @@ set_respawn(_From, #obj{id=Id} = State) ->
     {ok, Conn, _State} = obj:call_self(get_property, [conn], 
         State),
 	{ok, {faction, Faction}} = libfaction_srv:assign(),
-	{ok, SpawnPoint} = libfactions_srv:get_spawn_point(Faction),
+	{ok, SpawnPoint} = libfaction_srv:get_spawn_point(Faction),
     obj:call_self(event, [obj_respawn, [Id, {pos, SpawnPoint}]], State),
 	{noreply, State}.
 	
