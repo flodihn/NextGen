@@ -34,7 +34,7 @@
     obj_dir/5,
     obj_leave/3,
     obj_enter/3,
-    obj_anim/5,
+    obj_anim/4,
     obj_stop_anim/4,
     obj_speed/5,
     obj_dead/3,
@@ -57,7 +57,7 @@
 	set_shot/4,
 	set_faction/3,
 	set_respawn/2,
-	set_anim/4
+	set_anim/3
     ]).
 
 create_state(Type) ->
@@ -306,10 +306,10 @@ obj_enter(_From, Id, State) ->
     Conn ! {obj_enter, {id, Id}},
     {noreply, State}.
 
-obj_anim(_From, Id, XBlendAmount, YBlendAmount, State) ->
+obj_anim(_From, Id, AnimStr, State) ->
     %error_logger:info_report(obj_anim),
     {ok, Conn, _State} = obj:call_self(get_conn, State),
-    Conn ! {obj_anim, {id, Id}, {xblend, XBlendAmount}, {yblend, YBlendAmount}},
+    Conn ! {obj_anim, {id, Id}, {animstr, AnimStr}},
     {noreply, State}.
 
 obj_stop_anim(_From, Id, Anim, State)->
@@ -436,8 +436,8 @@ set_respawn(_From, #obj{id=Id} = State) ->
     obj:call_self(event, [obj_respawn, [Id, {pos, SpawnPoint}]], State),
 	{noreply, State}.
 	
-set_anim(_From, XBlendAmount, YBlendAmount, #obj{id=Id} = State) ->
-    obj:call_self(event, [obj_anim, [Id, XBlendAmount, YBlendAmount]], State),
+set_anim(_From, AnimStr, #obj{id=Id} = State) ->
+    obj:call_self(event, [obj_anim, [Id, AnimStr]], State),
 	{noreply, State}.
 
 % For now we trust the client updating our position, this should be 

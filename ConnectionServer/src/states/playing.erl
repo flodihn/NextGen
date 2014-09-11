@@ -127,9 +127,10 @@ event({obj_speed, {id, Id}, {speed, Speed}, {timestamp, TimeStamp}},
         TimeStamp/binary>>, 
         playing, State};
 
-event({obj_anim, {id, Id}, {xblend, XBlendAmount}, {yblend, YBlendAmount}}, State) ->
+event({obj_anim, {id, Id}, {animstr, AnimStr}}, State) ->
     IdLen = byte_size(Id),
-    {reply, <<?OBJ_ANIM, IdLen, Id/binary, XBlendAmount/little-float, YBlendAmount/little-float>>,
+    AnimStrLen = byte_size(AnimStr),
+    {reply, <<?OBJ_ANIM, IdLen, Id/binary, AnimStrLen, AnimStr/binary>>,
         playing, State};
 
 event({obj_dead, {id, Id}}, State) ->
@@ -327,11 +328,10 @@ event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary,
     obj_call(Pid, set_shot, [Id, #vec{x=X, y=Y, z=Z}]),
     {noreply, playing, State};
 
-event(<<?SET_ANIM, XBlendAmount/little-float, YBlendAmount/little-float>>, 
-		State) ->
+event(<<?SET_ANIM, StrLen:8/integer, Str:StrLen/binary>>, State) ->
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
-    obj_call(Pid, set_anim, [XBlendAmount, YBlendAmount]),
+    obj_call(Pid, set_anim, [Str]),
     {noreply, playing, State};
 
 event(<<?SET_RESPAWN>>, State) ->
@@ -339,8 +339,6 @@ event(<<?SET_RESPAWN>>, State) ->
     Pid = CharInfo#charinfo.pid,
     obj_call(Pid, set_respawn),
     {noreply, playing, State};
-
-
 
 event(Event, State) ->
     error_logger:info_report([{unknown_event, Event}]),
