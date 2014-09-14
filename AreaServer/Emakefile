@@ -1,27 +1,17 @@
 % Note that behaviours must be compiled first.
 {["src/*"], [debug_info, {outdir, "./ebin"}, {i, "include"}]}.
-
 {["src/libplayer/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libstd/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libenv/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libtree/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libid/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libdist/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libobj/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libsave/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libgod/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libtest/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
-
 {["src/libfaction/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
+{["src/liblog/*"], [debug_info, {outdir, "./ebin/"}, {i, "include"}]}.
 
 {["src/libchat/*", "src/libgeo/*"], [debug_info, {outdir, "./ebin"}, {i, "include"}]}.
 
