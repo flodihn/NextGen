@@ -147,7 +147,7 @@ loop(Socket, Id) ->
             end,
             loop(Socket, Id);
         {From, char_login} ->   
-            send(Socket, <<?CHAR_LOGIN/integer>>),
+            %send(Socket, <<?CHAR_LOGIN/integer>>),
             case recv(Socket) of
                 <<?CHAR_LOGIN_SUCCESS, IdLen/integer, 
                     NewId:IdLen/binary>> ->
@@ -212,9 +212,15 @@ get_rand_cmd() ->
     TimeStamp = term_to_binary(now()),
     case crypto:rand_uniform(1, 4) of
         1 ->
-            <<?INCREASE_SPEED, TimeStamp/binary>>;
+            X = rand_float(),
+            Y = 0,
+            Z = rand_float(), 
+            <<?SYNC_POS, X/little-float, Y/little-float, Z/little-float>>;
         2 ->
-            <<?DECREASE_SPEED, TimeStamp/binary>>;
+            X = rand_float(),
+            Y = 0,
+            Z = rand_float(), 
+            <<?SYNC_POS, X/little-float, Y/little-float, Z/little-float>>;
         3 ->
             X = rand_float(),
             Y = 0,

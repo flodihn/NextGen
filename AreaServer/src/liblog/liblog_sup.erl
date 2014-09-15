@@ -2,7 +2,7 @@
 %% @author Christian Flodihn <christian@flodhn.se>
 %% @copyright Christian Flodihn
 %% @doc
-%% This is the supervisor for the player library 'libplayer'.
+%% This is the supervisor for the log library 'liblog'.
 %% @end
 %%---------------------------------------------------------------------
 -module(liblog_sup).

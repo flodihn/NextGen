@@ -443,6 +443,7 @@ set_anim(_From, AnimStr, #obj{id=Id} = State) ->
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.
 sync_pos(_From, Pos, #obj{id=Id} = State) ->
+	liblog_srv:log({sync_pos, {id, Id}, {log, Pos}}),
     obj:call_self(event, [obj_pos, [Id, Pos]], State),
     {ok, _Reply, NewState} = obj:call_self(set_pos, [Pos], State), 
     {noreply, NewState}.

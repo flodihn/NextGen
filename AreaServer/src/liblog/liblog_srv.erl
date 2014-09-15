@@ -14,7 +14,9 @@
 
 % API
 -export([
-    log/1
+    log/1,
+	create_area/0,
+	view_log/1
     ]).
 
 %external exports
@@ -62,8 +64,16 @@ handle_call({log, {data, Data}}, _From, #state{mod=Mod} = State) ->
     Result = Mod:log(Data),
     {reply, Result, State};
 
+handle_call(create_area, _From, #state{mod=Mod} = State) ->
+    Result = Mod:create_area(),
+    {reply, Result, State};
+
+handle_call({view_log, LogType}, _From, #state{mod=Mod} = State) ->
+    Result = Mod:view_log(LogType),
+    {reply, Result, State};
+
 handle_call(Call, _From, State) ->
-    error_logger:info_report([{Call, State}]),
+    error_logger:info_report([{unknown_call, Call, State}]),
     {reply, ok, State}.
 %% @end
 
@@ -84,12 +94,18 @@ terminate(_Reason, #state{mod=_Mod}) ->
 	ok.
 
 %%---------------------------------------------------------------------
-%% @spec assign(Id) -> {ok, {faction, Faction}} | {error, Reason}
+%% @spec log(Dta) -> ok | {error, Reason}
 %% where
-%%      Id = binary(),
-%%      Faction = 0 | 1 
+%%      Data = any(),
 %% @doc
 %% @end
 %%---------------------------------------------------------------------
 log(Data) ->
     gen_server:call(?MODULE, {log, {data, Data}}).
+
+create_area() ->
+    gen_server:call(?MODULE, create_area).
+
+
+view_log(LogType) ->
+    gen_server:call(?MODULE, {view_log, LogType}).

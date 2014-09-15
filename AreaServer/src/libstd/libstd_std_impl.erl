@@ -91,6 +91,7 @@ create_area() ->
                 [{ram_copies, [node()]},
                 {local_content, true},
                 {attributes, record_info(fields, obj_registry)}]),
+    liblog_srv:create_area(),
     libdist_srv:create_area(),
     libenv_srv:create_area(),
     libsave_srv:create_area(),

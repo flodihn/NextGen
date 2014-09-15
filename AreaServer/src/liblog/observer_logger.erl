@@ -19,8 +19,12 @@
 
 % handlers
 -export([
-    log/1
+	create_area/0,
+    log/1,
+	view_log/1
     ]).
+
+-record(obpos_log, {id, data, time}).
 
 %%----------------------------------------------------------------------
 %% @spec init() -> ok
@@ -32,16 +36,39 @@
 init() ->
     {ok, []}.
 
+create_area() ->
+	mnesia:start(),
+    mnesia:create_table(obpos_log,
+    	[{ram_copies, [node()]},
+    	{attributes, record_info(fields, obpos_log)}]),
+    ok.
+
 %%----------------------------------------------------------------------
 %% @doc
-%% @spec assign(Id) ->{ok, {faction, Faction}}
+%% @spec log(Data) -> ok
 %% where
-%%      State = obj_state(), 
-%%      Id = string(),
-%%      Pid = pid() 
-%% @type obj_state(). An obj_state record.
-%% Purpose: Makes a player login.
+%%      Data = any() 
 %% @end
 %%----------------------------------------------------------------------
-log(_Data) ->
-	ok.
+log({sync_pos, {id, Id}, {log, Data}}) ->
+    mnesia:dirty_write(#obpos_log{id=Id, data=Data, time=erlang:now()});
+
+log(Unknown) ->
+	error_logger:info_report({ignoring_log_request, Unknown}).
+
+
+view_log(LogType) ->
+	traverse_table_and_show(LogType).
+
+traverse_table_and_show(Table_name)->
+    Iterator =  fun(Rec,_)->
+    	io:format("~p~n",[Rec]),
+		[]
+    end,
+    case mnesia:is_transaction() of
+        true -> mnesia:foldl(Iterator,[],Table_name);
+        false -> 
+            Exec = fun({Fun,Tab}) -> mnesia:foldl(Fun, [],Tab) end,
+            mnesia:activity(
+				transaction,Exec,[{Iterator,Table_name}],mnesia_frag)
+    end.
