@@ -412,9 +412,8 @@ obj_call(Pid, Fun, Args) ->
     rpc:call(node(Pid), obj, async_call, [Pid, Fun, Args]).
 
 make_str(Bin) ->
-	error_logger:info_report({make_str, Bin}),
 	BinLen = byte_size(Bin),
-	<<BinLen:8, BinLen/binary>>.		
+	<<BinLen:8, Bin/binary>>.		
 
 validate_id(<<Bin/binary>>, #state{validate_id_regexp=undefined} = State) ->
 	{ok, RegExp} = re:compile("[a-zA-Z0-9_-]+[a-zA-Z0-9_-]+#[0-9]+"),
