@@ -37,10 +37,14 @@ event({skybox, SkyBox}, State) ->
     {reply, <<?SKYBOX, Len, SkyBoxBin/binary>>, playing, State};
 
 event({new_pos, [Id, #vec{x=X, y=Y, z=Z}]}, State) ->
-    IdLen = byte_size(Id),
-    Reply = <<?NEW_POS, IdLen, Id/binary, 
-        X/little-float, Y/little-float, Z/little-float>>,
-    {reply, Reply, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?NEW_POS, IdStr/binary, X/little-float, Y/little-float,
+				Z/little-float>>, playing, NewState}
+	end;
 
 event({msg, Msg}, State) ->
     %error_logger:info_report([{sending, ?MSG, Msg}]),
@@ -77,29 +81,52 @@ event({ambient_light, Value}, State) ->
         State};
 
 event({obj_pos, {id, Id}, {pos, #vec{x=X, y=Y, z=Z}}}, State) ->
-    IdLen = byte_size(Id),
-    %error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
-    {reply, <<?OBJ_POS, IdLen, Id/binary, X/little-float,
-        Y/little-float, Z/little-float>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		%error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
+   			 {reply, <<?OBJ_POS, IdStr/binary, X/little-float,
+      	 		 Y/little-float, Z/little-float>>, playing, NewState}
+	end;
 
 event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}}}, State) ->
-    IdLen = byte_size(Id),
-    %error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
-    {reply, <<?OBJ_DIR, IdLen, Id/binary, X/little-float,
-        Y/little-float, Z/little-float>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		%error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
+    		{reply, <<?OBJ_DIR, IdStr/binary, X/little-float,
+        		Y/little-float, Z/little-float>>, playing, NewState}
+	end;
+
+
 
 event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}}, 
-    {timestamp, TimeStamp}}, State) ->
-    IdLen = byte_size(Id),
+		{timestamp, TimeStamp}}, State) ->
     %error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
-    {reply, <<?OBJ_DIR, IdLen, Id/binary, X/little-float,
-        Y/little-float, Z/little-float, TimeStamp/binary>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_DIR, IdStr/binary, Id/binary, X/little-float,
+      		  Y/little-float, Z/little-float, TimeStamp/binary>>, playing, NewState}
+	end;
+
+
 
 event({obj_shot, {id, Id}, {shot_pos, #vec{x=X, y=Y, z=Z}}},  State) ->
-    IdLen = byte_size(Id),
-    %error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
-    {reply, <<?OBJ_SHOT, IdLen, Id/binary, X/little-float,
-        Y/little-float, Z/little-float>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_SHOT, IdStr/binary, X/little-float,
+       		 Y/little-float, Z/little-float>>, playing, NewState}
+	end;
 
 event({obj_created, {id, Id}}, State) ->
     IdLen = byte_size(Id),
@@ -112,65 +139,101 @@ event({obj_leave, {id, Id}}, State) ->
     {reply, <<?OBJ_LEAVE, IdLen, Id/binary>>, playing, State};
 
 event({obj_enter, {id, Id}}, State) ->
-    IdLen = byte_size(Id),
-    {reply, <<?OBJ_ENTER, IdLen, Id/binary>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_ENTER, IdStr>>, playing, NewState}
+	end;
 
-event({obj_speed, {id, Id}, {speed, Speed}}, State) ->
-        IdLen = byte_size(Id),
-    {reply, <<?OBJ_SPEED, IdLen, Id/binary, Speed/little-float>>,
-        playing, State};
+event({obj_anim, {id, Id}, {animstr, AnimBin}}, State) ->
+    AnimStr = make_str(AnimBin),
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_ANIM, IdStr/binary, AnimStr/binary>>,
+       			 playing, NewState}
+	end;
 
-event({obj_speed, {id, Id}, {speed, Speed}, {timestamp, TimeStamp}}, 
-    State) ->
-    IdLen = byte_size(Id),
-    {reply, <<?OBJ_SPEED, IdLen, Id/binary, Speed/little-float,
-        TimeStamp/binary>>, 
-        playing, State};
 
-event({obj_anim, {id, Id}, {animstr, AnimStr}}, State) ->
-    IdLen = byte_size(Id),
-    AnimStrLen = byte_size(AnimStr),
-    {reply, <<?OBJ_ANIM, IdLen, Id/binary, AnimStrLen, AnimStr/binary>>,
-        playing, State};
 
 event({obj_dead, {id, Id}}, State) ->
-    IdLen = byte_size(Id),
-    {reply, <<?OBJ_DEAD, IdLen, Id/binary>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_DEAD, IdStr/binary>>, playing, NewState}
+	end;
+
+
 
 event({obj_logout, {id, Id}}, State) ->
-    IdLen = byte_size(Id),
-    {reply, <<?OBJ_LOGOUT, IdLen, Id/binary>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_LOGOUT, IdStr/binary>>, playing, NewState}
+	end;
 
 event({obj_vector, {id, Id}, {vec, #vec{x=X, y=Y, z=Z}}}, State) ->
-    IdLen = byte_size(Id),
-    {reply, <<?OBJ_VECTOR, IdLen, Id/binary, X/little-float,
-        Y/little-float, Z/little-float>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_VECTOR, IdStr/binary, X/little-float,
+      			Y/little-float, Z/little-float>>, playing, NewState}
+	end;
+
 
 event({obj_jump, {id, Id}, {force, #vec{x=X, y=Y, z=Z}}}, State) ->
-    IdLen = byte_size(Id),
-    {reply, <<?OBJ_JUMP, IdLen, Id/binary, X/little-float,
-        Y/little-float, Z/little-float>>, playing, State};
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_JUMP, IdStr/binary, X/little-float,
+        		Y/little-float, Z/little-float>>, playing, NewState}
+	end;
 
 event({obj_faction, {id, Id}, {faction, red}}, State) ->
-    IdLen = byte_size(Id),
-	Faction= <<"Red">>,
-    FactionLen = byte_size(Faction),
-    {reply, <<?OBJ_FACTION, IdLen, Id/binary, FactionLen, Faction/binary>>, 
-		playing, State};
+    FactionStr  = make_str(<<"Red">>),
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_FACTION, IdStr/binary, FactionStr/binary>>, 
+				playing, NewState}
+	end;
 
 event({obj_faction, {id, Id}, {faction, blue}}, State) ->
-    IdLen = byte_size(Id),
-	Faction= <<"Blue">>,
-    FactionLen = byte_size(Faction),
-    {reply, <<?OBJ_FACTION, IdLen, Id/binary, FactionLen, Faction/binary>>, 
-		playing, State};
+    FactionStr  = make_str(<<"Blue">>),
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_FACTION, IdStr/binary, FactionStr/binary>>, 
+				playing, NewState}
+	end;
+
 
 event({obj_respawn, {id, Id}, {pos, #vec{x=X, y=Y, z=Z}}}, State) ->
-    IdLen = byte_size(Id),
-    {reply, <<?OBJ_RESPAWN, IdLen, Id/binary, 
-		X/little-float, Y/little-float, Z/little-float>>, 
-		playing, State};
-
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_RESPAWN, IdStr/binary, 
+				X/little-float, Y/little-float, Z/little-float>>, 
+				playing, NewState}
+	end;
 
 %event({obj_stop_anim, {id, Id}, {anim, Anim}}, State) ->
 %    IdLen = byte_size(Id),
@@ -350,3 +413,19 @@ obj_call(Pid, Fun) ->
 obj_call(Pid, Fun, Args) ->
     rpc:call(node(Pid), obj, async_call, [Pid, Fun, Args]).
 
+make_str(Bin) ->
+	BinLen = byte_size(Bin),
+	<<BinLen:8, BinLen/binary>>.		
+
+validate_id(<<Bin/binary>>, #state{validate_id_regexp=undefined} = State) ->
+	{ok, RegExp} = re:compile("[a-zA-Z0-9_-]+[a-zA-Z0-9_-]+#[0-9]+"),
+	validate_id(Bin, State#state{validate_id_regexp=RegExp});
+
+validate_id(<<_IdLen:8, Id/binary>>, #state{validate_id_regexp=RegExp} = State) ->
+	case re:run(Id, RegExp) of
+		nomatch ->
+			error_logger:info_report({invalid_id, Id}),
+			{false, State};
+		{match, _} ->
+			{true, State}
+	end.
