@@ -158,8 +158,6 @@ event({obj_anim, {id, Id}, {animstr, AnimBin}}, State) ->
        			 playing, NewState}
 	end;
 
-
-
 event({obj_dead, {id, Id}}, State) ->
 	IdStr = make_str(Id),
 	case validate_id(IdStr, State) of
@@ -414,6 +412,7 @@ obj_call(Pid, Fun, Args) ->
     rpc:call(node(Pid), obj, async_call, [Pid, Fun, Args]).
 
 make_str(Bin) ->
+	error_logger:info_report({make_str, Bin}),
 	BinLen = byte_size(Bin),
 	<<BinLen:8, BinLen/binary>>.		
 
