@@ -135,8 +135,8 @@ event({obj_created, {id, Id}}, State) ->
         playing, State};
 
 event({obj_leave, {id, Id}}, State) ->
-    IdLen = byte_size(Id),
-    {reply, <<?OBJ_LEAVE, IdLen, Id/binary>>, playing, State};
+	IdStr = make_str(id),
+    {reply, <<?OBJ_LEAVE, IdStr/binary>>, playing, State};
 
 event({obj_enter, {id, Id}}, State) ->
 	IdStr = make_str(Id),
@@ -144,7 +144,7 @@ event({obj_enter, {id, Id}}, State) ->
 		{false, NewState} ->
     		{noreply, playing, NewState};
 		{true, NewState} ->
-    		{reply, <<?OBJ_ENTER, IdStr>>, playing, NewState}
+    		{reply, <<?OBJ_ENTER, IdStr/binary>>, playing, NewState}
 	end;
 
 event({obj_anim, {id, Id}, {animstr, AnimBin}}, State) ->
