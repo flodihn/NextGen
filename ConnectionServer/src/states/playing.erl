@@ -180,7 +180,7 @@ event({obj_vector, {id, Id}, {velocity, Velocity}}, State) ->
 		{false, NewState} ->
     		{noreply, playing, NewState};
 		{true, NewState} ->
-    		{reply, <<?OBJ_VECTOR, IdStr/binary, Velocity/integer>>, playing, NewState}
+    		{reply, <<?OBJ_VECTOR, IdStr/binary, Velocity:8/integer>>, playing, NewState}
 	end;
 
 
@@ -321,7 +321,7 @@ event(<<?SET_DIR, X/little-float, Y/little-float, Z/little-float,
         [#vec{x=X, y=Y, z=Z}, TimeStamp]]),
     {noreply, playing, State};
 
-event(<<?SET_VECTOR, Velocity/integer, _TimeStamp/binary>>, State) ->
+event(<<?SET_VECTOR, Velocity:8/integer, _TimeStamp/binary>>, State) ->
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
 	rpc:call(node(Pid), obj, async_call, [Pid, set_vector, [Velocity]]),
