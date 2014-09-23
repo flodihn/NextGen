@@ -336,7 +336,7 @@ obj_jump(_From, Id, Force, State) ->
 
 obj_vector(_From, Id, Vector, State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
-    Conn ! {obj_vector, {id, Id}, {vec, Vector}},
+    Conn ! {obj_vector, {id, Id}, {velocity, Vector}},
     {noreply, State}.
 
 obj_shot(_From, Id, ShotPos, State) ->
