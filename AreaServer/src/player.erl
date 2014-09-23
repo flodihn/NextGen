@@ -385,8 +385,10 @@ decrease_speed(_From, TimeStamp, #obj{id=Id} = State) ->
             {noreply, State}
     end.
 
-set_dir(From, Dir, TimeStamp, State) ->
-    obj:set_dir(From, Dir#vec{y=0}, TimeStamp, State).
+set_dir(From, Dir, TimeStamp, #obj{id=Id} = State) ->
+    obj:set_dir(From, Dir, TimeStamp, State),
+    obj:call_self(event, [obj_dir, [Id, Dir, TimeStamp]], State),
+	{noreply, State}.
 
 get_name(_From, Id, #obj{id=Id} = State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
@@ -405,7 +407,6 @@ notify_flying(_From, Id, Mode, State) ->
 
 ping(_From, Time, State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
-    %call_self(event, [foobar], State),
     Conn ! {pong, Time},
     {noreply, State}.
 

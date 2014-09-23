@@ -29,12 +29,13 @@ event({terrain, Terrain}, State) ->
     {reply, <<?TERRAIN, Len, TerrainBin/binary>>, playing, State};
 
 event({skybox, SkyBox}, State) ->
-    SkyBoxBin = list_to_binary(SkyBox),
-    Len = byte_size(SkyBoxBin),
+	SkyBoxStr = make_str(SkyBox),
+    %SkyBoxBin = list_to_binary(SkyBox),
+    %Len = byte_size(SkyBoxBin),
     %Reply = <<?SKYBOX, Len, SkyBoxBin/binary>>,
     %error_logger:info_report([{sending, ?SKYBOX, SkyBox, 
     %    byte_size(Reply)}]),
-    {reply, <<?SKYBOX, Len, SkyBoxBin/binary>>, playing, State};
+    {reply, <<?SKYBOX, SkyBoxStr/binary>>, playing, State};
 
 event({new_pos, [Id, #vec{x=X, y=Y, z=Z}]}, State) ->
 	IdStr = make_str(Id),
@@ -86,27 +87,22 @@ event({obj_pos, {id, Id}, {pos, #vec{x=X, y=Y, z=Z}}}, State) ->
 		{false, NewState} ->
     		{noreply, playing, NewState};
 		{true, NewState} ->
-    		%error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
+    		%error_logger:info_report([{obj_pos, ?OBJ_POS, IdStr, X, Y, Z}]),
    			 {reply, <<?OBJ_POS, IdStr/binary, X/little-float,
       	 		 Y/little-float, Z/little-float>>, playing, NewState}
 	end;
 
 event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}}}, State) ->
-	IdStr = make_str(Id),
-	case validate_id(IdStr, State) of
-		{false, NewState} ->
-    		{noreply, playing, NewState};
-		{true, NewState} ->
-    		%error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
-    		{reply, <<?OBJ_DIR, IdStr/binary, X/little-float,
-        		Y/little-float, Z/little-float>>, playing, NewState}
-	end;
-
-
+	TimeStamp = <<"FakeTimeStamp">>,
+	event({obj_dir, 
+		{id, Id},
+		{dir, #vec{x=X, y=Y, z=Z}},
+		{timestamp, TimeStamp}}, State);
+	
 
 event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}}, 
 		{timestamp, TimeStamp}}, State) ->
-    %error_logger:info_report([{obj_dir, ?OBJ_DIR, IdLen, Id, X, Y, Z}]),
+    %error_logger:info_report([{obj_dir, ?OBJ_DIR, Id, Id, X, Y, Z}]),
 	IdStr = make_str(Id),
 	case validate_id(IdStr, State) of
 		{false, NewState} ->
@@ -135,7 +131,7 @@ event({obj_created, {id, Id}}, State) ->
         playing, State};
 
 event({obj_leave, {id, Id}}, State) ->
-	IdStr = make_str(id),
+	IdStr = make_str(Id),
     {reply, <<?OBJ_LEAVE, IdStr/binary>>, playing, State};
 
 event({obj_enter, {id, Id}}, State) ->
@@ -416,7 +412,7 @@ make_str(Bin) ->
 	<<BinLen:8, Bin/binary>>.		
 
 validate_id(<<Bin/binary>>, #state{validate_id_regexp=undefined} = State) ->
-	{ok, RegExp} = re:compile("[a-zA-Z0-9_-]+[a-zA-Z0-9_-]+#[0-9]+"),
+	{ok, RegExp} = re:compile("^[a-zA-Z0-9-_]+@[a-zA-Z0-9_-]+#[0-9]+"),
 	validate_id(Bin, State#state{validate_id_regexp=RegExp});
 
 validate_id(<<_IdLen:8, Id/binary>>, #state{validate_id_regexp=RegExp} = State) ->

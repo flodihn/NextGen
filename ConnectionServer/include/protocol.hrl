@@ -1,8 +1,6 @@
 -define(CONN_RESET, 0).
--define(CONN_ESTABLISHED, 1).
--define(ACCOUNT_LOGIN, 2).
--define(ACCOUNT_LOGIN_SUCCESS, 3).
--define(ACCOUNT_LOGIN_FAIL, 4).
+-define(PLAY, 1).
+-define(OBSERVE, 2).
 -define(CHAR_LOGIN, 5).
 -define(CHAR_LOGIN_SUCCESS, 6).
 -define(CHAR_LOGIN_FAIL, 7).

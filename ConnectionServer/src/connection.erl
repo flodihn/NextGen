@@ -12,7 +12,6 @@
 -export([
     conn_lost/2,
     connected/2,
-    lobby/2,
     playing/2
     ]).
 
@@ -37,19 +36,7 @@ start_link(Socket) ->
 
 init(Socket) ->
     State = #state{socket=Socket},
-    {ok, DefaultAreaSrv} = application:get_env(start_area),
-    error_logger:info_report({char_login, DefaultAreaSrv}),
-    rpc:call(DefaultAreaSrv, libplayer_srv, create, [self()]),
-    receive
-        {char_login, {pid, Pid}, {id, Id}} ->
-            CharInfo = #charinfo{id=Id, pid=Pid},
-            NewState = State#state{charinfo=CharInfo},
-            IdLen = byte_size(Id),
-            socket_send(Socket, <<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>>),
-            {ok, playing, NewState};
-        _Error ->
-            {stop, player_login, State}
-    end.
+    {ok, connected, State}.
 
 handle_event(Event, StateName, StateData) ->
     error_logger:info_report([{event, Event, StateName}]),
@@ -71,7 +58,7 @@ handle_info({tcp, Socket, Data}, StateName,
         {noreply, NextState, NewState} ->
             {next_state, NextState, NewState};
         Error ->
-            error_logger:error_report([Error]),
+            %error_logger:error_report([reply_errror, Error]),
             {next_state, StateName, State}
     end;
 
@@ -108,9 +95,6 @@ socket_send(Socket, Msg) ->
 
 connected(Event, State) ->
     connected:event(Event, State).
-
-lobby(Event, State) ->
-    lobby:event(Event, State).
 
 playing(Event, State) ->
     playing:event(Event, State).

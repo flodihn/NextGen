@@ -19,6 +19,7 @@
 
 % handlers
 -export([
+	get_loop_procs/0,
 	create_area/0,
     log/1,
 	view_log/1
@@ -42,6 +43,9 @@ create_area() ->
     	[{ram_copies, [node()]},
     	{attributes, record_info(fields, obpos_log)}]),
     ok.
+
+get_loop_procs() ->
+	[obpos_log].	
 
 %%----------------------------------------------------------------------
 %% @doc
