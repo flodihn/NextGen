@@ -53,7 +53,7 @@
     set_conn/3,
     get_conn/2,
     quad_changed/2,
-    sync_pos/3,
+    sync_pos/4,
     ping/3,
 	set_shot/4,
 	set_faction/3,
@@ -454,9 +454,10 @@ set_jump_slam_attack(_From, Str, Vec, #obj{id=Id} = State) ->
 
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.
-sync_pos(_From, Pos, #obj{id=Id} = State) ->
+sync_pos(_From, Pos, Dir, #obj{id=Id} = State) ->
 	liblog_srv:log({sync_pos, {id, Id}, {log, Pos}}),
     obj:call_self(event, [obj_pos, [Id, Pos]], State),
+    obj:call_self(event, [obj_dir, [Id, Dir]], State),
     {ok, _Reply, NewState} = obj:call_self(set_pos, [Pos], State), 
     {noreply, NewState}.
 

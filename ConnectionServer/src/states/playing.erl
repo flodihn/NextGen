@@ -282,37 +282,16 @@ event(<<?PULSE>>, #state{charinfo=CharInfo} = State) ->
     obj_call(CharInfo#charinfo.pid, pulse),
     {noreply, playing, State};
 
-event(<<?SYNC_POS, X/little-float, Y/little-float, Z/little-float>>, 
+event(<<?SYNC_POS, 
+		X/little-float, Y/little-float, Z/little-float,
+		DirX/little-float, DirY/little-float, DirZ/little-float>>, 
     	State) ->
-    %error_logger:info_report([{sync_y_ugly_hack_for_player_pos, Y}]),
     CharInfo = State#state.charinfo,
-    obj_call(CharInfo#charinfo.pid, sync_pos, [#vec{x=X, y=Y, z=Z}]),
+    obj_call(CharInfo#charinfo.pid, sync_pos, [
+		#vec{x=X, y=Y, z=Z},
+		#vec{x=DirX, y=DirY, z=DirZ}
+		]),
     {noreply, playing, State};
-
-% Perhaps gods should have their own connection module?
-%event(<<?CREATE_OBJECT, 
-%    TypeLen:8/integer, Type:TypeLen/binary, 
-%    NameLen:8/integer, Name:NameLen/binary,
-%    MeshLen:8/integer, Mesh:MeshLen/binary,
-%    PosX/little-float, PosY/little-float, PosZ/little-float>>, 
-%    State) ->
-%    %error_logger:info_report([{Mesh, X, Y, Z}]),
-%    CharInfo = State#state.charinfo,
-%    Pid = CharInfo#charinfo.pid,
-%	rpc:call(node(Pid), obj, async_call, [Pid, god_tool_create, [
-%        {type, Type}, 
-%        {name, Name}, 
-%        {mesh, Mesh}, 
-%        {pos, #vec{x=PosX, y=PosY, z=PosZ}}]]),
-%    error_logger:info_report([{create_object, Type, Name, Mesh,
-%        PosX, PosY, PosZ}]),
-%    {noreply, playing, State};
-
-%event(<<?SET_MESH, IdLen:8/integer, Id:IdLen/binary, MeshLen:8/integer,
-%    Mesh:MeshLen/binary>>, State) ->
-%    CharInfo = State#state.charinfo,
-%	CharInfo#charinfo.pid ! {set_mesh, [Id, binary_to_list(Mesh)]},
-%    {noreply, playing, State};
 
 event(<<?INCREASE_SPEED, TimeStamp/binary>>, State) ->
     CharInfo = State#state.charinfo,
