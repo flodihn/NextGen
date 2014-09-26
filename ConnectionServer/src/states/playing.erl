@@ -413,7 +413,7 @@ event(<<?SET_JUMP_SLAM_ATTACK, StrLen:8/integer, Str:StrLen/binary,
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
 	Vec = #vec{x=X, y=Y, z=Z},
-    obj_call(Pid, do_jump_slam_attack, [Str, Vec]),
+    obj_call(Pid, set_jump_slam_attack, [Str, Vec]),
     {noreply, playing, State};
 
 event(Event, State) ->
