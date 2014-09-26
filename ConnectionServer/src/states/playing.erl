@@ -394,6 +394,14 @@ event(<<?SET_RESPAWN>>, State) ->
     obj_call(Pid, set_respawn),
     {noreply, playing, State};
 
+event(<<?SET_JUMP_SLAM_ATTACK, StrLen:8/integer, Str:StrLen/binary,
+		X/little-float, Y/little-float, Z/little-float>>, State) ->
+    CharInfo = State#state.charinfo,
+    Pid = CharInfo#charinfo.pid,
+	Vec = #vec{x=X, y=Y, z=Z},
+    obj_call(Pid, do_jump_slam_attack, [Str, Vec]),
+    {noreply, playing, State};
+
 event(Event, State) ->
     error_logger:info_report([{unknown_event, Event}]),
     {noreply, playing, State}.

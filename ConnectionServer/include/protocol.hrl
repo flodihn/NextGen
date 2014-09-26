@@ -55,6 +55,8 @@
 -define(OBJ_RESPAWN, 57).
 -define(SET_ANIM, 58).
 -define(SYNC_POS, 59).
+-define(SET_JUMP_SLAM_ATTACK, 60).
+-define(OBJ_JUMP_SLAM_ATTACK, 61).
 -define(OBJ_LOGOUT, 99).
 % God commands
 -define(SET_MESH, 252).

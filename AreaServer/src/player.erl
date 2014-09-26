@@ -44,6 +44,7 @@
 	obj_shot/4,
 	obj_respawn/4,
 	obj_faction/4,
+	obj_jump_slam_attack/5,
     increase_speed/3,
     decrease_speed/3,
     set_dir/4,
@@ -57,7 +58,8 @@
 	set_shot/4,
 	set_faction/3,
 	set_respawn/2,
-	set_anim/3
+	set_anim/3,
+	set_jump_slam_attack/4
     ]).
 
 create_state(Type) ->
@@ -354,6 +356,11 @@ obj_faction(_From, Id, {faction, Faction}, State) ->
     Conn ! {obj_faction, {id, Id}, {faction, Faction}},
     {noreply, State}.
 
+obj_jump_slam_attack(_From, Id, Str, Vec, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_jump_slam_attack, {id, Id}, {str, Str}, {vec, Vec}},
+    {noreply, State}.
+
 increase_speed(_From, TimeStamp, State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),
     %{ok, MaxSpeed, _State} = obj:call_self(get_max_speed, State),
@@ -439,6 +446,10 @@ set_respawn(_From, #obj{id=Id} = State) ->
 	
 set_anim(_From, AnimStr, #obj{id=Id} = State) ->
     obj:call_self(event, [obj_anim, [Id, AnimStr]], State),
+	{noreply, State}.
+
+set_jump_slam_attack(_From, Str, Vec, #obj{id=Id} = State) ->
+    obj:call_self(event, [obj_jump_slam_attack, [Id, Str, Vec]], State),
 	{noreply, State}.
 
 % For now we trust the client updating our position, this should be 
