@@ -108,8 +108,9 @@ event({obj_dir, {id, Id}, {dir, #vec{x=X, y=Y, z=Z}},
 		{false, NewState} ->
     		{noreply, playing, NewState};
 		{true, NewState} ->
-    		{reply, <<?OBJ_DIR, IdStr/binary, Id/binary, X/little-float,
-      		  Y/little-float, Z/little-float, TimeStamp/binary>>, playing, NewState}
+    		{reply, <<?OBJ_DIR, IdStr/binary,
+				X/little-float, Y/little-float, Z/little-float,
+				TimeStamp/binary>>, playing, NewState}
 	end;
 
 
