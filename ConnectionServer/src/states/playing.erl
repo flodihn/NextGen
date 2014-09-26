@@ -228,6 +228,20 @@ event({obj_respawn, {id, Id}, {pos, #vec{x=X, y=Y, z=Z}}}, State) ->
 				playing, NewState}
 	end;
 
+event({obj_jump_slam_attack, {id, Id}, {str, Str}, {vec, #vec{x=X, y=Y, z=Z}}}, 
+		State) ->
+	IdStr = make_str(Id),
+	StrBin = make_str(Str),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?OBJ_JUMP_SLAM_ATTACK, IdStr/binary, StrBin/binary,
+				X/little-float, Y/little-float, Z/little-float>>, 
+				playing, NewState}
+	end;
+
+
 %event({obj_stop_anim, {id, Id}, {anim, Anim}}, State) ->
 %    IdLen = byte_size(Id),
 %    AnimBin = list_to_binary(Anim),
