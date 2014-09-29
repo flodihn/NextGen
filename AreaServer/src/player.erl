@@ -60,7 +60,7 @@
 	set_respawn/2,
 	set_anim/3,
 	set_jump_slam_attack/4,
-	entity_interpolation/4
+	entity_interpolation/5
     ]).
 
 create_state(Type) ->
@@ -362,6 +362,11 @@ obj_jump_slam_attack(_From, Id, Str, Vec, State) ->
     Conn ! {obj_jump_slam_attack, {id, Id}, {str, Str}, {vec, Vec}},
     {noreply, State}.
 
+entity_interpolation(_From, Id, Pos, Dir, State) ->
+    {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {entity_interpolation, {id, Id}, {pos, Pos}, {dir, Dir}},
+	{noreply, State}.
+
 increase_speed(_From, TimeStamp, State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),
     %{ok, MaxSpeed, _State} = obj:call_self(get_max_speed, State),
@@ -451,10 +456,6 @@ set_anim(_From, AnimStr, #obj{id=Id} = State) ->
 
 set_jump_slam_attack(_From, Str, Vec, #obj{id=Id} = State) ->
     obj:call_self(event, [obj_jump_slam_attack, [Id, Str, Vec]], State),
-	{noreply, State}.
-
-entity_interpolation(_From, Pos, Dir, #obj{id=Id} = State) ->
-    obj:call_self(event, [entity_interpolation, [Id, Pos, Dir]], State),
 	{noreply, State}.
 
 % For now we trust the client updating our position, this should be 
