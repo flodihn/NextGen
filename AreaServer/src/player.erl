@@ -59,7 +59,8 @@
 	set_faction/3,
 	set_respawn/2,
 	set_anim/3,
-	set_jump_slam_attack/4
+	set_jump_slam_attack/4,
+	entity_interpolation/4
     ]).
 
 create_state(Type) ->
@@ -452,12 +453,15 @@ set_jump_slam_attack(_From, Str, Vec, #obj{id=Id} = State) ->
     obj:call_self(event, [obj_jump_slam_attack, [Id, Str, Vec]], State),
 	{noreply, State}.
 
+entity_interpolation(_From, Pos, Dir, #obj{id=Id} = State) ->
+    obj:call_self(event, [entity_interpolation, [Id, Pos, Dir]], State),
+	{noreply, State}.
+
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.
 sync_pos(_From, Pos, Dir, #obj{id=Id} = State) ->
 	liblog_srv:log({sync_pos, {id, Id}, {log, Pos}}),
-    obj:call_self(event, [obj_pos, [Id, Pos]], State),
-    obj:call_self(event, [obj_dir, [Id, Dir]], State),
+    obj:call_self(event, [entity_interpolation, [Id, Pos, Dir]], State),
     {ok, _Reply, NewState} = obj:call_self(set_pos, [Pos], State), 
     {noreply, NewState}.
 

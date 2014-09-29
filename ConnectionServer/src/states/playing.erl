@@ -242,6 +242,20 @@ event({obj_jump_slam_attack, {id, Id}, {str, Str}, {vec, #vec{x=X, y=Y, z=Z}}},
 				playing, NewState}
 	end;
 
+event({entity_interpolation, {id, Id},
+		{pos, #vec{x=PosX, y=PosY, z=PosZ}}, 
+		{dir, #vec{x=DirX, y=DirY, z=DirZ}}}, 
+		State) ->
+	IdStr = make_str(Id),
+	case validate_id(IdStr, State) of
+		{false, NewState} ->
+    		{noreply, playing, NewState};
+		{true, NewState} ->
+    		{reply, <<?ENTITY_INTERPOLATION, IdStr/binary,
+				PosX/little-float, PosY/little-float, PosZ/little-float, 
+				DirX/little-float, DirY/little-float, DirZ/little-float>>, 
+				playing, NewState}
+	end;
 
 %event({obj_stop_anim, {id, Id}, {anim, Anim}}, State) ->
 %    IdLen = byte_size(Id),

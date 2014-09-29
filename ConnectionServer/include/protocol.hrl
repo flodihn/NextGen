@@ -57,6 +57,7 @@
 -define(SYNC_POS, 59).
 -define(SET_JUMP_SLAM_ATTACK, 60).
 -define(OBJ_JUMP_SLAM_ATTACK, 61).
+-define(ENTITY_INTERPOLATION, 62).
 -define(OBJ_LOGOUT, 99).
 % God commands
 -define(SET_MESH, 252).
