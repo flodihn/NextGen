@@ -362,7 +362,11 @@ obj_jump_slam_attack(_From, Id, Str, Vec, State) ->
     Conn ! {obj_jump_slam_attack, {id, Id}, {str, Str}, {vec, Vec}},
     {noreply, State}.
 
-entity_interpolation(_From, Id, Pos, Dir, State) ->
+% Dont send the interpolation message to ourselves.
+entity_interpolation(_From, Id, Pos, Dir, #obj{id=Id} = State) ->
+	{noreply, State};
+
+entity_interpolation(_From, Id, Pos, Dir, #obj{id=_OtherId} = State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
     Conn ! {entity_interpolation, {id, Id}, {pos, Pos}, {dir, Dir}},
 	{noreply, State}.
