@@ -170,6 +170,10 @@ set_shot(_From, Id, ShotPos, #obj{id=MyId} = State) when Id /= MyId->
             obj:event(self(), event, [obj_dead, [Id]], State)
     end,
     obj:event(self(), event, [obj_shot, [MyId, ShotPos]], State),
+    {noreply, State};
+
+set_shot(_From, Id, _ShotPos, #obj{id=Id} = State) ->
+	error_logger:info_report({?MODULE, set_shot, can_not_shoot_self, Id}),
     {noreply, State}.
 
 query_entity(From, #obj{id=Id} = State) ->
@@ -363,7 +367,7 @@ obj_jump_slam_attack(_From, Id, Str, Vec, State) ->
     {noreply, State}.
 
 % Dont send the interpolation message to ourselves.
-entity_interpolation(_From, Id, Pos, Dir, #obj{id=Id} = State) ->
+entity_interpolation(_From, Id, _Pos, _Dir, #obj{id=Id} = State) ->
 	{noreply, State};
 
 entity_interpolation(_From, Id, Pos, Dir, #obj{id=_OtherId} = State) ->
@@ -379,13 +383,11 @@ increase_speed(_From, TimeStamp, State) ->
     	TimeStamp], State),
     {noreply, NewState}.
 
-decrease_speed(_From, TimeStamp, #obj{id=Id} = State) ->
+decrease_speed(_From, TimeStamp, State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),
     NewSpeed = OldSpeed - 1,
     case NewSpeed of
         0 ->
-            %obj:call_self(event, [obj_stop_anim, [Id, "Walk"]], State);
-            %obj:call_self(event, [obj_anim, [Id, "Idle"]], State);
 			pass;
         _Any ->
             pass
@@ -394,9 +396,6 @@ decrease_speed(_From, TimeStamp, #obj{id=Id} = State) ->
         true -> 
             {ok, _Reply, NewState} = obj:call_self(set_speed, [NewSpeed,
                 TimeStamp], State),
-            % event is called in set_speed.
-            %call_self(event, [obj_speed, [Id, NewSpeed, TimeStamp]], 
-            %    NewState),
             {noreply, NewState};
         false ->
             {noreply, State}
@@ -447,8 +446,6 @@ set_faction(_From, Faction, State) ->
 	{noreply, NewState}.
 
 set_respawn(_From, #obj{id=Id} = State) ->
-    {ok, Conn, _State} = obj:call_self(get_property, [conn], 
-        State),
 	{ok, {faction, Faction}} = libfaction_srv:assign(),
 	{ok, SpawnPoint} = libfaction_srv:get_spawn_point(Faction),
     obj:call_self(event, [obj_respawn, [Id, {pos, SpawnPoint}]], State),
