@@ -103,6 +103,9 @@ add_observer_to_loop_procs([Proc | LoopProcs], ObserverPid) ->
 	Proc ! {add_observer, {pid, ObserverPid}},
 	add_observer_to_loop_procs(LoopProcs, ObserverPid).
 
+remove_observer_from_loop_procs([], _ObserverPid) ->
+	done;
+
 remove_observer_from_loop_procs([Proc | LoopProcs], ObserverPid) ->
 	Proc ! {remove_observer, {pid, ObserverPid}},
 	remove_observer_from_loop_procs(LoopProcs, ObserverPid).

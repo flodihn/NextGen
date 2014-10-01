@@ -84,8 +84,6 @@ handle_call({remove_observer, {pid, Pid}}, _From, #state{mod=Mod} = State) ->
 	Mod:remove_observer_from_loop_procs(State#state.loop_procs, Pid),
     {reply, ok, State};
 
-
-
 handle_call(Call, _From, State) ->
     error_logger:info_report([{unknown_call, Call, State}]),
     {reply, ok, State}.
