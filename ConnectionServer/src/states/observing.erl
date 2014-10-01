@@ -10,6 +10,8 @@
     ]).
 
 event(tcp_closed, State) ->
+   	{ok, DefaultAreaSrv} = application:get_env(start_area),
+    rpc:call(DefaultAreaSrv, liblog_srv, remove_observer, [self()]),
     {noreply, exit, State};
 
 event({obpos_log, Id, {vec, X, Y, Z}, Dir}, State) ->

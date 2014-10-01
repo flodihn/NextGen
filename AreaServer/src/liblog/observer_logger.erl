@@ -19,11 +19,14 @@
 
 % handlers
 -export([
-	get_loop_procs/0,
-	create_area/0,
     log/1,
 	view_log/1,
-	add_test_entries/0
+	create_area/0,
+	get_loop_procs/0,
+	add_test_entries/0,
+	spawn_loop_procs/2,
+	add_observer_to_loop_procs/2,
+	remove_observer_to_loop_procs/2
     ]).
 
 -record(obpos_log, {id, data, time}).
@@ -85,3 +88,21 @@ add_test_entries() ->
 		z=random:uniform(100)},
 	log({sync_pos,
 		{id, <<"test@foobar#123456789">>}, {log, RandVec}}).
+
+spawn_loop_procs([], Acc) ->
+	Acc;
+
+spawn_loop_procs([Module | Rest], Acc) ->
+	Pid = Module:init(),
+	spawn_loop_procs(Rest, [Pid | Acc]).
+
+add_observer_to_loop_procs([], _ObserverPid) ->
+	done;
+
+add_observer_to_loop_procs([Proc | LoopProcs], ObserverPid) ->
+	Proc ! {add_observer, {pid, ObserverPid}},
+	add_observer_to_loop_procs(LoopProcs, ObserverPid).
+
+remove_observer_to_loop_procs([Proc | LoopProcs], ObserverPid) ->
+	Proc ! {remove_observer, {pid, ObserverPid}},
+	remove_observer_to_loop_procs(LoopProcs, ObserverPid).

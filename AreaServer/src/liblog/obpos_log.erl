@@ -28,8 +28,10 @@ loop() ->
 loop('$end_of_table') ->
 	receive 
 		{add_observer, {pid, ObserverPid}} ->
-			add_observer(ObserverPid)
-		after 100 ->
+			add_observer(ObserverPid);
+		{remove_observer, {pid, ObserverPid}} ->
+			remove_observer(ObserverPid)
+		after 1000 ->
 			timeout
 	end,
 	?MODULE:loop(mnesia:dirty_first(?MODULE));
@@ -54,6 +56,15 @@ add_observer(Pid) ->
 			put(observers, [Pid]);
 		ObserverList ->
 			put(observers, [Pid | ObserverList])
+	end.
+
+remove_observer(Pid) ->
+	%error_logger:info_report({add_observer, Pid}),
+	case get(observers) of
+		undefined ->
+			pass;
+		ObserverList ->
+			put(observers, lists:delete(Pid, ObserverList))
 	end.
 
 notify_observer([], _Row) ->

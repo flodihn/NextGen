@@ -17,7 +17,8 @@
     log/1,
 	create_area/0,
 	view_log/1,
-	add_observer/1
+	add_observer/1,
+	remove_observer/1
     ]).
 
 %external exports
@@ -58,22 +59,8 @@ init(Module) ->
     process_flag(trap_exit, true),
     {ok, State} = Module:init(),
 	LoopModules= Module:get_loop_procs(),
-	LoopProcs = spawn_loop_procs(LoopModules, []),
+	LoopProcs = Module:spawn_loop_procs(LoopModules, []),
     {ok, #state{mod=Module, loop_procs=LoopProcs, state=State}}.
-
-spawn_loop_procs([], Acc) ->
-	Acc;
-
-spawn_loop_procs([Module | Rest], Acc) ->
-	Pid = Module:init(),
-	spawn_loop_procs(Rest, [Pid | Acc]).
-
-add_observer_to_loop_procs([], _ObserverPid) ->
-	done;
-
-add_observer_to_loop_procs([Proc | LoopProcs], ObserverPid) ->
-	Proc ! {add_observer, {pid, ObserverPid}},
-	add_observer_to_loop_procs(LoopProcs, ObserverPid).
 
 %% @doc
 %% @private
@@ -89,9 +76,15 @@ handle_call({view_log, LogType}, _From, #state{mod=Mod} = State) ->
     Result = Mod:view_log(LogType),
     {reply, Result, State};
 
-handle_call({add_observer, {pid, Pid}}, _From, State) ->
-	add_observer_to_loop_procs(State#state.loop_procs, Pid),
+handle_call({add_observer, {pid, Pid}}, _From, #state{mod=Mod} = State) ->
+	Mod:add_observer_to_loop_procs(State#state.loop_procs, Pid),
     {reply, ok, State};
+
+handle_call({remove_observer, {pid, Pid}}, _From, #state{mod=Mod} = State) ->
+	Mod:remove_observer_from_loop_procs(State#state.loop_procs, Pid),
+    {reply, ok, State};
+
+
 
 handle_call(Call, _From, State) ->
     error_logger:info_report([{unknown_call, Call, State}]),
@@ -133,3 +126,6 @@ view_log(LogType) ->
 
 add_observer(Pid) ->
     gen_server:call(?MODULE, {add_observer, {pid, Pid}}).
+
+remove_observer(Pid) ->
+    gen_server:call(?MODULE, {remove_observer, {pid, Pid}}).
