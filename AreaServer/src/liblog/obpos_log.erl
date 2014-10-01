@@ -90,7 +90,7 @@ send_delete_to_observers(Id) ->
 		undefined ->
 			pass;
 		ObserverList ->
-			send_delete_to_observers(Id, ObserverList)
+			send_delete_to_observers(ObserverList, Id)
 	end.
 
 send_delete_to_observers([], _Id) ->
