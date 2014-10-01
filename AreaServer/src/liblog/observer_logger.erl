@@ -22,7 +22,8 @@
 	get_loop_procs/0,
 	create_area/0,
     log/1,
-	view_log/1
+	view_log/1,
+	add_test_entries/0
     ]).
 
 -record(obpos_log, {id, data, time}).
@@ -76,3 +77,11 @@ traverse_table_and_show(Table_name)->
             mnesia:activity(
 				transaction,Exec,[{Iterator,Table_name}],mnesia_frag)
     end.
+
+add_test_entries() ->
+	RandVec = #vec{
+		x=random:uniform(100),
+		y=random:uniform(100),
+		z=random:uniform(100)},
+	log({sync_pos,
+		{id, <<"test@foobar#123456789">>}, {log, RandVec}}).

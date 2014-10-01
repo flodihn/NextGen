@@ -12,7 +12,8 @@
 -export([
     conn_lost/2,
     connected/2,
-    playing/2
+    playing/2,
+	observing/2
     ]).
 
 % API
@@ -55,10 +56,12 @@ handle_info({tcp, Socket, Data}, StateName,
         {reply, Reply, NextState, NewState} ->
             socket_send(Socket, Reply),
             {next_state, NextState, NewState};
+		{noreply, exit, State} ->
+    		{stop, normal, State}; 
         {noreply, NextState, NewState} ->
             {next_state, NextState, NewState};
         Error ->
-            %error_logger:error_report([reply_errror, Error]),
+            error_logger:error_report([handle_info, Error, Data]),
             {next_state, StateName, State}
     end;
 
@@ -76,9 +79,19 @@ handle_info(Info, playing, #state{socket=Socket} = State) ->
             {next_state, StateName, NewState}
     end;
 
-handle_info(_Info, StateName, StateData) ->
-    %error_logger:info_report([Info]),
-    {next_state, StateName, StateData}.
+handle_info(Info, observing=StateName, #state{socket=Socket} = State) ->
+    case apply(StateName, event, [Info, State]) of
+        {reply, Reply, NextState, NewState} ->
+            socket_send(Socket, Reply),
+            {next_state, NextState, NewState};
+		{noreply, exit, State} ->
+    		{stop, normal, State}; 
+        {noreply, NextState, NewState} ->
+            {next_state, NextState, NewState};
+        Error ->
+            error_logger:error_report([handle_info, Error, Info]),
+            {next_state, StateName, State}
+    end.
  
 handle_sync_event(_Event, _From, StateName, StateData) ->
     {reply, test, StateName, StateData}.
@@ -98,6 +111,9 @@ connected(Event, State) ->
 
 playing(Event, State) ->
     playing:event(Event, State).
+
+observing(Event, State) ->
+    observing:event(Event, State).
 
 conn_lost(Event, State) ->
     conn_lost:event(Event, State).

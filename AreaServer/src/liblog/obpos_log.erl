@@ -36,13 +36,31 @@ loop('$end_of_table') ->
 
 loop(Key) ->
 	[Row] = mnesia:dirty_read({?MODULE, Key}),
-	%io:format("Row: ~p.~n", [Row]),
+	%error_logger:info_report({dirty_read, Row}),
+	Observers = get(observers),
+	case Observers of 
+		undefined ->
+			%error_logger:info_report({warning, no_observers});
+			pass;
+		_List ->
+			notify_observer(Observers, Row)
+	end,
 	?MODULE:loop(mnesia:dirty_next(?MODULE, Key)).
 
 add_observer(Pid) ->
+	%error_logger:info_report({add_observer, Pid}),
 	case get(observers) of
 		undefined ->
 			put(observers, [Pid]);
 		ObserverList ->
 			put(observers, [Pid | ObserverList])
 	end.
+
+notify_observer([], _Row) ->
+	ok;
+
+notify_observer([Observer | Rest], Row) ->
+	%error_logger:info_report({sending_to_observer, Observer, Row}),
+	Observer ! Row, 
+	notify_observer(Rest, Row).
+

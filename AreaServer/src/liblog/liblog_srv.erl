@@ -91,7 +91,7 @@ handle_call({view_log, LogType}, _From, #state{mod=Mod} = State) ->
 
 handle_call({add_observer, {pid, Pid}}, _From, State) ->
 	add_observer_to_loop_procs(State#state.loop_procs, Pid),
-    {noreply, State};
+    {reply, ok, State};
 
 handle_call(Call, _From, State) ->
     error_logger:info_report([{unknown_call, Call, State}]),
@@ -103,7 +103,8 @@ handle_info(_Info, State) ->
     {nopreply, State}.
 
 %% @private
-handle_cast(_Cast, State) ->
+handle_cast(Cast, State) ->
+	error_logger:info_report({unknown_cast, Cast}),
     {noreply, State}.
 
 %% @private

@@ -12,7 +12,8 @@
 % For now we terminate the gen_fsm, perhaps we should't make it still run
 % and the player can reconnected with preseved state?
 event({tcp_closed, _Socket}, State) ->
-    {stop, normal, State};       
+	% cleanup here.
+    {noreply, exit, State};       
 
 event(<<?PLAY/integer>>, State) ->
    	{ok, DefaultAreaSrv} = application:get_env(start_area),
@@ -34,16 +35,15 @@ event(<<?PLAY/integer>>, State) ->
             {noreply, connected, State}
     end;
 
-event(<<?OBSERVE:8/integer, "IuJq/11/WyIEs32XoSUaCQ==">>, State) ->
-	error_logger:info_report({?MODULE, observe}),
+event(<<?OBSERVE:8/integer, 24, "IuJq/11/WyIEs32XoSUaCQ==">>, State) ->
+	error_logger:info_report({?MODULE, observing}),
    	{ok, DefaultAreaSrv} = application:get_env(start_area),
-    error_logger:info_report({char_login, DefaultAreaSrv}),
-    rpc:call(DefaultAreaSrv, liblog, add_observer, [self()]),
-    {next_state, observe, State};
+    rpc:call(DefaultAreaSrv, liblog_srv, add_observer, [self()]),
+    {noreply, observing, State};
 
 event(Event, State) ->
-    %error_logger:info_report([{unknown_message, Event}]),
-    {next_state, connected, State}.
+    error_logger:info_report([{unknown_message, Event}]),
+    {noreply, connected, State}.
 
 
     

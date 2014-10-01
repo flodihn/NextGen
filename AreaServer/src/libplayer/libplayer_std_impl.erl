@@ -62,7 +62,6 @@ create(Conn) ->
     spawn(?MODULE, async_create, [Conn]).
 
 async_create(Conn) ->
-    %error_logger:info_report([{?MODULE, async_create, Conn}]),
     {ok, Pid} = obj_sup:start(player),
     obj:call(Pid, set_conn, [Conn]),
     {ok, Id} = obj:call(Pid, get_id, []),
