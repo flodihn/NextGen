@@ -1,0 +1,1 @@
+-define(OBSERVER_OBJ_POS, 10).
