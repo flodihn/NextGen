@@ -78,7 +78,7 @@ handle_call({view_log, LogType}, _From, #state{mod=Mod} = State) ->
     {reply, Result, State};
 
 handle_call({clear_log, {id, Id}}, _From, #state{mod=Mod} = State) ->
-    Mod:clear_log(Id, State#state.loop_procs),
+    Mod:clear_log(State#state.loop_procs, Id),
 	Mod:notify_observers(deleted, Id, State#state.loop_procs),
     {reply, ok, State};
 
