@@ -17,6 +17,7 @@
     log/1,
 	create_area/0,
 	view_log/1,
+	clear_log/1,
 	add_observer/1,
 	remove_observer/1
     ]).
@@ -76,6 +77,11 @@ handle_call({view_log, LogType}, _From, #state{mod=Mod} = State) ->
     Result = Mod:view_log(LogType),
     {reply, Result, State};
 
+handle_call({clear_log, {id, Id}}, _From, #state{mod=Mod} = State) ->
+    Mod:clear_log(Id, State#state.loop_procs),
+	Mod:notify_observers(deleted, Id, State#state.loop_procs),
+    {reply, ok, State};
+
 handle_call({add_observer, {pid, Pid}}, _From, #state{mod=Mod} = State) ->
 	Mod:add_observer_to_loop_procs(State#state.loop_procs, Pid),
     {reply, ok, State};
@@ -106,6 +112,9 @@ code_change(_OldVsn, State, _Extra) ->
 terminate(_Reason, #state{mod=_Mod}) ->
 	ok.
 
+create_area() ->
+    gen_server:call(?MODULE, create_area).
+
 %%---------------------------------------------------------------------
 %% @spec log(Dta) -> ok | {error, Reason}
 %% where
@@ -116,14 +125,15 @@ terminate(_Reason, #state{mod=_Mod}) ->
 log(Data) ->
     gen_server:call(?MODULE, {log, {data, Data}}).
 
-create_area() ->
-    gen_server:call(?MODULE, create_area).
-
 view_log(LogType) ->
     gen_server:call(?MODULE, {view_log, LogType}).
+
+clear_log(Id) ->
+    gen_server:call(?MODULE, {clear_log, {id, Id}}).
 
 add_observer(Pid) ->
     gen_server:call(?MODULE, {add_observer, {pid, Pid}}).
 
 remove_observer(Pid) ->
     gen_server:call(?MODULE, {remove_observer, {pid, Pid}}).
+

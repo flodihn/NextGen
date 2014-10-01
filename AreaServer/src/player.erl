@@ -129,6 +129,7 @@ logout(_From, #obj{id=Id} = State) ->
     % by sending stop msg to obj_loop.
     obj:call_self(event, [obj_logout, [Id]], State),
     libstd_srv:unregister_obj(Id),
+	liblog_srv:clear_log(Id),
     {ok, Quad, _State} = obj:call_self(get_quad, State),
     libtree_srv:handle_exit(Id, Quad),
     %error_logger:info_report([{player, Id, logout}]),

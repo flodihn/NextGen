@@ -1,1 +1,2 @@
 -define(OBSERVER_OBJ_POS, 10).
+-define(OBSERVER_OBJ_DELETED, 30).

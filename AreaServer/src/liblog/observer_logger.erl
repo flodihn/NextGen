@@ -21,8 +21,10 @@
 -export([
     log/1,
 	view_log/1,
+	clear_log/2,
 	create_area/0,
 	get_loop_procs/0,
+	notify_observers/3,
 	add_test_entries/0,
 	spawn_loop_procs/2,
 	add_observer_to_loop_procs/2,
@@ -109,3 +111,17 @@ remove_observer_from_loop_procs([], _ObserverPid) ->
 remove_observer_from_loop_procs([Proc | LoopProcs], ObserverPid) ->
 	Proc ! {remove_observer, {pid, ObserverPid}},
 	remove_observer_from_loop_procs(LoopProcs, ObserverPid).
+
+clear_log([], _Id) ->
+	done;
+
+clear_log([Proc | LoopProcs], Id) ->
+	Proc ! {clear_log, {id, Id}},
+	clear_log(LoopProcs, Id).
+
+notify_observers(_Type, _Arg, []) ->
+	done;
+
+notify_observers(Type, Arg, [Proc | LoopProcs]) ->
+	Proc ! {notification, {Type, Arg}},
+	notify_observers(Type, Arg, LoopProcs).

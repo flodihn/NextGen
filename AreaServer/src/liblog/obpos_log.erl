@@ -30,7 +30,11 @@ loop('$end_of_table') ->
 		{add_observer, {pid, ObserverPid}} ->
 			add_observer(ObserverPid);
 		{remove_observer, {pid, ObserverPid}} ->
-			remove_observer(ObserverPid)
+			remove_observer(ObserverPid);
+		{clear_log, {id, Id}} ->
+			clear_log(Id);
+		{notification, {deleted, Id}} ->
+			send_delete_to_observers(Id)
 		after 1000 ->
 			timeout
 	end,
@@ -75,3 +79,23 @@ notify_observer([Observer | Rest], Row) ->
 	Observer ! Row, 
 	notify_observer(Rest, Row).
 
+clear_log(Id) ->
+	F = fun() ->
+		mnesia:delete({obpos_log, Id})
+	end,
+	mnesia:transaction(F).
+
+send_delete_to_observers(Id) ->
+		case get(observers) of
+		undefined ->
+			pass;
+		ObserverList ->
+			send_delete_to_observers(Id, ObserverList)
+	end.
+
+send_delete_to_observers([], _Id) ->
+	ok;
+
+send_delete_to_observers([Observer | Rest], Id) ->
+	Observer ! {deleted, Id}, 
+	notify_observer(Rest, Id).
