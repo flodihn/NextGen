@@ -26,7 +26,7 @@
 	add_test_entries/0,
 	spawn_loop_procs/2,
 	add_observer_to_loop_procs/2,
-	remove_observer_to_loop_procs/2
+	remove_observer_from_loop_procs/2
     ]).
 
 -record(obpos_log, {id, data, time}).
@@ -103,6 +103,6 @@ add_observer_to_loop_procs([Proc | LoopProcs], ObserverPid) ->
 	Proc ! {add_observer, {pid, ObserverPid}},
 	add_observer_to_loop_procs(LoopProcs, ObserverPid).
 
-remove_observer_to_loop_procs([Proc | LoopProcs], ObserverPid) ->
+remove_observer_from_loop_procs([Proc | LoopProcs], ObserverPid) ->
 	Proc ! {remove_observer, {pid, ObserverPid}},
-	remove_observer_to_loop_procs(LoopProcs, ObserverPid).
+	remove_observer_from_loop_procs(LoopProcs, ObserverPid).
