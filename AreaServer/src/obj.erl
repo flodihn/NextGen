@@ -712,8 +712,6 @@ get_pos(_From, State) ->
     {reply, Reply, State}.
 
 set_pos(_From, Pos, State) ->
-    %{ok, _Reply, NewState} = obj:call_self(set_property, [pos, Pos], 
-    %    State),
     {noreply, NewState} = set_property(self(), pos, Pos, State),
     {noreply, NewState}.
 
