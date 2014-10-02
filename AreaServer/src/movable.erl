@@ -189,11 +189,6 @@ query_entity(From, #obj{id=Id} = State) ->
         undefined ->
             pass
     end,
-    % If speed is undefined, get_speed returns the integer 0, this should
-    % really be changed to we don't need so send unnecessary data.
-    {ok, Speed, _} = call_self(get_speed, State),
-    async_call(From, queried_entity, 
-        [{id, Id}, {key, speed}, {value, Speed}]),
     obj:query_entity(From, State).
 
 enable_flying(_From, #obj{id=Id} = State) ->

@@ -150,8 +150,6 @@ logout(_From, #obj{id=Id} = State) ->
 pulse(_From, State) ->
     %error_logger:info_report([{pulse_from, self()}]),
     obj:call_self(event, [query_entity], State),
-    %obj:event(self(), event, [test, ["foobar"]], State),
-    %obj:event(self(), event, [test, ["foobar"]], State),
     {noreply, State}.
 
 pulse(_From, Id, State) ->
@@ -429,16 +427,17 @@ ping(_From, Time, State) ->
     {noreply, State}.
 
 set_conn(_From, Conn, State) ->
-    {ok, _Reply, NewState} = obj:call_self(set_property, [conn, Conn], 
-        State),
+    {ok, _Reply, NewState} = obj:call_self(
+		set_property, [conn, Conn], State),
     {noreply, NewState}.
 
 get_conn(_From, State) ->
-    {ok, Conn, _State} = obj:call_self(get_property, [conn], 
-        State),
+    {ok, Conn, _State} = obj:call_self(
+		get_property, [conn], State),
     {reply, Conn, State}.
 
 quad_changed(_From, State) ->
+	error_logger:info_report({quad_changed, State#obj.id}),
     obj:call_self(pulse, State),
     {noreply, State}.
 
