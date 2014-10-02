@@ -23,7 +23,15 @@ init() ->
 	spawn_link(?MODULE, loop, []).
 
 loop() ->
-	?MODULE:loop(mnesia:dirty_first(?MODULE)).
+	case mnesia:dirty_first(?MODULE) of
+		{aborted, no_exists} ->
+			error_logger:info_report(
+				"Table obpos does not exist, retrying in 10 seconds"),
+			timer:sleep(10000),
+			loop();
+		Key ->
+			?MODULE:loop(Key)
+	end.
 
 loop('$end_of_table') ->
 	receive 
