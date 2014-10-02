@@ -70,8 +70,7 @@ create_state(Type) ->
     {ok, _Reply, State4} = obj:call_self(set_name, [<<"Unnamed soul">>], 
         State3),
     {ok, _Reply, State5} = obj:call_self(set_heart_beat, [2000], State4),
-    {ok, _Reply, State6} = obj:call_self(set_max_speed, [10], State5),
-    {ok, State6}.
+    {ok, State5}.
 
 %%----------------------------------------------------------------------
 %% @spec init(State) ->{ok, NewState}
@@ -464,6 +463,7 @@ set_jump_slam_attack(_From, Str, Vec, #obj{id=Id} = State) ->
 % changed when the servers is aware of the terrain.
 sync_pos(_From, Pos, Dir, #obj{id=Id} = State) ->
 	liblog_srv:log({sync_pos, {id, Id}, {log, Pos}}),
+	obj:quadtree_assign(self(), State),
     obj:call_self(event, [entity_interpolation, [Id, Pos, Dir]], State),
     {ok, _Reply, NewState} = obj:call_self(set_pos, [Pos], State), 
     {noreply, NewState}.
