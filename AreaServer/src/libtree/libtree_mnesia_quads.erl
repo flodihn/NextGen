@@ -31,9 +31,6 @@
 
 init() ->
     mnesia:start(),
-    %State = #state{},
-    %{ok, State}.
-    % Have to fix so quad tree can join existing area if not created.
     create_area(#state{}).
     
 create_area(State) ->
@@ -112,13 +109,11 @@ create_quad(Row, Col) ->
                 {attributes, record_info(fields, obj)}])
     end.
 
-
-
 assign(Id, Obj, Pos, CurrentQuad, 
     #state{tree_size=TreeSize, quad_size=QuadSize} = TreeState) ->
     Row = util:trim_int(1, TreeSize, util:ceiling(Pos#vec.x/QuadSize)),
     Col = util:trim_int(1, TreeSize, util:ceiling(Pos#vec.z/QuadSize)),
-    NewQuad = get_quad_name(Row, Col),
+    NewQuad = {Row, Col},
     case CurrentQuad of
         undefined ->
             % If there is no previous quad we write to the new.
@@ -127,8 +122,6 @@ assign(Id, Obj, Pos, CurrentQuad,
             end,
             mnesia:transaction(F),
             link(Obj),
-            %error_logger:info_report([{R}]),
-            %mnesia:dirty_write(NewQuad, #obj{id=Id, pid=Obj}),
             event(Obj, NewQuad, obj_enter, [Id], TreeState),
             NewQuad;
         NewQuad ->
@@ -141,32 +134,62 @@ assign(Id, Obj, Pos, CurrentQuad,
             % leave notification in the old quad.
             event(Obj, CurrentQuad, obj_leave, [Id], TreeState),
             obj:async_call(Obj, quad_changed),
-            %F = fun() ->
-            %    mnesia:delete({CurrentQuad, Id}),
-            %    mnesia:write(NewQuad, #obj{id=Id, pid=Obj})
-            %end,
-            %mnesia:transaction(F),
             mnesia:dirty_delete({CurrentQuad, Id}),
             mnesia:dirty_write(NewQuad, #obj{id=Id, pid=Obj}),
             unlink(Obj),
             event(Obj, NewQuad, obj_enter, [Id], TreeState),
-            
             NewQuad
     end.
 
-event(From, Quad, Fun, Args, _TreeState) ->
-    spawn(?MODULE, send_message, [From, Quad, Fun, Args]).
+event(From, {QuadX, QuadY}=Quad, Fun, Args, TreeState) ->
+	error_logger:info_report({?MODULE, event, Quad}),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX - 1, QuadY - 1, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX, QuadY - 1, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX + 1, QuadY - 1, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX - 1, QuadY, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX, QuadY, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX + 1, QuadY), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX - 1, QuadY + 1), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX, QuadY + 1), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX + 1, QuadY + 1), Fun, Args]).
 
 get_quad_name(Row, Col) ->
     list_to_atom(integer_to_list(Row) ++ "_" ++ integer_to_list(Col)).
+
+get_quad_name(Row, _Col, _TreeState) when Row < 0 ->
+	invalid_quad;
+
+get_quad_name(_Row, Col, _TreeState) when Col < 0 ->
+	invalid_quad;
+
+get_quad_name(Row, _Col, #state{tree_size=Size}) when Row > Size ->
+	invalid_quad;
+
+get_quad_name(_Row, Col, #state{tree_size=Size}) when Col > Size ->
+	invalid_quad;
+
+get_quad_name(Row, Col, _TreeState) ->
+    list_to_atom(integer_to_list(Row) ++ "_" ++ integer_to_list(Col)).
+
+send_message(_From, invalid_quad, _Fun, _Args) ->
+	done;
 
 send_message(From, Quad, Fun, Args) ->
     Start = now(),
     FirstKey = mnesia:dirty_first(Quad),
     send_message(From, Quad, Fun, Args, FirstKey, Start).
 
-send_message(_From, _Quad, _Fun, _Args, '$end_of_table', Start) ->
-    End = now(),
+send_message(_From, _Quad, _Fun, _Args, '$end_of_table', _Start) ->
+    %End = now(),
     %error_logger:info_report([{send_message, time, 
     %    timer:now_diff(End, Start)/1000}]),
     done;

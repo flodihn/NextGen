@@ -80,13 +80,10 @@ create_state(Type) ->
 %% @end
 %%----------------------------------------------------------------------
 init(State) ->
-    error_logger:info_report([{player, init}]),
     movable:init(State).
 
 post_init(From, State) ->
     movable:post_init(From, State),
-    %obj:async_call(self(), query_env),
-	%error_logger:info_report({sending_pulse, State#obj.id}),
     obj:async_call(self(), pulse),
     {noreply, State}.
 
@@ -130,7 +127,6 @@ logout(_From, #obj{id=Id} = State) ->
 	liblog_srv:clear_log(Id),
     {ok, Quad, _State} = obj:call_self(get_quad, State),
     libtree_srv:handle_exit(Id, Quad),
-    %error_logger:info_report([{player, Id, logout}]),
     exit(normal).
 
 %%----------------------------------------------------------------------
