@@ -140,9 +140,15 @@ logout(_From, #obj{id=Id} = State) ->
 %% See also @see queried_entity/5
 %% @end
 %%----------------------------------------------------------------------
-pulse(_From, State) ->
-    %error_logger:info_report([{pulse_from, self()}]),
-    obj:call_self(event, [query_entity], State),
+pulse(From, State) ->
+	Self = self(),
+	case From of
+		Self ->
+    		error_logger:info_report("ignore_pulse_from_self"),
+			pass;
+		_OtherPid ->
+    		obj:call_self(event, [query_entity], State)
+	end,
     {noreply, State}.
 
 % Ignore pulse messages from ourselves.
@@ -174,14 +180,20 @@ set_shot(_From, Id, _ShotPos, #obj{id=Id} = State) ->
     {noreply, State}.
 
 query_entity(From, #obj{id=Id} = State) ->
-	case obj:call_self(get_property, [faction], State) of
-        {ok, undefined, _} ->
-            pass;
-        {ok, Faction, _} ->
-            obj:async_call(From, queried_entity, [{id, Id}, 
-                {key, faction}, {value, Faction}])
-    end,
-    movable:query_entity(From, State).
+	Self = self(),
+	case From of
+		Self ->
+			{noreply, State};
+		_Other ->
+			case obj:call_self(get_property, [faction], State) of
+       			 {ok, undefined, _} ->
+       			     pass;
+      			 {ok, Faction, _} ->
+            		obj:async_call(From, queried_entity, [{id, Id}, 
+                		{key, faction}, {value, Faction}])
+    		end,
+    		movable:query_entity(From, State)
+	end.
 
 obj_logout(_From, Id, State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
