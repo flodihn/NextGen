@@ -116,9 +116,10 @@ assign(Id, Obj, Pos, CurrentQuad,
     NewQuad = {Row, Col},
     case CurrentQuad of
         undefined ->
+			QuadName = get_quad_name(Row, Col),
             % If there is no previous quad we write to the new.
             F = fun() ->
-                mnesia:write(NewQuad, #obj{id=Id, pid=Obj}, write)
+                mnesia:write(QuadName, #obj{id=Id, pid=Obj}, write)
             end,
             mnesia:transaction(F),
             link(Obj),
@@ -127,15 +128,16 @@ assign(Id, Obj, Pos, CurrentQuad,
         NewQuad ->
             % If we have the same quad there is nothing to do.
             NewQuad;
-        _NotSameQuad ->
+        {NewX, NewY} ->
             % If we are in a new quad, delete from old quad and write
             % to new.
             % Make a synchronous call to make sure we send the
             % leave notification in the old quad.
+			NewQuadName = get_quad_name(NewX, NewY),
             event(Obj, CurrentQuad, obj_leave, [Id], TreeState),
             obj:async_call(Obj, quad_changed),
             mnesia:dirty_delete({CurrentQuad, Id}),
-            mnesia:dirty_write(NewQuad, #obj{id=Id, pid=Obj}),
+            mnesia:dirty_write(NewQuadName, #obj{id=Id, pid=Obj}),
             unlink(Obj),
             event(Obj, NewQuad, obj_enter, [Id], TreeState),
             NewQuad
