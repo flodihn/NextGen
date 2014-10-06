@@ -1,5 +1,5 @@
 -define(CONN_RESET, 0).
--define(CONN_ESTABLISHED, 1).
+-define(PLAY, 1).
 -define(ACCOUNT_LOGIN, 2).
 -define(ACCOUNT_LOGIN_SUCCESS, 3).
 -define(ACCOUNT_LOGIN_FAIL, 4).

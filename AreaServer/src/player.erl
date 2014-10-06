@@ -66,11 +66,10 @@
 create_state(Type) ->
     {ok, State} = movable:create_state(Type),
     State2 = update_parents(State),
-    {ok, _Reply, State3} = obj:call_self(set_mesh, ["robot.mesh"], State2),
-    {ok, _Reply, State4} = obj:call_self(set_name, [<<"Unnamed soul">>], 
-        State3),
-    {ok, _Reply, State5} = obj:call_self(set_heart_beat, [2000], State4),
-    {ok, State5}.
+    {noreply, State3} = obj:set_property(self(), last_heart_beat, now(),
+		State2),
+    {ok, _Reply, State4} = obj:call_self(set_heart_beat, [10000], State3),
+    {ok, State4}.
 
 %%----------------------------------------------------------------------
 %% @spec init(State) ->{ok, NewState}
@@ -95,7 +94,6 @@ update_parents(State) ->
     State#obj{parents=[movable, obj]}.
 
 heart_beat(From, State) ->
-    error_logger:info_report([{player, heart_beat}]),
 	obj:quadtree_assign(self(), State),
     movable:heart_beat(From, State).
 

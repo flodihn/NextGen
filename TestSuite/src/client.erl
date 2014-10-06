@@ -53,7 +53,6 @@ start() ->
     crypto:start(),
     spawn(?MODULE, loop, []).
 
-
 connect(Pid) ->
     connect(Pid, ?DEFAULT_HOST, ?DEFAULT_PORT),
     ok.
@@ -147,7 +146,7 @@ loop(Socket, Id) ->
             end,
             loop(Socket, Id);
         {From, char_login} ->   
-            %send(Socket, <<?CHAR_LOGIN/integer>>),
+            send(Socket, <<?PLAY/integer>>),
             case recv(Socket) of
                 <<?CHAR_LOGIN_SUCCESS, IdLen/integer, 
                     NewId:IdLen/binary>> ->
@@ -185,13 +184,15 @@ play_loop(Socket,
             io:format("Unknown data received: ~p~n", [Data]), 
             play_loop(Socket, State)
     after ?CMD_INTERVAL ->
-            Cmd = get_rand_cmd(),
-            Sent = send(Socket, Cmd),
-            NewBytesSent = BytesSent + Sent,
-            NewCmdsSent = CmdsSent + 1,
+            %Cmd = get_rand_cmd(),
+            %Sent = send(Socket, Cmd),
+            %NewBytesSent = BytesSent + Sent,
+            %NewCmdsSent = CmdsSent + 1,
             %io:format("Bytes sent: ~p.~n", [NewBytesSent]),
+            %play_loop(Socket, State#client_state{
+            %    cmds_sent=NewCmdsSent, bytes_sent=NewBytesSent})
             play_loop(Socket, State#client_state{
-                cmds_sent=NewCmdsSent, bytes_sent=NewBytesSent})
+                cmds_sent=1, bytes_sent=1})
     end.
 
 % Function that gathers the amount of bytes recevied from the recv_loop 

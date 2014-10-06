@@ -242,19 +242,25 @@ has_fun([{_Fun, _NrArgs} | Rest], Fun, NrArgs) ->
     has_fun(Rest, Fun, NrArgs).
 
 fetch_heart_beat(Dict) ->
-    case dict:find(heart_beat, Dict) of
-        {ok, HeartBeat} ->
-            HeartBeat;
-        error ->
-            infinity
+    case cache:fetch(heart_beat) of
+       	undefined ->
+			infinity;
+        HeartBeat ->
+            HeartBeat
     end.
+    %case dict:find(heart_beat, Dict) of
+    %    {ok, HeartBeat} ->
+    %        HeartBeat;
+    %    error ->
+    %        infinity
+    %end.
 
 fetch_last_heart_beat(Dict) ->
-    case dict:find(last_heart_beat, Dict) of
-        {ok, LastHeartBeat} ->
-            LastHeartBeat;
-        error ->
-            {0, 0, 0}     
+    case get(last_heart_beat) of
+        undefined->
+            {0, 0, 0};
+        LastHeartBeat ->
+            LastHeartBeat
     end.
 
 call_heart_beat(State) ->

@@ -13,7 +13,6 @@ recv_loop(Owner, Socket, #recv_state{id=Id, bytes_recv=BytesRecv,
     cmds_recv=CmdsRecv, resp_times=RespTimes} = State) ->
     % Since we don't need flow controler in recv loop whe call it before
     % data is received.
-    %io:format("Setting socket options {active, once}.~n"),
     inet:setopts(Socket, [{active, once}]),
     receive 
         {get_state} ->
@@ -28,7 +27,8 @@ recv_loop(Owner, Socket, #recv_state{id=Id, bytes_recv=BytesRecv,
         {tcp, Socket, <<?OBJ_DIR, IdLen/integer, Id:IdLen/binary, 
             	_X/little-float, _Y/little-float, Z/little-float, 
             	BinTime/binary>> = Data} ->
-			Diff = binary_time_to_diff(BinTime),
+			Diff = time(),
+			%Diff = binary_time_to_diff(BinTime),
             %io:format("OBJ_DIR ms: ~p.~n", [Diff/1000]),
             NewBytesRecv = BytesRecv + byte_size(Data) + 2,
 			recv_loop(Owner, Socket, 
