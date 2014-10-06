@@ -76,7 +76,6 @@ async_create(Conn) ->
 	{ok, SpawnPoint} = libfaction_srv:get_spawn_point(Faction),
     obj:call(Pid, set_faction, [Faction]),
     obj:call(Pid, set_pos, [SpawnPoint]),
-    obj:call(Pid, obj_enter, [Id]),
     obj:async_call(Pid, post_init),
     Conn ! {char_login, {pid, Pid}, {id, Id}}.
     

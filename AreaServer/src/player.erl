@@ -82,8 +82,9 @@ create_state(Type) ->
 init(State) ->
     movable:init(State).
 
-post_init(From, State) ->
+post_init(From, #obj{id=Id} = State) ->
     movable:post_init(From, State),
+    obj:call_self(obj_enter, [Id], State),
     obj:async_call(self(), pulse),
     {noreply, State}.
 
