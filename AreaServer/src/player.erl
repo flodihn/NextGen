@@ -83,9 +83,24 @@ init(State) ->
     movable:init(State).
 
 post_init(From, #obj{id=Id} = State) ->
-    movable:post_init(From, State),
-    obj:call_self(obj_enter, [Id], State),
+   {ok, Conn, _State} = obj:call_self(get_conn, State),
+    Conn ! {obj_enter, {id, Id}},
+	case obj:call_self(get_property, [faction], State) of
+    	{ok, undefined, _} ->
+       		pass;
+      	{ok, Faction, _} ->
+   			Conn ! {obj_faction, {id, Id}, {faction, Faction}},
+         	obj:async_call(From, queried_entity, [{id, Id}, 
+           	{key, faction}, {value, Faction}])
+   	end,
+	case obj:call_self(get_pos, State) of
+		{ok, Pos, _State} ->
+    		Conn ! {obj_pos, {id, Id}, {pos, Pos}};
+		_Error ->
+			pass
+	end,
     obj:async_call(self(), pulse),
+    movable:post_init(From, State),
     {noreply, State}.
 
 update_parents(State) ->
