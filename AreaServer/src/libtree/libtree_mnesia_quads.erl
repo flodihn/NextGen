@@ -207,5 +207,9 @@ send_message(From, Quad, Fun, Args, Key, Start) ->
 get_size(#state{tree_size=TreeSize}) ->
     {ok, TreeSize}.
 
-handle_exit(Id, Quad) ->
-    mnesia:dirty_delete(Quad, Id).
+handle_exit(Id, undefined) ->
+	done;
+
+handle_exit(Id, {Row, Col}) ->
+    QuadName = get_quad_name(Row, Col),
+    mnesia:dirty_delete(QuadName, Id).
