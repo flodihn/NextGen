@@ -115,6 +115,9 @@ assign(Id, Obj, Pos, CurrentQuad,
     Col = util:trim_int(1, TreeSize, util:ceiling(Pos#vec.z/QuadSize)),
     NewQuad = {Row, Col},
     case CurrentQuad of
+       NewQuad ->
+            % If we have the same quad there is nothing to do.
+            NewQuad;
         undefined ->
 			QuadName = get_quad_name(Row, Col),
             % If there is no previous quad we write to the new.
@@ -125,18 +128,17 @@ assign(Id, Obj, Pos, CurrentQuad,
             link(Obj),
             event(Obj, NewQuad, obj_enter, [Id], TreeState),
             NewQuad;
-        NewQuad ->
-            % If we have the same quad there is nothing to do.
-            NewQuad;
         {NewX, NewY} ->
             % If we are in a new quad, delete from old quad and write
             % to new.
             % Make a synchronous call to make sure we send the
             % leave notification in the old quad.
+			{CurrentX, CurrentY} = CurrentQuad,
+			CurrentQuadName = get_quad_name(CurrentX, CurrentY),
 			NewQuadName = get_quad_name(NewX, NewY),
             event(Obj, CurrentQuad, obj_leave, [Id], TreeState),
             obj:async_call(Obj, quad_changed),
-            mnesia:dirty_delete({CurrentQuad, Id}),
+            mnesia:dirty_delete({CurrentQuadName, Id}),
             mnesia:dirty_write(NewQuadName, #obj{id=Id, pid=Obj}),
             unlink(Obj),
             event(Obj, NewQuad, obj_enter, [Id], TreeState),
