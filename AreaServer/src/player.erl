@@ -106,8 +106,10 @@ post_init(From, #obj{id=Id} = State) ->
 update_parents(State) ->
     State#obj{parents=[movable, obj]}.
 
-heart_beat(From, State) ->
+heart_beat(From, #obj{id=Id} = State) ->
 	obj:quadtree_assign(self(), State),
+	{ok, Pos, _State} = obj:call_self(get_pos, State),
+	liblog_srv:log({sync_pos, {id, Id}, {log, Pos}}),
     movable:heart_beat(From, State).
 
 %%----------------------------------------------------------------------
@@ -160,7 +162,6 @@ pulse(From, State) ->
 	Self = self(),
 	case From of
 		Self ->
-    		error_logger:info_report("ignore_pulse_from_self"),
 			pass;
 		_OtherPid ->
     		obj:call_self(event, [query_entity], State)
@@ -462,7 +463,6 @@ get_conn(_From, State) ->
     {reply, Conn, State}.
 
 quad_changed(_From, State) ->
-	error_logger:info_report({quad_changed, State#obj.id}),
     obj:call_self(pulse, State),
     {noreply, State}.
 
@@ -488,7 +488,6 @@ set_jump_slam_attack(_From, Str, Vec, #obj{id=Id} = State) ->
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.
 sync_pos(_From, Pos, Dir, #obj{id=Id} = State) ->
-	liblog_srv:log({sync_pos, {id, Id}, {log, Pos}}),
 	obj:quadtree_assign(self(), State),
     obj:call_self(event, [entity_interpolation, [Id, Pos, Dir]], State),
     {ok, _Reply, NewState} = obj:call_self(set_pos, [Pos], State), 
