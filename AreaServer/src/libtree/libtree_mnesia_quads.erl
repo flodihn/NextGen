@@ -146,7 +146,6 @@ assign(Id, Obj, Pos, CurrentQuad,
     end.
 
 event(From, {QuadX, QuadY}=Quad, Fun, Args, TreeState) ->
-	error_logger:info_report({?MODULE, event, Quad}),
     spawn(?MODULE, send_message, [
 		From, get_quad_name(QuadX - 1, QuadY - 1, TreeState), Fun, Args]),
     spawn(?MODULE, send_message, [
@@ -207,7 +206,7 @@ send_message(From, Quad, Fun, Args, Key, Start) ->
 get_size(#state{tree_size=TreeSize}) ->
     {ok, TreeSize}.
 
-handle_exit(Id, undefined) ->
+handle_exit(_Id, undefined) ->
 	done;
 
 handle_exit(Id, {Row, Col}) ->
