@@ -145,6 +145,10 @@ pulse(_From, State) ->
     obj:call_self(event, [query_entity], State),
     {noreply, State}.
 
+% Ignore pulse messages from ourselves.
+pulse(_From, Id, #obj{id=Id} = State) ->
+    {noreply, State};
+
 pulse(_From, Id, State) ->
     %error_logger:info_report([{"Pulsing object", Id}]),
     case libstd_srv:get_obj(Id) of

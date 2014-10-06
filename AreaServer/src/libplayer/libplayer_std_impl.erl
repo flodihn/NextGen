@@ -100,7 +100,6 @@ async_login(Conn, Id) ->
     obj:call(Pid, set_conn, [Conn]),
     obj:call(Pid, post_init),
     
-    % These lines should not be needed.
     {ok, Pos} = obj:call(Pid, get_pos),
     Conn ! {new_pos, [Id, Pos]},
 
