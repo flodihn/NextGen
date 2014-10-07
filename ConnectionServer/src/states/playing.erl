@@ -244,7 +244,8 @@ event({obj_jump_slam_attack, {id, Id}, {str, Str}, {vec, #vec{x=X, y=Y, z=Z}}},
 
 event({entity_interpolation, {id, Id},
 		{pos, #vec{x=PosX, y=PosY, z=PosZ}}, 
-		{dir, #vec{x=DirX, y=DirY, z=DirZ}}}, 
+		{dir, #vec{x=DirX, y=DirY, z=DirZ}}, 
+		{vel, #vec{x=VelX, y=VelY, z=VelZ}}}, 
 		State) ->
 	IdStr = make_str(Id),
 	case validate_id(IdStr, State) of
@@ -253,7 +254,8 @@ event({entity_interpolation, {id, Id},
 		{true, NewState} ->
     		{reply, <<?ENTITY_INTERPOLATION, IdStr/binary,
 				PosX/little-float, PosY/little-float, PosZ/little-float, 
-				DirX/little-float, DirY/little-float, DirZ/little-float>>, 
+				DirX/little-float, DirY/little-float, DirZ/little-float, 
+				VelX/little-float, VelY/little-float, VelZ/little-float>>, 
 				playing, NewState}
 	end;
 
@@ -298,12 +300,14 @@ event(<<?PULSE>>, #state{charinfo=CharInfo} = State) ->
 
 event(<<?SYNC_POS, 
 		X/little-float, Y/little-float, Z/little-float,
-		DirX/little-float, DirY/little-float, DirZ/little-float>>, 
+		DirX/little-float, DirY/little-float, DirZ/little-float, 
+		VelX/little-float, VelY/little-float, VelZ/little-float>>, 
     	State) ->
     CharInfo = State#state.charinfo,
     obj_call(CharInfo#charinfo.pid, sync_pos, [
 		#vec{x=X, y=Y, z=Z},
-		#vec{x=DirX, y=DirY, z=DirZ}
+		#vec{x=DirX, y=DirY, z=DirZ},
+		#vec{x=VelX, y=VelY, z=VelZ}
 		]),
     {noreply, playing, State};
 

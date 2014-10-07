@@ -53,14 +53,14 @@
     set_conn/3,
     get_conn/2,
     quad_changed/2,
-    sync_pos/4,
+    sync_pos/5,
     ping/3,
 	set_shot/4,
 	set_faction/3,
 	set_respawn/2,
 	set_anim/3,
 	set_jump_slam_attack/4,
-	entity_interpolation/5
+	entity_interpolation/6
     ]).
 
 create_state(Type) ->
@@ -393,12 +393,12 @@ obj_jump_slam_attack(_From, Id, Str, Vec, State) ->
     {noreply, State}.
 
 % Dont send the interpolation message to ourselves.
-entity_interpolation(_From, Id, _Pos, _Dir, #obj{id=Id} = State) ->
+entity_interpolation(_From, Id, _Pos, _Dir, _Vel, #obj{id=Id} = State) ->
 	{noreply, State};
 
-entity_interpolation(_From, Id, Pos, Dir, #obj{id=_OtherId} = State) ->
+entity_interpolation(_From, Id, Pos, Dir, Vel, #obj{id=_OtherId} = State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
-    Conn ! {entity_interpolation, {id, Id}, {pos, Pos}, {dir, Dir}},
+    Conn ! {entity_interpolation, {id, Id}, {pos, Pos}, {dir, Dir}, {vel, Vel}},
 	{noreply, State}.
 
 increase_speed(_From, TimeStamp, State) ->
@@ -487,9 +487,8 @@ set_jump_slam_attack(_From, Str, Vec, #obj{id=Id} = State) ->
 
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.
-sync_pos(_From, Pos, Dir, #obj{id=Id} = State) ->
-	obj:quadtree_assign(self(), State),
-    obj:call_self(event, [entity_interpolation, [Id, Pos, Dir]], State),
+sync_pos(_From, Pos, Dir, Vel, #obj{id=Id} = State) ->
+    obj:call_self(event, [entity_interpolation, [Id, Pos, Dir, Vel]], State),
     {ok, _Reply, NewState} = obj:call_self(set_pos, [Pos], State), 
     {noreply, NewState}.
 
