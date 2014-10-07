@@ -16,6 +16,7 @@
 -include("report.hrl").
 
 -define(TEST_RUNTIME, 60000).
+-define(CLIENT, world_record_client).
 
 init() ->
     case lists:member(test_clients, ets:all()) of
@@ -36,11 +37,7 @@ run_test(Host, NrClients) ->
     ClientList = spawn_clients(NrClients),
     io:format("Connecting clients...~n"),
     connect_clients(ClientList, Host),
-    %io:format("Logging in client accounts...~n"),
-    %account_login_clients(ClientList),
-    %io:format("Logging in client characters...~n"),
     char_login_clients(ClientList),
-    %Start = now(),
     io:format("Simulating player behaviour...~n"),
     start_play_clients(ClientList),
     io:format("Running test for ~p seconds, please wait...~n", 
@@ -55,7 +52,7 @@ auto_spawn_clients(0, Acc) ->
     Acc;
 
 auto_spawn_clients(Nr, Acc) ->
-    Pid = client:auto_start(),
+    Pid = ?CLIENT:auto_start(),
     auto_spawn_clients(Nr - 1, Acc ++ [Pid]).
 
 spawn_clients(Nr) ->
@@ -65,7 +62,7 @@ spawn_clients(0, Acc) ->
     Acc;
 
 spawn_clients(Nr, Acc) ->
-    Pid = client:start(),
+    Pid = ?CLIENT:start(),
     ets:insert(test_clients, {Pid, Nr}),
     spawn_clients(Nr - 1, Acc ++ [Pid]).
 
@@ -73,7 +70,7 @@ connect_clients([], _Host) ->
     done;
 
 connect_clients([ClientPid | Tail], Host) ->
-    client:connect(ClientPid, Host),
+    ?CLIENT:connect(ClientPid, Host),
     connect_clients(Tail, Host).
 
 
@@ -81,7 +78,7 @@ account_login_clients([]) ->
     done;
 
 account_login_clients([ClientPid | Tail]) ->
-    client:account_login(ClientPid),
+    ?CLIENT:account_login(ClientPid),
     account_login_clients(Tail).
 
 char_login_clients(List) ->
@@ -91,7 +88,7 @@ char_login_clients([], _Acc, _Max) ->
     done;
 
 char_login_clients([ClientPid | Tail], Acc, Max) ->
-    client:char_login(ClientPid),
+    ?CLIENT:char_login(ClientPid),
     io:format("~p/~p logged in.~n", [Acc, Max]),
     char_login_clients(Tail, Acc + 1, Max).
 
@@ -99,7 +96,7 @@ start_play_clients([]) ->
     done;
 
 start_play_clients([ClientPid | Tail]) ->
-    client:start_play(ClientPid),
+    ?CLIENT:start_play(ClientPid),
     start_play_clients(Tail).
 
 report() ->
@@ -144,7 +141,7 @@ report('$end_of_table', Report, NrClients, File) ->
     file:close(File);
 
 report(ClientPid, Report, NrClients, File) ->
-    ClientReport = client:report(ClientPid),
+    ClientReport = ?CLIENT:report(ClientPid),
     file:write(File,
         "=== Client " ++ integer_to_list(NrClients) ++ " ===\n" ++
         "Commands sent: " ++ 
