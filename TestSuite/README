@@ -6,4 +6,9 @@ erl -pa ebin
 To launch 100 test clients:
 testsuite:run_test(100).
 
+By default this will connect to a server on localhost, if you need it to
+connect somewhere else, you can do:
+
+testsuite:run_test("10.0.0.2", 100).
+
 Wait 60 seconds and a report will be written to file.
