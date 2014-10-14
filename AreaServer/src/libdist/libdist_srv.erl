@@ -86,6 +86,9 @@ handle_call({find_obj, AreaId}, _From, #state{mod=Mod} = State) ->
     Reply = Mod:find_obj(AreaId),
     {reply, Reply, State};
 
+handle_call(get_num_player, _From, #state{mod=Mod} = State) ->
+    Reply = Mod:get_num_players(),
+    {reply, Reply, State};
 
 handle_call(_Call, _From, State) ->
     %error_logger:info_report([{?MODULE, unknown_call, Call}]),
@@ -130,3 +133,6 @@ next_obj(AreaId) ->
 
 find_obj(Id) ->
     gen_server:call(?MODULE, {find_obj, Id}).
+
+get_num_players() ->
+    gen_server:call(?MODULE, get_num_players).
