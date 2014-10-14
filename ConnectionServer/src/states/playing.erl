@@ -259,32 +259,6 @@ event({entity_interpolation, {id, Id},
 				playing, NewState}
 	end;
 
-%event({obj_stop_anim, {id, Id}, {anim, Anim}}, State) ->
-%    IdLen = byte_size(Id),
-%    AnimBin = list_to_binary(Anim),
-%    AnimLen = byte_size(AnimBin),
-%    {reply, <<?OBJ_STOP_ANIM, IdLen, Id/binary, AnimLen, AnimBin/binary>>, 
-%        playing, State};
-
-%event({notify_name, {id, Id}, {name, Name}}, State) ->
-%    IdLen = byte_size(Id),
-%    %NameBin = list_to_binary(Name),
-%    %NameLen = byte_size(NameBin),
-%    NameLen = byte_size(Name),
-%    {reply, <<?NOTIFY_NAME, IdLen, Id/binary, NameLen, Name/binary>>, 
-%        playing, State};
-
-%event({{notify_flying, flying}, {id, Id}}, State) ->
-%    IdLen = byte_size(Id),
-%    {reply, <<?NOTIFY_FLYING, 1, IdLen, Id/binary>>, playing, State};
-
-%event({{notify_flying, not_flying}, {id, Id}}, State) ->
-%    IdLen = byte_size(Id),
-%    {reply, <<?NOTIFY_FLYING, 0, IdLen, Id/binary>>, playing, State};
-
-%event(enable_god_tool, State) ->
-%    {reply, <<?NOTIFY_ENABLE_GOD_TOOL>>, playing, State};
-
 event({pong, Time}, State) ->
     {reply, <<?NOTIFY_PONG, Time/binary>>, playing, State};
 
@@ -294,7 +268,6 @@ event(<<?QUERY_ENTITY, _IdLen:8/integer, Id/binary>>, State) ->
     {noreply, playing, State};
 
 event(<<?PULSE>>, #state{charinfo=CharInfo} = State) ->
-    %error_logger:info_report([{pulse}]),
     obj_call(CharInfo#charinfo.pid, pulse),
     {noreply, playing, State};
 
@@ -347,7 +320,6 @@ event(<<?JUMP, X/little-float, Y/little-float, Z/little-float,
         [#vec{x=X, y=Y, z=Z}]]),
     {noreply, playing, State};
 
-
 %event(<<?SET_NAME, NameLen:8/integer, Name:NameLen/binary>>, State) ->
 %    CharInfo = State#state.charinfo,
 %    Pid = CharInfo#charinfo.pid,
@@ -388,7 +360,6 @@ event(<<?PING, Time/binary>>, State) ->
 
 event(<<?SET_SHOT, IdLen:8/integer, Id:IdLen/binary,
 		X/little-float, Y/little-float, Z/little-float>>, State) ->
-	%error_logger:info_report([{?MODULE, <<"SET_SHOT">>}]),
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
     obj_call(Pid, set_shot, [Id, #vec{x=X, y=Y, z=Z}]),

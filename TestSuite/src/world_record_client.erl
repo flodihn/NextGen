@@ -129,22 +129,6 @@ loop() ->
 
 loop(Socket, Id) ->
     receive 
-        {From, account_login, Account, Pass} ->
-            AccountBin = str_to_binary(Account),
-            PassBin = str_to_binary(Pass),
-            %io:format("Account login...~n", []),
-            send(Socket, <<?ACCOUNT_LOGIN/integer, AccountBin/binary, 
-                PassBin/binary>>),
-            case recv(Socket) of
-                <<?ACCOUNT_LOGIN_SUCCESS>> ->
-                    %io:format("Account login success~n"),
-                    From ! {ok, account_login};
-                <<?ACCOUNT_LOGIN_FAIL>> ->
-                    io:format("Account login fail~n");
-                Data ->
-                    io:format("Account login unknown data: ~p.~n", [Data])
-            end,
-            loop(Socket, Id);
         {From, char_login} ->   
             send(Socket, <<?PLAY/integer>>),
             case recv(Socket) of
@@ -210,41 +194,19 @@ do_report(From,
     end.
 
 get_rand_cmd() ->
-     PosX = rand_float(),
+     PosX = random:uniform(10000),
      PosY = 0,
-     PosZ = rand_float(), 
+     PosZ = random:uniform(10000), 
      DirX = rand_float(),
      DirY = 0,
      DirZ = rand_float(), 
+     VelX = rand_float(),
+     VelY = 0,
+     VelZ = rand_float(), 
      <<?SYNC_POS,
 		PosX/little-float, PosY/little-float, PosZ/little-float,
-		DirX/little-float, DirY/little-float, DirZ/little-float>>.
-    %TimeStamp = term_to_binary(now()),
-    %case crypto:rand_uniform(1, 4) of
-    %    1 ->
-    %        PosX = rand_float(),
-    %        PosY = 0,
-    %        PosZ = rand_float(), 
-    %        DirX = rand_float(),
-    %        DirY = 0,
-    %        DirZ = rand_float(), 
-    %        <<?SYNC_POS,
-	%			PosX/little-float, PosY/little-float, PosZ/little-float,
-	%			DirX/little-float, DirY/little-float, DirZ/little-float>>;
-    %    2 ->
-    %        X = rand_float(),
-    %        Y = 0,
-    %        Z = rand_float(), 
-    %        <<?SYNC_POS, X/little-float, Y/little-float, Z/little-float>>;
-    %    3 ->
-    %        X = rand_float(),
-    %        Y = 0,
-    %        Z = rand_float(), 
-    %        <<?SET_DIR, X/little-float, Y/little-float, Z/little-float,
-    %            TimeStamp/binary>>;
-    %    4 ->
-    %        <<?PING, TimeStamp/binary>>
-    %end.
+		DirX/little-float, DirY/little-float, DirZ/little-float,
+		VelX/little-float, VelY/little-float, VelZ/little-float>>.
 
 rand_float() ->
     F = random:uniform(),

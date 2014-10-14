@@ -25,7 +25,6 @@ event(<<?PLAY/integer>>, State) ->
 			IdLen = byte_size(Id),
 			connection:socket_send(State#state.socket, 
 				<<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>>),
-    		error_logger:info_report({?MODULE, next_state, playing}),
 			{noreply, playing, NewState};
         Error ->
     		error_logger:info_report({?MODULE, error, Error}),

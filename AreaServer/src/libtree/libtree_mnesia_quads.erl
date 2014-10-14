@@ -198,8 +198,12 @@ send_message(_From, _Quad, _Fun, _Args, '$end_of_table', _Start) ->
     done;
 
 send_message(From, Quad, Fun, Args, Key, Start) ->
-    [Obj] = mnesia:dirty_read(Quad, Key),
-    obj:async_call(From, Obj#obj.pid, Fun, Args),
+    case mnesia:dirty_read(Quad, Key) of
+    	[Obj] ->
+    		obj:async_call(From, Obj#obj.pid, Fun, Args);
+		Error ->
+			error_logger:error_report({?MODULE, error, Error})
+	end,
     NextKey = mnesia:dirty_next(Quad, Key),
     send_message(From, Quad, Fun, Args, NextKey, Start).
 

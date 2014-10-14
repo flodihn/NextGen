@@ -1,0 +1,9 @@
+========== TESTSUITE README ==========
+
+Run this command from this directory:
+erl -pa ebin 
+
+To launch 100 test clients:
+testsuite:run_test(100).
+
+Wait 60 seconds and a report will be written to file.

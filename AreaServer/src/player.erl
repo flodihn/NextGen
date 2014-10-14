@@ -403,7 +403,6 @@ entity_interpolation(_From, Id, Pos, Dir, Vel, #obj{id=_OtherId} = State) ->
 
 increase_speed(_From, TimeStamp, State) ->
     {ok, OldSpeed, _State} = obj:call_self(get_speed, State),
-    %{ok, MaxSpeed, _State} = obj:call_self(get_max_speed, State),
     NewSpeed = OldSpeed + 1,
     {ok, _Reply, NewState} = obj:call_self(set_speed, [NewSpeed,
     	TimeStamp], State),
