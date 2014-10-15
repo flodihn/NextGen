@@ -149,4 +149,5 @@ lookup_neighbours(AreaId, [_Node | _Neighbours]) ->
     %end.    
     lookup_neighbours(AreaId, []).
 
-
+get_num_players() ->
+	mnesia:table_info(obj_registry, size).

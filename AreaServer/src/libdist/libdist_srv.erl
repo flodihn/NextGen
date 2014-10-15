@@ -11,7 +11,8 @@
     get_obj/1,
     next_obj/0,
     next_obj/1,
-    find_obj/1
+    find_obj/1,
+	get_num_players/0
     ]).
 
 %external exports
