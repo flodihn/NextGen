@@ -194,9 +194,9 @@ do_report(From,
     end.
 
 get_rand_cmd() ->
-     PosX = random:uniform(10000),
+     PosX = random:uniform(2000),
      PosY = 0,
-     PosZ = random:uniform(10000), 
+     PosZ = random:uniform(2000), 
      DirX = rand_float(),
      DirY = 0,
      DirZ = rand_float(), 
