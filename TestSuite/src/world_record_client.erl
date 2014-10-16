@@ -44,6 +44,7 @@
 -define(CMD_INTERVAL, 500).
 
 auto_start() ->
+	crypto:init(),
     P = start(),
     connect(P),
     account_login(P),
@@ -232,7 +233,7 @@ maybe_change_vector(LastVec, Multiplier) ->
 	  		{rand_float() * Multiplier, 0 * Multiplier, 
 				rand_float() * Multiplier};
 		_RealVec ->
-			case random:uniform(50) of
+			case crypto:rand_uniform(0, 50) of
 				1 ->
 	  				{rand_float() * Multiplier, 0 * Multiplier, 
 						rand_float() * Multiplier};
@@ -244,8 +245,8 @@ maybe_change_vector(LastVec, Multiplier) ->
 				
 
 rand_float() ->
-    F = random:uniform(),
-    case random:uniform(2) of 
+    F = crypto:rand_uniform(0, 10) * 0.1,
+    case crypto:rand_uniform(0, 2) of 
         1 ->
             F;
         2 ->
