@@ -30,6 +30,8 @@
 -include("report.hrl").
 -include("protocol.hrl").
 
+-record(vec, {x, y, z}).
+
 -define(TCP_OPTS, [binary, {packet, 2}, {active, once}]).
 
 -define(DEFAULT_HOST, "localhost").
@@ -39,7 +41,7 @@
 -define(DEFAULT_ACCOUNT_PASSWORD, "Password").
 -define(TIMEOUT, 10000).
 
--define(CMD_INTERVAL, 167).
+-define(CMD_INTERVAL, 500).
 
 auto_start() ->
     P = start(),
@@ -103,6 +105,15 @@ info(Pid) ->
     Pid ! {info},
     ok.
 
+wait_for_new_pos(Socket, Id) ->
+	case recv(Socket) of
+        <<?OBJ_POS, IdLen/integer, NewId:IdLen/binary,
+			X/little-float, Y/little-float, Z/little-float>> ->
+			#vec{x=X, y=Y, z=Z};
+		Other ->
+			wait_for_new_pos(Socket, Id)
+	end.
+
 report(Pid) ->
     Pid ! {self(), report},
     receive 
@@ -121,13 +132,13 @@ loop() ->
         {From, connect, Host, Port} ->
             {ok, Socket} = gen_tcp:connect(Host, Port, ?TCP_OPTS),
             From ! {ok, connected},
-            loop(Socket, undefined);
+            loop(Socket, undefined, undefined);
         Data ->
             io:format("Unknown command: ~p~n", Data), 
             loop()
     end.
 
-loop(Socket, Id) ->
+loop(Socket, Id, Pos) ->
     receive 
         {From, char_login} ->   
             send(Socket, <<?PLAY/integer>>),
@@ -135,7 +146,9 @@ loop(Socket, Id) ->
                 <<?CHAR_LOGIN_SUCCESS, IdLen/integer, 
                     NewId:IdLen/binary>> ->
                     From ! {ok, char_login},
-                    loop(Socket, NewId);
+					% Receive initial position
+					StartPos = wait_for_new_pos(Socket, NewId),
+                    loop(Socket, NewId, StartPos);
                 <<?CHAR_LOGIN_FAIL>> ->
                     io:format("Char login fail~n");
                 Data ->
@@ -146,18 +159,20 @@ loop(Socket, Id) ->
 				self(), Socket, #recv_state{id=Id}]),
             gen_tcp:controlling_process(Socket, RecvPid),
             From ! {ok, start_play},
-            play_loop(Socket, #client_state{recv_proc=RecvPid});
+            play_loop(Socket, #client_state{recv_proc=RecvPid, pos=Pos,
+				time_since_last_cmd=now()});
         Data ->
             % While not all clients are has been logged in we might 
             % receive some valid
             % data, but since we have not started playing yet we just 
             % ignore it.
             io:format("Unknown data received: ~p~n", [Data]), 
-            loop(Socket, Id)
+            loop(Socket, Id, Pos)
     end.
 
 play_loop(Socket, 
-    #client_state{cmds_sent=CmdsSent, bytes_sent=BytesSent} = State) ->
+    #client_state{cmds_sent=CmdsSent, bytes_sent=BytesSent, 
+		pos=Pos} = State) ->
     receive
         {From, report} ->
             do_report(From, State);
@@ -168,13 +183,14 @@ play_loop(Socket,
             io:format("Unknown data received: ~p~n", [Data]), 
             play_loop(Socket, State)
     after ?CMD_INTERVAL ->
-            Cmd = get_rand_cmd(),
+            {Cmd, NewClientState} = get_rand_cmd(State),
             Sent = send(Socket, Cmd),
             NewBytesSent = BytesSent + Sent,
             NewCmdsSent = CmdsSent + 1,
             %io:format("Bytes sent: ~p.~n", [NewBytesSent]),
-            play_loop(Socket, State#client_state{
-                cmds_sent=NewCmdsSent, bytes_sent=NewBytesSent})
+            play_loop(Socket, NewClientState#client_state{
+                cmds_sent=NewCmdsSent, bytes_sent=NewBytesSent,
+				time_since_last_cmd=now()})
             %play_loop(Socket, State#client_state{
             %    cmds_sent=1, bytes_sent=1})
     end.
@@ -193,20 +209,39 @@ do_report(From,
                 cmds_recv=CmdsRecv, resp_times=RespTimes}
     end.
 
-get_rand_cmd() ->
-     PosX = random:uniform(2000),
-     PosY = 0,
-     PosZ = random:uniform(2000), 
-     DirX = rand_float(),
-     DirY = 0,
-     DirZ = rand_float(), 
-     VelX = rand_float(),
-     VelY = 0,
-     VelZ = rand_float(), 
-     <<?SYNC_POS,
+get_rand_cmd(#client_state{pos=Pos, 
+		time_since_last_cmd=TimeSinceLastCmd, last_vel=LastVel,
+		last_dir=LastDir} = State) ->
+	DeltaTime = timer:now_diff(now(), TimeSinceLastCmd) / 1000000,
+	{VelX, VelY, VelZ} = maybe_change_vector(LastVel, 5),
+	{DirX, DirY, DirZ} = maybe_change_vector(LastDir, 1),
+	PosX = Pos#vec.x + (VelX * DeltaTime),
+	PosY = Pos#vec.y + (VelY * DeltaTime),
+	PosZ = Pos#vec.z + (VelZ * DeltaTime),
+	%error_logger:info_report({sending, PosX, PosY, PosZ}),
+    {<<?SYNC_POS,
 		PosX/little-float, PosY/little-float, PosZ/little-float,
 		DirX/little-float, DirY/little-float, DirZ/little-float,
-		VelX/little-float, VelY/little-float, VelZ/little-float>>.
+		VelX/little-float, VelY/little-float, VelZ/little-float>>,
+		State#client_state{pos=#vec{x=PosX, y=PosY, z=PosZ},
+			last_vel={VelX, VelY, VelZ}, last_dir={DirX, DirY, DirZ}}}.
+
+maybe_change_vector(LastVec, Multiplier) ->
+	case LastVec of
+		undefined ->
+	  		{rand_float() * Multiplier, 0 * Multiplier, 
+				rand_float() * Multiplier};
+		_RealVec ->
+			case random:uniform(50) of
+				1 ->
+	  				{rand_float() * Multiplier, 0 * Multiplier, 
+						rand_float() * Multiplier};
+				_Other ->
+					LastVec
+			end
+	end.
+		
+				
 
 rand_float() ->
     F = random:uniform(),
