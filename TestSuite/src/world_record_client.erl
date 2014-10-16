@@ -247,9 +247,9 @@ maybe_change_vector(LastVec, Multiplier) ->
 rand_float() ->
     F = crypto:rand_uniform(0, 10) * 0.1,
     case crypto:rand_uniform(0, 2) of 
-        1 ->
+        0 ->
             F;
-        2 ->
+        1 ->
             -F
     end.       
 
