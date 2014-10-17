@@ -134,7 +134,7 @@ assign(Id, Obj, Pos, CurrentQuad,
             % leave notification in the old quad.
 			{CurrentX, CurrentY} = CurrentQuad,
 			CurrentQuadName = get_quad_name(CurrentX, CurrentY),
-			NewQuadName = get_quad_name(NewX, NewY),
+			NewQuadName = get_quad_name(Row, Col),
             event(Obj, CurrentQuad, obj_leave, [Id], TreeState),
             obj:async_call(Obj, quad_changed),
             mnesia:dirty_delete({CurrentQuadName, Id}),
