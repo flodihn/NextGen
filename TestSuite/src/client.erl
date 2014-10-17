@@ -129,22 +129,6 @@ loop() ->
 
 loop(Socket, Id) ->
     receive 
-        {From, account_login, Account, Pass} ->
-            AccountBin = str_to_binary(Account),
-            PassBin = str_to_binary(Pass),
-            %io:format("Account login...~n", []),
-            send(Socket, <<?ACCOUNT_LOGIN/integer, AccountBin/binary, 
-                PassBin/binary>>),
-            case recv(Socket) of
-                <<?ACCOUNT_LOGIN_SUCCESS>> ->
-                    %io:format("Account login success~n"),
-                    From ! {ok, account_login};
-                <<?ACCOUNT_LOGIN_FAIL>> ->
-                    io:format("Account login fail~n");
-                Data ->
-                    io:format("Account login unknown data: ~p.~n", [Data])
-            end,
-            loop(Socket, Id);
         {From, char_login} ->   
             send(Socket, <<?PLAY/integer>>),
             case recv(Socket) of

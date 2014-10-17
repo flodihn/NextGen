@@ -1,8 +1,6 @@
 -define(CONN_RESET, 0).
 -define(PLAY, 1).
--define(ACCOUNT_LOGIN, 2).
--define(ACCOUNT_LOGIN_SUCCESS, 3).
--define(ACCOUNT_LOGIN_FAIL, 4).
+-define(OBSERVE, 2).
 -define(CHAR_LOGIN, 5).
 -define(CHAR_LOGIN_SUCCESS, 6).
 -define(CHAR_LOGIN_FAIL, 7).
@@ -45,12 +43,22 @@
 -define(PING, 44).
 -define(NOTIFY_PONG, 45).
 -define(NOTIFY_DELAY, 46).
+-define(OBJ_DEAD, 47).
+-define(SET_SHOT, 48).
+-define(OBJ_JUMP, 49).
+-define(JUMP, 51).
+-define(OBJ_VECTOR, 52).
+-define(SET_VECTOR, 53).
+-define(OBJ_SHOT, 54).
+-define(OBJ_FACTION, 55).
+-define(SET_RESPAWN, 56).
+-define(OBJ_RESPAWN, 57).
+-define(SET_ANIM, 58).
 -define(SYNC_POS, 59).
-
+-define(SET_JUMP_SLAM_ATTACK, 60).
+-define(OBJ_JUMP_SLAM_ATTACK, 61).
+-define(ENTITY_INTERPOLATION, 62).
+-define(OBJ_LOGOUT, 99).
 % God commands
 -define(SET_MESH, 252).
 -define(CREATE_OBJECT, 253).
-
-% temporary hack, the client can decide their y pos, this because
-% the area server can not handle terrain and collision detection yet.
--define(SYNC_Y_MOVE, 254).

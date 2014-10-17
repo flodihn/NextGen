@@ -185,11 +185,11 @@ pulse(_From, Id, State) ->
 set_shot(_From, Id, ShotPos, #obj{id=MyId} = State) when Id /= MyId->
 	case Id of
         <<>> ->
-            pass;
+			pass;
 		_ValidId ->
-            obj:event(self(), event, [obj_dead, [Id]], State)
+    		obj:call_self(event, [obj_dead, [Id]], State)
     end,
-    obj:event(self(), event, [obj_shot, [MyId, ShotPos]], State),
+    obj:call_self(event, [obj_shot, [MyId, ShotPos]], State),
     {noreply, State};
 
 set_shot(_From, Id, _ShotPos, #obj{id=Id} = State) ->
@@ -423,7 +423,7 @@ decrease_speed(_From, TimeStamp, State) ->
                 TimeStamp], State),
             {noreply, NewState};
         false ->
-            {noreply, State}
+            {norep, State}
     end.
 
 set_dir(From, Dir, TimeStamp, #obj{id=Id} = State) ->

@@ -10,7 +10,8 @@
 -define(TIMEOUT, 200).
 
 recv_loop(Owner, Socket, #recv_state{id=Id, bytes_recv=BytesRecv,
-    cmds_recv=CmdsRecv, resp_times=RespTimes} = State) ->
+    	cmds_recv=CmdsRecv, resp_times=RespTimes, 
+		debug_output=DebugOutput} = State) ->
     % Since we don't need flow controler in recv loop whe call it before
     % data is received.
     inet:setopts(Socket, [{active, once}]),
@@ -43,6 +44,7 @@ recv_loop(Owner, Socket, #recv_state{id=Id, bytes_recv=BytesRecv,
                 State#recv_state{bytes_recv=NewBytesRecv, 
                 cmds_recv=CmdsRecv + 1, resp_times=[Diff] ++ RespTimes});
         {tcp, Socket, Data} ->
+			debug(Data, DebugOutput),
             NewBytesRecv = BytesRecv + byte_size(Data) + 2,
             recv_loop(Owner, Socket, 
                 State#recv_state{bytes_recv=NewBytesRecv, 
@@ -62,4 +64,10 @@ binary_time_to_diff(Binary) ->
             Time = binary_to_term(Binary),
             timer:now_diff(now(), Time) / 1000
 	end.
+
+debug(Msg, false) ->
+	ok;
+
+debug(Msg, true) ->
+	io:format("~p.~n", [Msg]).
 
