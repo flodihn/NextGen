@@ -135,7 +135,7 @@ assign(Id, Obj, Pos, CurrentQuad,
 			{CurrentX, CurrentY} = CurrentQuad,
 			CurrentQuadName = get_quad_name(CurrentX, CurrentY),
 			NewQuadName = get_quad_name(Row, Col),
-            event(Obj, CurrentQuad, obj_leave, [Id], TreeState),
+    		send_obj_leave(Id, Obj, CurrentQuad, TreeState),
             obj:async_call(Obj, quad_changed),
             mnesia:dirty_delete({CurrentQuadName, Id}),
             mnesia:dirty_write(NewQuadName, #obj{id=Id, pid=Obj}),
@@ -143,6 +143,10 @@ assign(Id, Obj, Pos, CurrentQuad,
             event(Obj, NewQuad, obj_enter, [Id], TreeState),
             NewQuad
     end.
+
+send_obj_leave(Id, Obj, CurrentQuad, TreeState) ->
+    event(Obj, CurrentQuad, obj_leave, [Id], TreeState),
+	ok.
 
 event(From, {QuadX, QuadY}=Quad, Fun, Args, TreeState) ->
     spawn(?MODULE, send_message, [

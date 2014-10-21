@@ -184,7 +184,8 @@ play_loop(Socket,
             io:format("Unknown data received: ~p~n", [Data]), 
             play_loop(Socket, State)
     after ?CMD_INTERVAL ->
-            {Cmd, NewClientState} = get_rand_cmd(State),
+			RandomNr = crypto:rand_uniform(0, 10),
+            {Cmd, NewClientState} = get_rand_cmd(RandomNr, State),
             Sent = send(Socket, Cmd),
             NewBytesSent = BytesSent + Sent,
             NewCmdsSent = CmdsSent + 1,
@@ -210,7 +211,13 @@ do_report(From,
                 cmds_recv=CmdsRecv, resp_times=RespTimes}
     end.
 
-get_rand_cmd(#client_state{pos=Pos, 
+get_rand_cmd(RandomNr, #client_state{pos=Pos, 
+		time_since_last_cmd=TimeSinceLastCmd, last_vel=LastVel,
+		last_dir=LastDir} = State) when RandomNr == 0 ->
+	Timestamp = term_to_binary(now()),
+    {<<?PING, Timestamp/binary>>, State};
+
+get_rand_cmd(RandomNr, #client_state{pos=Pos, 
 		time_since_last_cmd=TimeSinceLastCmd, last_vel=LastVel,
 		last_dir=LastDir} = State) ->
 	DeltaTime = timer:now_diff(now(), TimeSinceLastCmd) / 1000000,
@@ -241,7 +248,6 @@ maybe_change_vector(LastVec, Multiplier) ->
 					LastVec
 			end
 	end.
-		
 				
 
 rand_float() ->
