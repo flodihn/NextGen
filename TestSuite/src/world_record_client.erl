@@ -274,8 +274,9 @@ recv(Socket) ->
             Data;
         Other ->
             error_logger:info_report([{recv, Other}])
-    after 10000 ->
-        error_logger:error_report({"No response from server"})
+    after 20000 ->
+        error_logger:error_report({"No response from server"}),
+		timeout
     end.
 
 str_to_binary(Str) ->

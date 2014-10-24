@@ -37,9 +37,8 @@ create_area(State) ->
     {ok, NewState} = increase(State),
     {ok, NewState2} = increase(NewState),
     {ok, NewState3} = increase(NewState2),
-    %{ok, NewState4} = increase(NewState3),
-    %{ok, NewStat4}.
-    {ok, NewState3}.
+    {ok, NewState4} = increase(NewState3),
+    {ok, NewState4}.
 
 join_area(Node) ->
     libstd_srv:monsrv_rpc(monsrv, get_area, 
@@ -47,9 +46,10 @@ join_area(Node) ->
     {ok, TreeSize} = rpc:call(Node, libtree_srv, get_size, []),
     join_tree(TreeSize, Node).
 
-info(#state{area_size=AreaSize, quad_size=QuadSize, quads=Quads}) ->
-    io:format("~nAreaSize: ~p.~nQuadSize: ~p.~nQuads: ~p.~n",
-        [AreaSize, QuadSize, Quads]).
+info(#state{area_size=AreaSize, quad_size=QuadSize, quads=Quads,
+		tree_size=TreeSize}) ->
+    io:format("~nAreaSize: ~p.~nQuadSize: ~p.~nQuads: ~p.~n TreeSize:~p.~n", 
+        [AreaSize, QuadSize, Quads, TreeSize]).
 
 increase(#state{area_size=AreaSize, tree_size=TreeSize} = State) ->
     NewTreeSize = TreeSize * 2,
@@ -118,14 +118,15 @@ assign(Id, Obj, Pos, CurrentQuad,
             % If we have the same quad there is nothing to do.
             NewQuad;
         undefined ->
-			QuadName = get_quad_name(Row, Col),
+			QuadName = get_quad_name(Row, Col, TreeState),
             % If there is no previous quad we write to the new.
             F = fun() ->
                 mnesia:write(QuadName, #obj{id=Id, pid=Obj}, write)
             end,
             mnesia:transaction(F),
             link(Obj),
-            spawn(?MODULE, event, [Obj, NewQuad, obj_enter, [Id], TreeState]),
+            %spawn(?MODULE, event, [Obj, NewQuad, obj_enter, [Id], TreeState]),
+            event(Obj, NewQuad, obj_enter, [Id], TreeState),
             NewQuad;
         {NewX, NewY} ->
             % If we are in a new quad, delete from old quad and write
@@ -133,14 +134,15 @@ assign(Id, Obj, Pos, CurrentQuad,
             % Make a synchronous call to make sure we send the
             % leave notification in the old quad.
 			{CurrentX, CurrentY} = CurrentQuad,
-			CurrentQuadName = get_quad_name(CurrentX, CurrentY),
-			NewQuadName = get_quad_name(Row, Col),
+			CurrentQuadName = get_quad_name(CurrentX, CurrentY, TreeState),
+			NewQuadName = get_quad_name(Row, Col, TreeState),
     		send_obj_leave(Id, Obj, CurrentQuad, TreeState),
             obj:async_call(Obj, quad_changed),
             mnesia:dirty_delete({CurrentQuadName, Id}),
             mnesia:dirty_write(NewQuadName, #obj{id=Id, pid=Obj}),
             unlink(Obj),
-            spawn(?MODULE, event, [Obj, NewQuad, obj_enter, [Id], TreeState]),
+            %spawn(?MODULE, event, [Obj, NewQuad, obj_enter, [Id], TreeState]),
+            event(Obj, NewQuad, obj_enter, [Id], TreeState),
             NewQuad
     end.
 
@@ -149,33 +151,33 @@ send_obj_leave(Id, Obj, CurrentQuad, TreeState) ->
 	ok.
 
 event(From, {QuadX, QuadY}=Quad, Fun, Args, TreeState) ->
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX - 1, QuadY - 1, TreeState), Fun, Args]),
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX, QuadY - 1, TreeState), Fun, Args]),
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX + 1, QuadY - 1, TreeState), Fun, Args]),
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX - 1, QuadY, TreeState), Fun, Args]),
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX, QuadY, TreeState), Fun, Args]),
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX + 1, QuadY), Fun, Args]),
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX - 1, QuadY + 1), Fun, Args]),
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX, QuadY + 1), Fun, Args]),
-    %spawn(?MODULE, send_message, [
-	%	From, get_quad_name(QuadX + 1, QuadY + 1), Fun, Args]).
-    send_message(From, get_quad_name(QuadX - 1, QuadY - 1, TreeState), Fun, Args),
-    send_message(From, get_quad_name(QuadX, QuadY - 1, TreeState), Fun, Args),
-    send_message(From, get_quad_name(QuadX + 1, QuadY - 1, TreeState), Fun, Args),
-    send_message(From, get_quad_name(QuadX - 1, QuadY, TreeState), Fun, Args),
-    send_message(From, get_quad_name(QuadX, QuadY, TreeState), Fun, Args),
-    send_message(From, get_quad_name(QuadX + 1, QuadY), Fun, Args),
-    send_message(From, get_quad_name(QuadX - 1, QuadY + 1), Fun, Args),
-    send_message(From, get_quad_name(QuadX, QuadY + 1), Fun, Args),
-    send_message(From, get_quad_name(QuadX + 1, QuadY + 1), Fun, Args).
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX - 1, QuadY - 1, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX, QuadY - 1, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX + 1, QuadY - 1, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX - 1, QuadY, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX, QuadY, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX + 1, QuadY, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX - 1, QuadY + 1, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX, QuadY + 1, TreeState), Fun, Args]),
+    spawn(?MODULE, send_message, [
+		From, get_quad_name(QuadX + 1, QuadY + 1, TreeState), Fun, Args]).
+    %send_message(From, get_quad_name(QuadX - 1, QuadY - 1, TreeState), Fun, Args),
+    %send_message(From, get_quad_name(QuadX, QuadY - 1, TreeState), Fun, Args),
+    %send_message(From, get_quad_name(QuadX + 1, QuadY - 1, TreeState), Fun, Args),
+    %send_message(From, get_quad_name(QuadX - 1, QuadY, TreeState), Fun, Args),
+    %send_message(From, get_quad_name(QuadX, QuadY, TreeState), Fun, Args),
+    %send_message(From, get_quad_name(QuadX + 1, QuadY, TreeState), Fun, Args),
+    %send_message(From, get_quad_name(QuadX - 1, QuadY + 1, TreeState), Fun, Args),
+    %send_message(From, get_quad_name(QuadX, QuadY + 1, TreeState), Fun, Args),
+    %send_message(From, get_quad_name(QuadX + 1, QuadY + 1, TreeState), Fun, Args).
 
 get_quad_name(Row, Col) ->
     list_to_atom(integer_to_list(Row) ++ "_" ++ integer_to_list(Col)).
@@ -186,14 +188,28 @@ get_quad_name(Row, _Col, _TreeState) when Row < 0 ->
 get_quad_name(_Row, Col, _TreeState) when Col < 0 ->
 	invalid_quad;
 
-get_quad_name(Row, _Col, #state{tree_size=Size}) when Row > Size ->
-	invalid_quad;
+get_quad_name(Row, Col, #state{tree_size=Size})->
+	ClampedRow = clamp_number(Row, Size),
+	ClampedCol= clamp_number(Col, Size),
+	get_quad_name(ClampedRow, ClampedCol).
+				
+clamp_number(Num, Max) when Num > Max ->
+	Max;
 
-get_quad_name(_Row, Col, #state{tree_size=Size}) when Col > Size ->
-	invalid_quad;
+clamp_number(Num, _Max) when Num < 1 ->
+	1;
 
-get_quad_name(Row, Col, _TreeState) ->
-    list_to_atom(integer_to_list(Row) ++ "_" ++ integer_to_list(Col)).
+clamp_number(Num, _Max) ->
+	Num.
+
+%get_quad_name(Row, _Col, #state{tree_size=Size}) when Row > Size ->
+%	invalid_quad;
+
+%get_quad_name(_Row, Col, #state{tree_size=Size}) when Col > Size ->
+%	invalid_quad;
+
+%get_quad_name(Row, Col, _TreeState) ->
+%    list_to_atom(integer_to_list(Row) ++ "_" ++ integer_to_list(Col)).
 
 send_message(_From, invalid_quad, _Fun, _Args) ->
 	done;
