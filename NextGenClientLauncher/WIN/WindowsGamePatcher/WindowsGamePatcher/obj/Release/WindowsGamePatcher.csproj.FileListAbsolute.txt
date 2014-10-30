@@ -1,0 +1,18 @@
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\bin\Release\Ionic.Zip.dll
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\WindowsGamePatcher.csprojResolveAssemblyReference.cache
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\MainWindow.baml
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\MainWindow.g.cs
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\App.g.cs
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\WindowsGamePatcher.Properties.Resources.resources
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\WindowsGamePatcher.csproj.GenerateResource.Cache
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\bin\Release\Abydos Game Patcher.exe.config
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\bin\Release\Abydos Game Patcher.exe.manifest
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\bin\Release\Abydos Game Patcher.application
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\bin\Release\Abydos Game Patcher.exe
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\bin\Release\Abydos Game Patcher.pdb
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\Abydos Game Patcher_MarkupCompile.cache
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\Abydos Game Patcher.g.resources
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\Abydos Game Patcher.exe.manifest
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\Abydos Game Patcher.application
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\Abydos Game Patcher.exe
+C:\Users\kevin\Documents\Patcher\WindowsGamePatcher\WindowsGamePatcher\obj\Release\Abydos Game Patcher.pdb

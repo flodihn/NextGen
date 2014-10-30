@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="Abydos Game Patcher.exe" version="1.0.0.8" publicKeyToken="bcda608a58f4ee85" language="neutral" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="ABYDOS_logo.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Abydos Game Patcher" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="Abydos Game Patcher.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the 
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward 
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Abydos Game Patcher.exe" size="79360">
+      <assemblyIdentity name="Abydos Game Patcher" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>uV8arL4NVkagoCb5IZ/4eVbWDbSYHyxvmPbZz92S11o=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Ionic.Zip.dll" size="462336">
+      <assemblyIdentity name="Ionic.Zip" version="1.9.1.8" publicKeyToken="EDBE51AD942A3F5C" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>Oz5UFoLkjz/Shy+FoGJ42i8+eHfulW2om5DXMqHqoL0=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Abydos Game Patcher.exe.config" size="187">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>xm4bo26HQ0LNVwz1vdPYtzhkpMnp2AI5i+f0b+OahTI=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="ABYDOS_logo.ico" size="14458">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>WwNoYBKl/9yXTXQRshdErPLJ54Zcl7+g4QL68SFDFiQ=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=KEVIN\kevin" issuerKeyHash="7e41c1b1d7c1171ff77fd2db11aedca1b27e0bc5" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>rFQh5FaZ6tQvlJoHnNO3uRMAR7ZDTxNuNaEEAoPMvcI=</DigestValue></Reference></SignedInfo><SignatureValue>kUbDHzb4T3Ox8Flt8LsTTHFEX74iz0dUL360xlt7u+iwIgIynxUDGU4UEcCQqTg9tyPZme5/pT4djvoMn7AwBoJtDPSkywFLDvCZvbeI21jmEMqVm26RxxKhQkKjxyVNOrr3ljSaVcpKlOs3IPB8WogeTAEBeUZgrlcAfGb7ZnM=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>xu5mU0bARDOO1Bh31lWq7LYlOrBeCKTqAx6wYxmEOo6c9rmmUXDCRqoJecneUYATsZOVgxu2s2X/u7osqa9m7R9dqkPfVQMhq/6yA++3Kt146Vzt/ZXjwFkP4ciOEXE3n0cZVFBVdgnjMXYaWQymPB89N83TGDeCydq7r28R5hM=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="c2bdcc830204a1356e134f43b6470013b9b7d39c079a942fd4ea9956e42154ac" Description="" Url=""><as:assemblyIdentity name="Abydos Game Patcher.exe" version="1.0.0.8" publicKeyToken="bcda608a58f4ee85" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=KEVIN\kevin</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>Rvf2lYPo4kFQrRI05RT9SVoUZjFsW7VvhszfXBlciKY=</DigestValue></Reference></SignedInfo><SignatureValue>Hn8SXiAH8kZrnqDh1MphcAOyjKP0durMyNqZWxOLYfRgqDWG3u8ZqfpZeeKljW8fXOgS3x1tWUnmijvnC15sOhnhg32Q7dqpHLacgI1BM72K8zFR6r7u+8F/sDd6KVlodhZbRfufJVZhw3/ISyhN4NPaJ8d4FLnzOvtdRI9cNkM=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>xu5mU0bARDOO1Bh31lWq7LYlOrBeCKTqAx6wYxmEOo6c9rmmUXDCRqoJecneUYATsZOVgxu2s2X/u7osqa9m7R9dqkPfVQMhq/6yA++3Kt146Vzt/ZXjwFkP4ciOEXE3n0cZVFBVdgnjMXYaWQymPB89N83TGDeCydq7r28R5hM=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIBxTCCAS6gAwIBAgIQcCDQkFzfBKVO48VPjfyI4TANBgkqhkiG9w0BAQsFADAhMR8wHQYDVQQDHhYASwBFAFYASQBOAFwAawBlAHYAaQBuMB4XDTE0MTAyOTE2MDQyOVoXDTE1MTAyOTIyMDQyOVowITEfMB0GA1UEAx4WAEsARQBWAEkATgBcAGsAZQB2AGkAbjCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAxu5mU0bARDOO1Bh31lWq7LYlOrBeCKTqAx6wYxmEOo6c9rmmUXDCRqoJecneUYATsZOVgxu2s2X/u7osqa9m7R9dqkPfVQMhq/6yA++3Kt146Vzt/ZXjwFkP4ciOEXE3n0cZVFBVdgnjMXYaWQymPB89N83TGDeCydq7r28R5hMCAwEAATANBgkqhkiG9w0BAQsFAAOBgQBJM9P86o5+flFirox8tqItQ9VSCp5OWlC9SSHMC2JUMTTc33u5KeVAyo8tuhJnHJ8RLke8hSJqKIV8kJZ2x7p2kjNBsNNtuYXkXlamHJaLXqN3s7wfmIIJaPtin6VzaGxqxuPg7HNaHxnYbK7qur5zfpojNeO363RpbDjofTBqSQ==</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
