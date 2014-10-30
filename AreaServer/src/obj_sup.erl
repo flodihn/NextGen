@@ -42,8 +42,17 @@ start() ->
 start(Type) ->
     supervisor:start_child(?MODULE, [new_state, {type, Type}]).
 
+start(Type, Nr) when is_number(Nr) ->
+    start_loop(Type, Nr, []);
+
 start(Type, State) ->
     supervisor:start_child(?MODULE, [{existing_state, State}, 
         {type, Type}]).
 
+start_loop(_Type, 0, Acc) ->
+    lists:flatten(Acc);
 
+start_loop(Type, Nr, Acc) ->
+    {ok, Pid} = supervisor:start_child(
+        ?MODULE, [new_state, {type, Type}]),
+    start_loop(Type, Nr - 1, [Acc | [Pid]]).

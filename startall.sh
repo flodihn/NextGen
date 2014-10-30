@@ -11,7 +11,7 @@ sh start.sh -noshell &
 cd ..
 
 cd AreaServer 
-sh start.sh -noshell &
+sh start.sh areasrv -noshell &
 cd ..
 
 

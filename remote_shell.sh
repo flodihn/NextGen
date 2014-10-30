@@ -1,1 +1,1 @@
-erl -sname test -remsh areasrv@$1
+erl -sname $1_rem -remsh $1@`hostname -s`
