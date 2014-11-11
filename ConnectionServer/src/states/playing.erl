@@ -262,6 +262,9 @@ event({entity_interpolation, {id, Id},
 event({pong, Time}, State) ->
     {reply, <<?NOTIFY_PONG, Time/binary>>, playing, State};
 
+event({test_state_update, Timestamp}, State) ->
+    {reply, <<?TEST_STATE_UPDATE, Timestamp/binary>>, playing, State};
+
 event(<<?QUERY_ENTITY, _IdLen:8/integer, Id/binary>>, State) ->
     CharInfo = State#state.charinfo,
     obj_call(CharInfo#charinfo.pid, pulse, [Id]),
@@ -383,6 +386,15 @@ event(<<?SET_JUMP_SLAM_ATTACK, StrLen:8/integer, Str:StrLen/binary,
     Pid = CharInfo#charinfo.pid,
 	Vec = #vec{x=X, y=Y, z=Z},
     obj_call(Pid, set_jump_slam_attack, [Str, Vec]),
+    {noreply, playing, State};
+
+event(<<?TEST_STATE_UPDATE, 
+        KeyLen:8/integer, Key:KeyLen/binary,
+        ValLen:8/integer, Val:KeyLen/binary,
+        Timestamp/binary>>, State) ->
+    CharInfo = State#state.charinfo,
+    Pid = CharInfo#charinfo.pid,
+    obj_call(Pid, test_state_update, [Key, Val]),
     {noreply, playing, State};
 
 event(Event, State) ->
