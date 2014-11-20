@@ -62,20 +62,14 @@ create(Conn) ->
     spawn(?MODULE, async_create, [Conn]).
 
 async_create(Conn) ->
-    {ok, Pid} = obj_sup:start(player),
+    {ok, Pid} = obj_sup:start(social_player),
     obj:call(Pid, set_conn, [Conn]),
     {ok, Id} = obj:call(Pid, get_id, []),
-    %%{ok, CharSrv} = application:get_env(charsrv),
-    %%case rpc:call(CharSrv, charsrv, get_char_count, []) of
-    %%    0 ->
-    %%        libgod.srv:make_god(Pid);
-    %%    _NotZero ->
-    %%        pass
-    %%end,
-	{ok, {faction, Faction}} = libfaction_srv:assign(),
-	{ok, SpawnPoint} = libfaction_srv:get_spawn_point(Faction),
-    obj:call(Pid, set_faction, [Faction]),
-    obj:call(Pid, set_pos, [SpawnPoint]),
+
+	%{ok, {faction, Faction}} = libfaction_srv:assign(),
+	%{ok, SpawnPoint} = libfaction_srv:get_spawn_point(Faction),
+    %obj:call(Pid, set_faction, [Faction]),
+    %obj:call(Pid, set_pos, [SpawnPoint]),
     obj:async_call(Pid, post_init),
     Conn ! {char_login, {pid, Pid}, {id, Id}}.
     
@@ -100,10 +94,10 @@ async_login(Conn, Id) ->
     obj:call(Pid, set_conn, [Conn]),
     obj:call(Pid, post_init),
     
-    {ok, Pos} = obj:call(Pid, get_pos),
-    Conn ! {new_pos, [Id, Pos]},
+    %{ok, Pos} = obj:call(Pid, get_pos),
+    %Conn ! {new_pos, [Id, Pos]},
 
-    error_logger:info_report([{player, Id, logged_in, Pid}]),
+    %error_logger:info_report([{player, Id, logged_in, Pid}]),
     Conn ! {char_login, {pid, Pid}, {id, Id}}.
 
 %% @private

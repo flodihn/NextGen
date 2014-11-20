@@ -59,6 +59,7 @@
 -define(OBJ_JUMP_SLAM_ATTACK, 61).
 -define(ENTITY_INTERPOLATION, 62).
 -define(OBJ_LOGOUT, 99).
+-define(TEST_STATE_UPDATE, 100).
 % God commands
 -define(SET_MESH, 252).
 -define(CREATE_OBJECT, 253).

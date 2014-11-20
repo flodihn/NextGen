@@ -43,6 +43,13 @@ recv_loop(Owner, Socket, #recv_state{id=Id, bytes_recv=BytesRecv,
 			recv_loop(Owner, Socket, 
                 State#recv_state{bytes_recv=NewBytesRecv, 
                 cmds_recv=CmdsRecv + 1, resp_times=[Diff] ++ RespTimes});
+        {tcp, Socket, <<?TEST_STATE_UPDATE, BinTime/binary>> = Data} ->
+			Diff = binary_time_to_diff(BinTime),
+            NewBytesRecv = BytesRecv + byte_size(Data) + 2,
+            %io:format("TEST STATE UPDATE MS: ~p.~n", [Diff/1000]),
+			recv_loop(Owner, Socket, 
+                State#recv_state{bytes_recv=NewBytesRecv, 
+                cmds_recv=CmdsRecv + 1, resp_times=[Diff] ++ RespTimes});
         {tcp, Socket, Data} ->
 			debug(Data, DebugOutput),
             NewBytesRecv = BytesRecv + byte_size(Data) + 2,

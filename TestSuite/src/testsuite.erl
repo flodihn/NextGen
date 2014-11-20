@@ -15,8 +15,8 @@
 
 -include("report.hrl").
 
--define(TEST_RUNTIME, 60000).
--define(CLIENT, world_record_client).
+-define(TEST_RUNTIME, 300000).
+-define(CLIENT, social_game_client).
 
 init() ->
     case lists:member(test_clients, ets:all()) of

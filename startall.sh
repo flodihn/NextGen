@@ -1,3 +1,5 @@
+killall -9 beam.smp 
+
 cd ConnectionServer
 sh start.sh -noshell &
 cd ..

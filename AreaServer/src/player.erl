@@ -488,10 +488,8 @@ set_jump_slam_attack(_From, Str, Vec, #obj{id=Id} = State) ->
 test_state_update(_From, Key, Val, TimeStamp, #obj{id=Id} = State) ->
     {ok, Conn, _State} = obj:call_self(get_conn, State),
     cache:cache(Key, Val),
-    Conn ! {{test_state_update, TimeStamp}, {id, Id}},
+    Conn ! {test_state_update, TimeStamp},
 	{noreply, State}.
-
-
 
 % For now we trust the client updating our position, this should be 
 % changed when the servers is aware of the terrain.

@@ -390,11 +390,12 @@ event(<<?SET_JUMP_SLAM_ATTACK, StrLen:8/integer, Str:StrLen/binary,
 
 event(<<?TEST_STATE_UPDATE, 
         KeyLen:8/integer, Key:KeyLen/binary,
-        ValLen:8/integer, Val:KeyLen/binary,
+        ValLen:8/integer, Val:ValLen/binary,
         Timestamp/binary>>, State) ->
+    %error_logger:info_report({?TEST_STATE_UPDATE, Key, Val, Timestamp}),
     CharInfo = State#state.charinfo,
     Pid = CharInfo#charinfo.pid,
-    obj_call(Pid, test_state_update, [Key, Val]),
+    obj_call(Pid, test_state_update, [Key, Val, Timestamp]),
     {noreply, playing, State};
 
 event(Event, State) ->
