@@ -8,7 +8,7 @@
      {mod, {charsrv_app, []}},
      {start_phases, []},
      {env, [
-        {start_area, 'start_area@Leader1'}
+        {start_area, 'start_area@flodis-desktop'}
      ]}
     ]}.
 

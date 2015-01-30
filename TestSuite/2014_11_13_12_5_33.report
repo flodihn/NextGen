@@ -1,0 +1,707 @@
+=== Client 0 ===
+Commands sent: 119
+Response times: 35.65ms. 76.81ms. 2.17ms. 12.04ms. 1.60ms. 6.95ms. 2.02ms. 12.20ms. 36.04ms. 1.53ms. 13.89ms. 0.44ms. 29.62ms
+Commands received: 24918
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2687355 bytes 2624.37 kilobytes 2.5629 megabytes
+
+=== Client 1 ===
+Commands sent: 119
+Response times: 44.27ms. 37.37ms. 19.55ms. 16.46ms. 24.59ms. 7.61ms. 12.16ms. 5.68ms. 34.63ms. 58.36ms. 33.67ms. 51.17ms. 52.61ms. 91.63ms. 120.70ms
+Commands received: 22584
+Bytes sent: 8115 bytes 7.92 kilobytes 0.0077 megabytes
+Bytes received: 2424387 bytes 2367.57 kilobytes 2.3121 megabytes
+
+=== Client 2 ===
+Commands sent: 119
+Response times: 10.61ms. 3.72ms. 3.50ms. 0.99ms. 10.54ms. 4.14ms. 5.06ms. 7.09ms. 5.53ms. 6.58ms. 13.52ms. 3.59ms. 8.16ms. 12.19ms. 5.43ms. 17.48ms. 10.33ms
+Commands received: 22645
+Bytes sent: 8007 bytes 7.82 kilobytes 0.0076 megabytes
+Bytes received: 2428353 bytes 2371.44 kilobytes 2.3159 megabytes
+
+=== Client 3 ===
+Commands sent: 119
+Response times: 13.77ms. 10.79ms. 6.84ms. 6.30ms. 2.53ms. 4.83ms. 7.36ms. 19.05ms. 27.26ms
+Commands received: 22543
+Bytes sent: 8439 bytes 8.24 kilobytes 0.0080 megabytes
+Bytes received: 2422497 bytes 2365.72 kilobytes 2.3103 megabytes
+
+=== Client 4 ===
+Commands sent: 119
+Response times: 86.96ms. 53.36ms. 55.24ms. 60.08ms. 55.29ms. 42.05ms. 79.38ms. 65.31ms. 82.74ms. 96.36ms. 135.63ms
+Commands received: 22684
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2441811 bytes 2384.58 kilobytes 2.3287 megabytes
+
+=== Client 5 ===
+Commands sent: 118
+Response times: 108.62ms. 35.55ms. 44.18ms. 71.69ms. 67.44ms. 56.40ms. 42.66ms. 84.78ms. 70.51ms. 69.11ms. 55.34ms. 52.61ms. 82.55ms
+Commands received: 24916
+Bytes sent: 8148 bytes 7.96 kilobytes 0.0078 megabytes
+Bytes received: 2684769 bytes 2621.84 kilobytes 2.5604 megabytes
+
+=== Client 6 ===
+Commands sent: 119
+Response times: 31.74ms. 58.48ms. 67.41ms. 109.86ms. 106.00ms
+Commands received: 24854
+Bytes sent: 8655 bytes 8.45 kilobytes 0.0083 megabytes
+Bytes received: 2679699 bytes 2616.89 kilobytes 2.5556 megabytes
+
+=== Client 7 ===
+Commands sent: 119
+Response times: 87.11ms. 64.87ms. 78.11ms. 56.25ms. 76.81ms. 62.42ms. 72.00ms. 66.99ms. 58.85ms. 73.16ms. 134.30ms. 106.68ms
+Commands received: 24985
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2684820 bytes 2621.89 kilobytes 2.5604 megabytes
+
+=== Client 8 ===
+Commands sent: 119
+Response times: 84.34ms. 4.26ms. 11.53ms. 24.10ms. 35.73ms. 46.00ms. 45.12ms. 62.81ms
+Commands received: 25050
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2687508 bytes 2624.52 kilobytes 2.5630 megabytes
+
+=== Client 9 ===
+Commands sent: 118
+Response times: 152.80ms. 90.56ms. 61.88ms. 46.27ms. 55.97ms. 87.14ms. 71.99ms. 49.19ms
+Commands received: 22621
+Bytes sent: 8418 bytes 8.22 kilobytes 0.0080 megabytes
+Bytes received: 2426184 bytes 2369.32 kilobytes 2.3138 megabytes
+
+=== Client 10 ===
+Commands sent: 118
+Response times: 50.38ms. 51.73ms. 57.24ms. 46.36ms. 57.22ms. 45.37ms. 86.28ms. 68.53ms. 77.61ms. 64.50ms
+Commands received: 22546
+Bytes sent: 8310 bytes 8.12 kilobytes 0.0079 megabytes
+Bytes received: 2423166 bytes 2366.37 kilobytes 2.3109 megabytes
+
+=== Client 11 ===
+Commands sent: 119
+Response times: 14.29ms. 25.86ms. 29.42ms. 22.83ms. 7.37ms. 35.86ms. 15.78ms. 32.55ms. 63.98ms. 128.95ms. 132.29ms. 133.60ms
+Commands received: 22463
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2421588 bytes 2364.83 kilobytes 2.3094 megabytes
+
+=== Client 12 ===
+Commands sent: 119
+Response times: 47.69ms. 51.59ms. 12.07ms. 15.38ms. 17.87ms. 19.35ms. 20.91ms. 10.16ms. 8.52ms. 19.77ms. 12.61ms. 19.38ms. 8.71ms. 26.74ms
+Commands received: 22664
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2443494 bytes 2386.22 kilobytes 2.3303 megabytes
+
+=== Client 13 ===
+Commands sent: 119
+Response times: 103.99ms. 49.73ms. 25.40ms. 28.77ms. 19.88ms. 39.28ms. 16.31ms. 9.02ms. 30.17ms. 59.63ms. 53.79ms. 102.33ms. 132.23ms
+Commands received: 25037
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2690487 bytes 2627.43 kilobytes 2.5658 megabytes
+
+=== Client 14 ===
+Commands sent: 119
+Response times: 104.64ms. 23.88ms. 11.92ms. 74.47ms. 81.22ms. 72.92ms. 60.46ms. 134.20ms. 113.44ms
+Commands received: 25010
+Bytes sent: 8439 bytes 8.24 kilobytes 0.0080 megabytes
+Bytes received: 2688999 bytes 2625.98 kilobytes 2.5644 megabytes
+
+=== Client 15 ===
+Commands sent: 119
+Response times: 26.94ms. 23.55ms. 5.84ms. 18.84ms. 7.46ms. 1.57ms. 3.78ms. 22.70ms. 3.70ms. 4.12ms. 3.05ms. 16.36ms. 47.41ms
+Commands received: 24876
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2682681 bytes 2619.81 kilobytes 2.5584 megabytes
+
+=== Client 16 ===
+Commands sent: 119
+Response times: 51.31ms. 55.82ms. 4.00ms. 10.61ms. 3.61ms. 6.65ms. 6.95ms. 10.96ms. 14.95ms. 35.23ms. 20.18ms. 14.85ms. 19.14ms. 68.30ms
+Commands received: 24893
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2685864 bytes 2622.91 kilobytes 2.5614 megabytes
+
+=== Client 17 ===
+Commands sent: 119
+Response times: 100.21ms. 99.12ms. 25.72ms. 26.23ms. 24.72ms. 73.75ms. 59.46ms. 49.92ms. 71.86ms. 59.64ms. 125.43ms
+Commands received: 22772
+Bytes sent: 8331 bytes 8.14 kilobytes 0.0079 megabytes
+Bytes received: 2444979 bytes 2387.67 kilobytes 2.3317 megabytes
+
+=== Client 18 ===
+Commands sent: 119
+Response times: 120.34ms. 63.36ms. 90.55ms. 51.16ms. 56.84ms. 66.24ms. 62.05ms. 40.26ms. 104.16ms. 83.91ms. 81.49ms. 93.39ms. 91.79ms. 86.46ms. 101.22ms. 100.23ms
+Commands received: 24927
+Bytes sent: 8007 bytes 7.82 kilobytes 0.0076 megabytes
+Bytes received: 2683824 bytes 2620.92 kilobytes 2.5595 megabytes
+
+=== Client 19 ===
+Commands sent: 119
+Response times: 96.93ms. 70.97ms. 38.20ms. 77.96ms. 65.63ms. 82.06ms. 125.74ms
+Commands received: 25013
+Bytes sent: 8547 bytes 8.35 kilobytes 0.0082 megabytes
+Bytes received: 2688849 bytes 2625.83 kilobytes 2.5643 megabytes
+
+=== Client 20 ===
+Commands sent: 119
+Response times: 55.75ms. 68.29ms. 43.12ms. 37.80ms. 36.28ms. 43.11ms. 81.04ms. 51.49ms. 102.78ms. 116.22ms
+Commands received: 25057
+Bytes sent: 8385 bytes 8.19 kilobytes 0.0080 megabytes
+Bytes received: 2688450 bytes 2625.44 kilobytes 2.5639 megabytes
+
+=== Client 21 ===
+Commands sent: 119
+Response times: 25.39ms. 53.56ms. 21.07ms. 42.99ms. 18.96ms. 50.10ms. 36.91ms. 65.48ms. 41.16ms. 79.80ms
+Commands received: 24914
+Bytes sent: 8385 bytes 8.19 kilobytes 0.0080 megabytes
+Bytes received: 2680566 bytes 2617.74 kilobytes 2.5564 megabytes
+
+=== Client 22 ===
+Commands sent: 119
+Response times: 62.03ms. 63.52ms. 69.11ms. 13.94ms. 22.36ms. 3.70ms. 13.70ms. 22.15ms. 27.41ms. 41.83ms
+Commands received: 24969
+Bytes sent: 8385 bytes 8.19 kilobytes 0.0080 megabytes
+Bytes received: 2687724 bytes 2624.73 kilobytes 2.5632 megabytes
+
+=== Client 23 ===
+Commands sent: 119
+Response times: 106.35ms. 21.17ms. 41.21ms. 20.02ms. 16.80ms. 11.39ms. 9.54ms. 9.15ms. 3.69ms. 2.64ms. 5.29ms. 12.55ms. 23.79ms. 39.03ms. 39.79ms. 70.93ms. 68.76ms
+Commands received: 22701
+Bytes sent: 8007 bytes 7.82 kilobytes 0.0076 megabytes
+Bytes received: 2444061 bytes 2386.78 kilobytes 2.3308 megabytes
+
+=== Client 24 ===
+Commands sent: 119
+Response times: 104.71ms. 98.75ms. 12.48ms. 4.00ms. 3.60ms. 7.01ms. 12.11ms. 12.21ms. 15.02ms. 7.15ms. 17.69ms. 23.47ms. 42.21ms
+Commands received: 22432
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2419089 bytes 2362.39 kilobytes 2.3070 megabytes
+
+=== Client 25 ===
+Commands sent: 119
+Response times: 29.16ms. 22.53ms. 60.82ms. 51.26ms. 1.24ms. 3.23ms. 3.63ms. 5.68ms. 7.67ms. 22.41ms. 4.31ms. 20.42ms
+Commands received: 24965
+Bytes sent: 8274 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2684889 bytes 2621.96 kilobytes 2.5605 megabytes
+
+=== Client 26 ===
+Commands sent: 119
+Response times: 68.88ms. 26.09ms. 24.03ms. 16.21ms. 18.15ms. 25.55ms. 26.36ms. 14.03ms. 7.79ms. 33.84ms. 19.46ms. 61.25ms. 42.48ms. 81.64ms. 105.61ms
+Commands received: 22547
+Bytes sent: 8115 bytes 7.92 kilobytes 0.0077 megabytes
+Bytes received: 2424567 bytes 2367.74 kilobytes 2.3122 megabytes
+
+=== Client 27 ===
+Commands sent: 118
+Response times: 144.00ms. 46.14ms. 53.83ms. 19.98ms. 27.50ms. 58.48ms. 62.95ms. 87.08ms
+Commands received: 24895
+Bytes sent: 8418 bytes 8.22 kilobytes 0.0080 megabytes
+Bytes received: 2682576 bytes 2619.70 kilobytes 2.5583 megabytes
+
+=== Client 28 ===
+Commands sent: 118
+Response times: 101.59ms. 31.63ms. 2.12ms. 26.81ms. 20.26ms. 10.99ms. 11.77ms. 56.04ms. 52.77ms. 43.40ms. 42.89ms. 39.10ms. 29.82ms. 83.11ms
+Commands received: 25093
+Bytes sent: 8094 bytes 7.90 kilobytes 0.0077 megabytes
+Bytes received: 2690838 bytes 2627.77 kilobytes 2.5662 megabytes
+
+=== Client 29 ===
+Commands sent: 119
+Response times: 97.99ms. 8.89ms. 10.64ms. 10.31ms. 17.76ms. 17.05ms. 19.55ms. 15.01ms. 12.19ms. 21.81ms. 4.64ms. 17.76ms. 3.78ms. 11.99ms. 11.96ms. 80.06ms
+Commands received: 22622
+Bytes sent: 8061 bytes 7.87 kilobytes 0.0077 megabytes
+Bytes received: 2427540 bytes 2370.64 kilobytes 2.3151 megabytes
+
+=== Client 30 ===
+Commands sent: 119
+Response times: 119.98ms. 105.84ms. 122.91ms. 87.41ms. 68.79ms. 38.25ms. 65.38ms
+Commands received: 24901
+Bytes sent: 8547 bytes 8.35 kilobytes 0.0082 megabytes
+Bytes received: 2681367 bytes 2618.52 kilobytes 2.5572 megabytes
+
+=== Client 31 ===
+Commands sent: 119
+Response times: 105.17ms. 114.13ms. 27.83ms. 56.61ms. 67.87ms. 26.00ms. 35.39ms. 46.23ms. 64.87ms. 61.60ms. 79.60ms. 81.27ms. 80.54ms. 81.78ms. 76.44ms. 111.22ms. 93.11ms. 100.90ms
+Commands received: 22826
+Bytes sent: 7953 bytes 7.77 kilobytes 0.0076 megabytes
+Bytes received: 2449770 bytes 2392.35 kilobytes 2.3363 megabytes
+
+=== Client 32 ===
+Commands sent: 119
+Response times: 28.29ms. 9.98ms. 11.38ms. 5.32ms. 3.75ms. 22.75ms. 31.85ms. 9.77ms. 13.59ms. 27.28ms. 21.15ms. 16.13ms. 24.16ms. 42.42ms. 69.59ms. 38.84ms
+Commands received: 25020
+Bytes sent: 8061 bytes 7.87 kilobytes 0.0077 megabytes
+Bytes received: 2691846 bytes 2628.76 kilobytes 2.5671 megabytes
+
+=== Client 33 ===
+Commands sent: 119
+Response times: 131.55ms. 5.54ms. 23.65ms. 37.47ms. 23.74ms. 87.28ms. 36.30ms. 52.64ms
+Commands received: 22742
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2443656 bytes 2386.38 kilobytes 2.3305 megabytes
+
+=== Client 34 ===
+Commands sent: 119
+Response times: 5.02ms. 17.53ms. 35.95ms. 3.42ms. 0.60ms. 5.34ms. 1.08ms. 6.12ms. 0.39ms. 3.44ms. 8.08ms. 4.93ms
+Commands received: 25027
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2685102 bytes 2622.17 kilobytes 2.5607 megabytes
+
+=== Client 35 ===
+Commands sent: 119
+Response times: 73.63ms. 21.52ms. 6.19ms. 2.57ms. 1.43ms. 20.15ms. 13.84ms. 7.40ms. 23.70ms. 27.89ms. 25.13ms. 56.15ms
+Commands received: 24988
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2688024 bytes 2625.02 kilobytes 2.5635 megabytes
+
+=== Client 36 ===
+Commands sent: 119
+Response times: 22.16ms. 5.51ms. 13.27ms. 4.82ms. 4.43ms. 13.36ms. 7.38ms
+Commands received: 24945
+Bytes sent: 8547 bytes 8.35 kilobytes 0.0082 megabytes
+Bytes received: 2682807 bytes 2619.93 kilobytes 2.5585 megabytes
+
+=== Client 37 ===
+Commands sent: 119
+Response times: 55.95ms. 30.17ms. 9.01ms. 21.29ms. 22.27ms. 50.52ms. 56.69ms. 44.33ms
+Commands received: 22716
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2442792 bytes 2385.54 kilobytes 2.3296 megabytes
+
+=== Client 38 ===
+Commands sent: 119
+Response times: 17.17ms. 4.17ms. 5.27ms. 23.54ms. 16.40ms. 24.41ms
+Commands received: 24976
+Bytes sent: 8601 bytes 8.40 kilobytes 0.0082 megabytes
+Bytes received: 2685882 bytes 2622.93 kilobytes 2.5615 megabytes
+
+=== Client 39 ===
+Commands sent: 119
+Response times: 95.72ms. 2.48ms. 16.87ms. 1.08ms. 0.86ms. 10.10ms. 7.69ms. 18.73ms
+Commands received: 24865
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2681496 bytes 2618.65 kilobytes 2.5573 megabytes
+
+=== Client 40 ===
+Commands sent: 118
+Response times: 95.69ms. 100.36ms. 16.41ms. 0.58ms. 14.12ms. 20.26ms. 50.62ms. 55.46ms. 35.74ms. 33.55ms. 66.20ms. 64.91ms. 83.68ms. 94.87ms. 94.08ms
+Commands received: 22522
+Bytes sent: 8040 bytes 7.85 kilobytes 0.0077 megabytes
+Bytes received: 2424531 bytes 2367.71 kilobytes 2.3122 megabytes
+
+=== Client 41 ===
+Commands sent: 119
+Response times: 47.35ms. 34.22ms. 45.64ms. 28.33ms. 64.84ms. 40.90ms. 41.62ms. 32.20ms. 59.08ms. 64.85ms. 34.40ms. 71.64ms
+Commands received: 24911
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2685534 bytes 2622.59 kilobytes 2.5611 megabytes
+
+=== Client 42 ===
+Commands sent: 119
+Response times: 29.34ms. 24.72ms. 9.63ms. 9.06ms. 11.44ms. 12.46ms. 7.17ms. 8.47ms. 8.32ms. 2.69ms. 2.93ms. 6.85ms. 6.37ms. 12.18ms. 36.07ms. 43.29ms
+Commands received: 22828
+Bytes sent: 8061 bytes 7.87 kilobytes 0.0077 megabytes
+Bytes received: 2449728 bytes 2392.31 kilobytes 2.3362 megabytes
+
+=== Client 43 ===
+Commands sent: 119
+Response times: 102.41ms. 28.00ms. 60.74ms. 45.50ms. 73.30ms. 46.95ms. 51.09ms. 31.00ms. 47.08ms. 80.07ms. 54.52ms. 74.62ms. 64.95ms. 96.34ms. 106.69ms. 136.36ms. 109.51ms
+Commands received: 22503
+Bytes sent: 8007 bytes 7.82 kilobytes 0.0076 megabytes
+Bytes received: 2424393 bytes 2367.57 kilobytes 2.3121 megabytes
+
+=== Client 44 ===
+Commands sent: 119
+Response times: 113.27ms. 12.27ms. 65.85ms. 53.45ms. 43.95ms. 31.65ms. 70.99ms. 75.30ms. 126.43ms
+Commands received: 24926
+Bytes sent: 8439 bytes 8.24 kilobytes 0.0080 megabytes
+Bytes received: 2685183 bytes 2622.25 kilobytes 2.5608 megabytes
+
+=== Client 45 ===
+Commands sent: 119
+Response times: 62.55ms. 54.60ms. 20.59ms. 29.87ms. 17.61ms. 10.14ms. 59.19ms. 26.42ms. 48.63ms. 19.22ms. 25.74ms. 26.59ms. 27.71ms. 19.51ms. 75.97ms. 53.29ms. 72.25ms. 66.15ms. 95.86ms. 91.91ms
+Commands received: 25094
+Bytes sent: 7845 bytes 7.66 kilobytes 0.0075 megabytes
+Bytes received: 2695602 bytes 2632.42 kilobytes 2.5707 megabytes
+
+=== Client 46 ===
+Commands sent: 119
+Response times: 8.48ms. 21.38ms. 23.36ms. 27.02ms. 1.97ms. 8.04ms. 11.24ms. 2.42ms. 3.21ms. 13.80ms. 6.86ms. 6.98ms. 19.27ms
+Commands received: 22531
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2424021 bytes 2367.21 kilobytes 2.3117 megabytes
+
+=== Client 47 ===
+Commands sent: 119
+Response times: 104.57ms. 8.26ms. 26.89ms. 47.04ms. 48.98ms. 39.62ms. 14.65ms. 44.20ms. 62.97ms. 36.45ms. 96.41ms. 103.94ms. 125.05ms
+Commands received: 24963
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2688111 bytes 2625.11 kilobytes 2.5636 megabytes
+
+=== Client 48 ===
+Commands sent: 119
+Response times: 42.84ms. 57.64ms. 11.36ms. 20.99ms. 16.35ms. 8.49ms. 14.59ms. 13.33ms. 21.52ms. 15.30ms. 6.03ms. 14.71ms. 14.09ms. 49.46ms
+Commands received: 24934
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2689428 bytes 2626.39 kilobytes 2.5648 megabytes
+
+=== Client 49 ===
+Commands sent: 119
+Response times: 11.22ms. 12.02ms. 6.49ms. 6.20ms. 2.62ms. 9.67ms. 9.87ms. 5.18ms. 6.87ms. 7.71ms. 14.36ms. 21.91ms. 15.71ms. 19.89ms
+Commands received: 22621
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2426670 bytes 2369.79 kilobytes 2.3143 megabytes
+
+=== Client 50 ===
+Commands sent: 119
+Response times: 7.40ms. 1.99ms. 4.79ms. 10.97ms. 3.89ms. 9.07ms. 24.74ms
+Commands received: 24975
+Bytes sent: 8547 bytes 8.35 kilobytes 0.0082 megabytes
+Bytes received: 2689281 bytes 2626.25 kilobytes 2.5647 megabytes
+
+=== Client 51 ===
+Commands sent: 119
+Response times: 101.80ms. 96.95ms. 83.79ms. 30.68ms. 29.51ms. 38.91ms. 73.83ms. 145.63ms
+Commands received: 22436
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2418588 bytes 2361.90 kilobytes 2.3065 megabytes
+
+=== Client 52 ===
+Commands sent: 119
+Response times: 95.64ms. 114.54ms. 17.54ms. 59.37ms. 17.20ms. 14.33ms. 39.45ms. 39.92ms. 19.17ms. 31.38ms. 87.40ms
+Commands received: 24903
+Bytes sent: 8331 bytes 8.14 kilobytes 0.0079 megabytes
+Bytes received: 2685477 bytes 2622.54 kilobytes 2.5611 megabytes
+
+=== Client 53 ===
+Commands sent: 119
+Response times: 10.78ms. 17.15ms. 0.42ms. 18.16ms. 21.07ms. 9.39ms. 10.19ms. 4.84ms. 7.44ms
+Commands received: 24874
+Bytes sent: 8439 bytes 8.24 kilobytes 0.0080 megabytes
+Bytes received: 2683815 bytes 2620.91 kilobytes 2.5595 megabytes
+
+=== Client 54 ===
+Commands sent: 119
+Response times: 0.34ms. 0.90ms. 8.00ms. 16.25ms. 3.08ms. 43.72ms
+Commands received: 22537
+Bytes sent: 8601 bytes 8.40 kilobytes 0.0082 megabytes
+Bytes received: 2421462 bytes 2364.71 kilobytes 2.3093 megabytes
+
+=== Client 55 ===
+Commands sent: 119
+Response times: 33.02ms. 43.23ms. 60.70ms. 54.94ms. 41.26ms. 47.60ms. 36.06ms. 60.00ms. 39.61ms. 47.61ms. 65.37ms. 44.98ms. 87.29ms
+Commands received: 22773
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2447433 bytes 2390.07 kilobytes 2.3341 megabytes
+
+=== Client 56 ===
+Commands sent: 118
+Response times: 91.81ms. 62.01ms. 83.22ms. 30.23ms. 46.42ms. 21.14ms. 85.14ms. 72.64ms. 80.90ms. 94.55ms. 106.60ms
+Commands received: 24952
+Bytes sent: 8256 bytes 8.06 kilobytes 0.0079 megabytes
+Bytes received: 2685447 bytes 2622.51 kilobytes 2.5610 megabytes
+
+=== Client 57 ===
+Commands sent: 119
+Response times: 92.29ms. 104.26ms. 41.83ms. 57.80ms. 37.43ms. 31.98ms. 56.35ms. 54.90ms. 66.17ms. 55.87ms
+Commands received: 24975
+Bytes sent: 8385 bytes 8.19 kilobytes 0.0080 megabytes
+Bytes received: 2684346 bytes 2621.43 kilobytes 2.5600 megabytes
+
+=== Client 58 ===
+Commands sent: 119
+Response times: 26.18ms. 85.95ms. 48.19ms. 25.00ms. 15.46ms. 6.39ms. 26.62ms. 20.74ms. 27.34ms. 19.43ms. 37.50ms. 30.05ms. 60.57ms. 49.74ms. 95.32ms. 84.42ms. 94.62ms. 108.97ms
+Commands received: 24894
+Bytes sent: 7953 bytes 7.77 kilobytes 0.0076 megabytes
+Bytes received: 2685054 bytes 2622.12 kilobytes 2.5607 megabytes
+
+=== Client 59 ===
+Commands sent: 119
+Response times: 81.81ms. 56.15ms. 16.13ms. 25.55ms. 11.94ms. 20.46ms. 29.98ms. 23.41ms. 43.72ms. 53.36ms. 67.73ms. 64.66ms. 107.30ms
+Commands received: 24985
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2688405 bytes 2625.40 kilobytes 2.5639 megabytes
+
+=== Client 60 ===
+Commands sent: 119
+Response times: 61.38ms. 102.44ms. 57.59ms. 63.95ms. 81.54ms. 67.08ms. 65.36ms. 78.26ms. 78.87ms. 102.21ms. 131.68ms. 121.88ms. 134.12ms
+Commands received: 24948
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2687571 bytes 2624.58 kilobytes 2.5631 megabytes
+
+=== Client 61 ===
+Commands sent: 119
+Response times: 100.08ms. 130.49ms. 75.22ms. 83.29ms. 82.20ms. 101.64ms. 143.32ms. 109.93ms
+Commands received: 25036
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2688294 bytes 2625.29 kilobytes 2.5638 megabytes
+
+=== Client 62 ===
+Commands sent: 119
+Response times: 27.56ms. 14.40ms. 1.39ms. 1.02ms. 4.93ms. 17.70ms
+Commands received: 22772
+Bytes sent: 8547 bytes 8.35 kilobytes 0.0082 megabytes
+Bytes received: 2446494 bytes 2389.15 kilobytes 2.3332 megabytes
+
+=== Client 63 ===
+Commands sent: 119
+Response times: 50.91ms. 83.79ms. 12.71ms. 29.58ms. 53.88ms. 72.30ms. 69.58ms
+Commands received: 24932
+Bytes sent: 8547 bytes 8.35 kilobytes 0.0082 megabytes
+Bytes received: 2680395 bytes 2617.57 kilobytes 2.5562 megabytes
+
+=== Client 64 ===
+Commands sent: 119
+Response times: 114.65ms. 112.58ms. 131.22ms. 71.60ms. 42.35ms. 39.09ms. 29.12ms. 65.50ms. 62.35ms. 50.04ms. 64.25ms. 54.63ms. 56.80ms. 75.49ms
+Commands received: 22797
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2449506 bytes 2392.10 kilobytes 2.3360 megabytes
+
+=== Client 65 ===
+Commands sent: 119
+Response times: 41.41ms. 51.30ms. 73.26ms. 87.04ms. 18.42ms. 31.21ms. 14.83ms. 9.57ms. 8.94ms. 29.89ms. 32.34ms. 67.28ms. 68.30ms. 43.32ms. 66.90ms. 71.54ms. 66.07ms
+Commands received: 25105
+Bytes sent: 8007 bytes 7.82 kilobytes 0.0076 megabytes
+Bytes received: 2695323 bytes 2632.15 kilobytes 2.5705 megabytes
+
+=== Client 66 ===
+Commands sent: 119
+Response times: 34.73ms. 48.76ms. 53.18ms. 43.55ms. 15.80ms. 20.74ms. 77.50ms. 72.14ms
+Commands received: 22651
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2439804 bytes 2382.62 kilobytes 2.3268 megabytes
+
+=== Client 67 ===
+Commands sent: 119
+Response times: 80.26ms. 18.39ms. 32.36ms. 20.53ms. 9.82ms. 6.26ms. 15.63ms. 8.48ms. 15.79ms. 5.38ms. 51.65ms. 25.68ms. 64.20ms. 86.35ms
+Commands received: 25077
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2693496 bytes 2630.37 kilobytes 2.5687 megabytes
+
+=== Client 68 ===
+Commands sent: 119
+Response times: 26.57ms. 50.61ms. 3.72ms. 3.70ms. 3.78ms. 7.76ms. 8.71ms. 2.66ms. 8.49ms. 4.93ms. 7.82ms. 12.33ms. 10.32ms. 14.54ms
+Commands received: 22611
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2428326 bytes 2371.41 kilobytes 2.3158 megabytes
+
+=== Client 69 ===
+Commands sent: 119
+Response times: 10.25ms. 17.37ms. 3.75ms. 5.94ms. 4.67ms. 3.58ms. 5.23ms. 6.13ms. 3.83ms. 4.76ms. 5.78ms. 18.58ms. 5.30ms
+Commands received: 22838
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2449629 bytes 2392.22 kilobytes 2.3361 megabytes
+
+=== Client 70 ===
+Commands sent: 119
+Response times: 95.87ms. 17.77ms. 35.11ms. 18.71ms. 49.81ms. 64.30ms. 54.60ms. 75.62ms. 69.29ms. 70.35ms. 103.53ms. 112.22ms
+Commands received: 22541
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2425548 bytes 2368.70 kilobytes 2.3132 megabytes
+
+=== Client 71 ===
+Commands sent: 119
+Response times: 37.68ms. 9.39ms. 31.68ms. 4.28ms. 9.64ms. 29.18ms. 40.29ms. 61.56ms. 63.04ms. 90.93ms
+Commands received: 25019
+Bytes sent: 8385 bytes 8.19 kilobytes 0.0080 megabytes
+Bytes received: 2691828 bytes 2628.74 kilobytes 2.5671 megabytes
+
+=== Client 72 ===
+Commands sent: 119
+Response times: 130.03ms. 33.12ms. 23.72ms. 48.74ms. 14.04ms. 41.97ms. 27.12ms. 38.86ms. 15.88ms. 51.39ms. 34.09ms. 36.95ms. 39.77ms. 68.15ms. 83.50ms. 100.33ms. 86.01ms. 102.59ms
+Commands received: 22626
+Bytes sent: 7953 bytes 7.77 kilobytes 0.0076 megabytes
+Bytes received: 2428230 bytes 2371.32 kilobytes 2.3157 megabytes
+
+=== Client 73 ===
+Commands sent: 119
+Response times: 42.61ms. 62.57ms. 50.40ms. 49.02ms. 29.73ms. 30.61ms. 28.61ms. 18.08ms. 40.79ms. 59.42ms. 54.41ms. 76.38ms
+Commands received: 23161
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2495400 bytes 2436.91 kilobytes 2.3798 megabytes
+
+=== Client 74 ===
+Commands sent: 119
+Response times: 48.40ms. 54.72ms. 65.18ms. 51.25ms. 23.98ms. 33.89ms. 15.70ms. 45.98ms. 17.97ms. 58.02ms. 56.18ms. 66.09ms. 90.67ms
+Commands received: 25106
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2692761 bytes 2629.65 kilobytes 2.5680 megabytes
+
+=== Client 75 ===
+Commands sent: 119
+Response times: 100.53ms. 85.07ms. 12.76ms. 63.52ms. 70.60ms. 65.89ms. 36.63ms. 59.03ms. 48.63ms. 60.17ms. 71.51ms. 89.59ms. 75.14ms. 53.03ms. 98.20ms. 115.16ms
+Commands received: 22560
+Bytes sent: 8061 bytes 7.87 kilobytes 0.0077 megabytes
+Bytes received: 2425236 bytes 2368.39 kilobytes 2.3129 megabytes
+
+=== Client 76 ===
+Commands sent: 119
+Response times: 120.57ms. 102.49ms. 44.67ms. 43.11ms. 42.24ms. 56.06ms. 70.39ms. 55.18ms. 75.52ms. 71.26ms. 124.48ms. 109.59ms. 129.48ms. 86.57ms. 95.00ms
+Commands received: 25022
+Bytes sent: 8112 bytes 7.92 kilobytes 0.0077 megabytes
+Bytes received: 2690778 bytes 2627.71 kilobytes 2.5661 megabytes
+
+=== Client 77 ===
+Commands sent: 119
+Response times: 17.34ms. 32.99ms. 24.40ms. 4.22ms. 13.71ms. 8.59ms. 16.27ms. 2.50ms. 18.76ms. 21.48ms. 23.84ms. 33.51ms
+Commands received: 25017
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2692302 bytes 2629.20 kilobytes 2.5676 megabytes
+
+=== Client 78 ===
+Commands sent: 119
+Response times: 63.93ms. 58.38ms. 6.83ms. 0.48ms. 0.61ms. 4.04ms. 3.67ms. 7.34ms. 8.44ms. 10.19ms. 13.88ms. 82.58ms. 119.73ms
+Commands received: 22709
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2445993 bytes 2388.67 kilobytes 2.3327 megabytes
+
+=== Client 79 ===
+Commands sent: 119
+Response times: 27.36ms. 21.24ms. 23.61ms. 5.65ms. 4.07ms. 2.56ms. 5.81ms. 5.12ms. 10.32ms. 10.09ms. 4.70ms. 5.85ms. 19.80ms. 17.58ms. 20.16ms
+Commands received: 22856
+Bytes sent: 8115 bytes 7.92 kilobytes 0.0077 megabytes
+Bytes received: 2451831 bytes 2394.37 kilobytes 2.3382 megabytes
+
+=== Client 80 ===
+Commands sent: 119
+Response times: 53.06ms. 12.92ms. 37.98ms. 31.57ms. 21.33ms. 7.38ms. 6.58ms. 14.32ms. 12.28ms. 14.27ms. 15.67ms. 13.17ms. 48.00ms
+Commands received: 24899
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2685597 bytes 2622.65 kilobytes 2.5612 megabytes
+
+=== Client 81 ===
+Commands sent: 119
+Response times: 88.70ms. 103.29ms. 31.60ms. 19.81ms. 25.27ms. 13.63ms. 23.37ms. 33.45ms. 49.30ms. 70.82ms. 59.06ms. 86.14ms. 75.74ms. 82.99ms. 101.46ms
+Commands received: 22530
+Bytes sent: 8061 bytes 7.87 kilobytes 0.0077 megabytes
+Bytes received: 2425971 bytes 2369.11 kilobytes 2.3136 megabytes
+
+=== Client 82 ===
+Commands sent: 119
+Response times: 2.01ms. 14.99ms. 23.10ms. 2.40ms. 0.68ms. 0.41ms. 5.02ms. 2.46ms. 5.03ms. 16.39ms. 26.69ms
+Commands received: 25046
+Bytes sent: 8331 bytes 8.14 kilobytes 0.0079 megabytes
+Bytes received: 2690343 bytes 2627.29 kilobytes 2.5657 megabytes
+
+=== Client 83 ===
+Commands sent: 119
+Response times: 57.71ms. 2.79ms. 8.45ms. 1.68ms. 1.98ms. 4.42ms. 6.63ms. 2.86ms. 6.63ms. 13.69ms. 7.66ms. 1.87ms. 1.18ms. 8.42ms
+Commands received: 25092
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2692818 bytes 2629.71 kilobytes 2.5681 megabytes
+
+=== Client 84 ===
+Commands sent: 119
+Response times: 35.76ms. 8.55ms. 3.90ms. 6.37ms. 5.88ms
+Commands received: 25049
+Bytes sent: 8655 bytes 8.45 kilobytes 0.0083 megabytes
+Bytes received: 2688951 bytes 2625.93 kilobytes 2.5644 megabytes
+
+=== Client 85 ===
+Commands sent: 119
+Response times: 31.33ms. 23.46ms. 5.95ms. 4.95ms. 5.27ms. 5.53ms. 16.44ms. 5.88ms. 8.30ms
+Commands received: 22804
+Bytes sent: 8439 bytes 8.24 kilobytes 0.0080 megabytes
+Bytes received: 2447313 bytes 2389.95 kilobytes 2.3339 megabytes
+
+=== Client 86 ===
+Commands sent: 119
+Response times: 62.32ms. 58.13ms. 45.19ms. 39.96ms. 42.41ms. 41.68ms. 78.93ms. 96.17ms. 62.85ms. 96.71ms. 83.00ms
+Commands received: 22544
+Bytes sent: 8331 bytes 8.14 kilobytes 0.0079 megabytes
+Bytes received: 2424951 bytes 2368.12 kilobytes 2.3126 megabytes
+
+=== Client 87 ===
+Commands sent: 119
+Response times: 92.09ms. 4.17ms. 10.40ms. 12.45ms. 1.22ms. 8.99ms. 35.83ms. 23.86ms. 17.25ms. 15.19ms. 12.74ms. 22.73ms. 45.73ms. 71.99ms
+Commands received: 22648
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2441406 bytes 2384.19 kilobytes 2.3283 megabytes
+
+=== Client 88 ===
+Commands sent: 119
+Response times: 4.84ms. 9.74ms. 9.20ms. 11.44ms. 2.20ms. 4.52ms. 17.96ms. 17.41ms. 5.31ms. 18.61ms. 6.47ms. 9.71ms. 16.47ms. 44.97ms. 17.36ms. 66.84ms. 70.29ms. 58.51ms
+Commands received: 22717
+Bytes sent: 7953 bytes 7.77 kilobytes 0.0076 megabytes
+Bytes received: 2447646 bytes 2390.28 kilobytes 2.3343 megabytes
+
+=== Client 89 ===
+Commands sent: 119
+Response times: 102.42ms. 23.30ms. 35.02ms. 37.37ms. 23.95ms. 33.32ms. 52.03ms. 45.26ms. 36.45ms
+Commands received: 24871
+Bytes sent: 8439 bytes 8.24 kilobytes 0.0080 megabytes
+Bytes received: 2683785 bytes 2620.88 kilobytes 2.5595 megabytes
+
+=== Client 90 ===
+Commands sent: 119
+Response times: 46.29ms. 71.52ms. 20.80ms. 27.69ms. 51.38ms. 78.03ms. 142.91ms
+Commands received: 24896
+Bytes sent: 8547 bytes 8.35 kilobytes 0.0082 megabytes
+Bytes received: 2681757 bytes 2618.90 kilobytes 2.5575 megabytes
+
+=== Client 91 ===
+Commands sent: 119
+Response times: 50.24ms. 6.46ms. 8.34ms. 7.80ms. 5.15ms. 21.68ms. 19.37ms. 5.62ms. 12.42ms. 4.15ms. 20.69ms. 10.12ms. 55.46ms
+Commands received: 25042
+Bytes sent: 8223 bytes 8.03 kilobytes 0.0078 megabytes
+Bytes received: 2689161 bytes 2626.13 kilobytes 2.5646 megabytes
+
+=== Client 92 ===
+Commands sent: 119
+Response times: 103.68ms. 13.76ms. 36.70ms. 67.50ms. 83.10ms. 46.23ms. 31.49ms. 48.25ms. 59.61ms. 50.54ms. 45.32ms. 54.31ms. 143.18ms. 120.93ms. 134.04ms. 102.75ms
+Commands received: 24896
+Bytes sent: 8007 bytes 7.82 kilobytes 0.0076 megabytes
+Bytes received: 2683788 bytes 2620.89 kilobytes 2.5595 megabytes
+
+=== Client 93 ===
+Commands sent: 119
+Response times: 8.54ms. 14.69ms. 6.65ms. 3.60ms. 2.09ms. 5.30ms. 3.33ms. 8.87ms. 12.01ms. 12.43ms. 7.26ms. 11.83ms
+Commands received: 25126
+Bytes sent: 8277 bytes 8.08 kilobytes 0.0079 megabytes
+Bytes received: 2696226 bytes 2633.03 kilobytes 2.5713 megabytes
+
+=== Client 94 ===
+Commands sent: 119
+Response times: 40.48ms. 69.88ms. 16.43ms. 4.60ms. 18.85ms. 91.97ms
+Commands received: 25118
+Bytes sent: 8601 bytes 8.40 kilobytes 0.0082 megabytes
+Bytes received: 2694300 bytes 2631.15 kilobytes 2.5695 megabytes
+
+=== Client 95 ===
+Commands sent: 119
+Response times: 32.84ms. 9.12ms. 11.29ms. 22.60ms. 21.56ms. 16.82ms. 8.49ms. 21.41ms. 16.16ms. 22.70ms. 6.12ms. 0.27ms. 17.30ms. 31.35ms. 261.49ms
+Commands received: 24983
+Bytes sent: 8115 bytes 7.92 kilobytes 0.0077 megabytes
+Bytes received: 2691897 bytes 2628.81 kilobytes 2.5672 megabytes
+
+=== Client 96 ===
+Commands sent: 119
+Response times: 99.51ms. 16.50ms. 7.81ms. 20.96ms. 49.16ms. 15.39ms. 33.89ms. 34.60ms
+Commands received: 22772
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2445600 bytes 2388.28 kilobytes 2.3323 megabytes
+
+=== Client 97 ===
+Commands sent: 119
+Response times: 7.83ms. 60.06ms. 53.59ms. 74.70ms. 63.69ms. 68.54ms. 124.22ms
+Commands received: 24897
+Bytes sent: 8493 bytes 8.29 kilobytes 0.0081 megabytes
+Bytes received: 2680287 bytes 2617.47 kilobytes 2.5561 megabytes
+
+=== Client 98 ===
+Commands sent: 119
+Response times: 21.96ms. 13.27ms. 19.31ms. 5.06ms. 2.35ms. 20.30ms. 40.54ms. 21.06ms. 23.47ms
+Commands received: 22666
+Bytes sent: 8439 bytes 8.24 kilobytes 0.0080 megabytes
+Bytes received: 2443353 bytes 2386.09 kilobytes 2.3302 megabytes
+
+=== Client 99 ===
+Commands sent: 119
+Response times: 6.20ms. 25.39ms. 14.65ms. 8.94ms. 5.99ms. 12.52ms. 6.18ms. 7.44ms. 7.45ms. 6.06ms. 2.38ms. 10.50ms. 25.99ms. 12.02ms
+Commands received: 22746
+Bytes sent: 8169 bytes 7.98 kilobytes 0.0078 megabytes
+Bytes received: 2446662 bytes 2389.32 kilobytes 2.3333 megabytes
+
+========== REPORT ==========
+Time: 2014-11-13 12:5:33
+
+Number of clients: 100
+Total commands sent: 11893
+Total bytes sent: 827763 bytes 808.36 kilobytes 0.7894 megabytes
+Total bytes received: 257947422 bytes 251901.78 kilobytes 245.9978 megabytes
