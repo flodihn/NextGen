@@ -8,7 +8,7 @@
      {start_phases, []},
      {env, [
         {accsrv, 'accsrv@Leader1'},
-        {start_area, 'areasrv@Leader1'},
+        {start_area, 'start_area@Leader1'},
         {charsrv, 'charsrv@Leader1'}
      ]}
     ]}.
