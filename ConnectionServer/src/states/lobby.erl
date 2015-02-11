@@ -22,7 +22,7 @@ event(<<?CHAR_LOGIN, IdLen/integer, Id:IdLen/binary>>, State) ->
         [self(), Id]),
     receive 
         {char_login, {pid, Pid}, {id, Id}} ->
-            %error_logger:info_report([{char_login_success, Id}]),
+            error_logger:info_report([{char_login_success, Id}]),
             CharInfo = #charinfo{id=Id, pid=Pid},
             NewState = State#state{charinfo=CharInfo},
             IdLen = byte_size(Id),
@@ -39,14 +39,14 @@ event(<<?CHAR_LOGIN>>, State) ->
     %    [NewCharData]),
 
     {ok, DefaultAreaSrv} = application:get_env(start_area),
-	%error_logger:info_report({char_login, DefaultAreaSrv}),
+	error_logger:info_report({char_login, DefaultAreaSrv}),
     %{Time, _Result} = timer:tc(rpc, call, [DefaultAreaSrv, libplayer.srv, 
     %    create, [self()]]),
     %error_logger:info_report([{"libplayer.srv:create time: ", Time/1001}]),
     rpc:call(DefaultAreaSrv, libplayer_srv, create, [self()]),
     receive 
         {char_login, {pid, Pid}, {id, Id}} ->
-            %error_logger:info_report([{char_login_success, Id}]),
+            error_logger:info_report([{char_login_success, Id}]),
             CharInfo = #charinfo{id=Id, pid=Pid},
             NewState = State#state{charinfo=CharInfo},
             IdLen = byte_size(Id),
