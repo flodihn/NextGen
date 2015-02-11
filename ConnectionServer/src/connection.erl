@@ -5,6 +5,7 @@
 -include("charinfo.hrl").
 -include("state.hrl").
 -include("char.hrl").
+-include("protocol.hrl").
 
 % States
 -export([
@@ -16,7 +17,6 @@
 
 % API
 -export([
-    conn_reply/2,
     socket_send/2
     ]).
 
@@ -35,11 +35,21 @@ start_link(Socket) ->
     gen_fsm:start_link(?MODULE, Socket, []).
 
 init(Socket) ->
-    %error_logger:info_report([{new_connection, {socket, Socket}}]),
-    %client_listener:start(self(), Socket),
     State = #state{socket=Socket},
-    {ok, connected, State}.
-
+    {ok, DefaultAreaSrv} = application:get_env(start_area),
+	error_logger:info_report({char_login, DefaultAreaSrv}),
+    rpc:call(DefaultAreaSrv, libplayer_srv, create, [self()]),
+    receive 
+        {char_login, {pid, Pid}, {id, Id}} ->
+            CharInfo = #charinfo{id=Id, pid=Pid},
+            NewState = State#state{charinfo=CharInfo},
+            IdLen = byte_size(Id),
+            socket_send(Socket, <<?CHAR_LOGIN_SUCCESS, IdLen, Id/binary>>),
+			{ok, playing, NewState};
+		Error ->
+			{stop, player_login, State}
+	end.
+			
 handle_event(Event, StateName, StateData) ->
     error_logger:info_report([{event, Event, StateName}]),
     {next_state, StateName, StateData}.
@@ -91,12 +101,7 @@ code_change(_OldVsn, _StateName, _StateData, _Extra) ->
 terminate(_Reason, _StateName, _StateData) ->
     ok.
 
-conn_reply(Socket, Reply) ->
-    %error_logger:info_report([{debug, conn_reply, Reply}]),
-    gen_tcp:send(Socket, term_to_binary(Reply)).
-
 socket_send(Socket, Msg) ->
-    error_logger:info_report([{socket_send, Msg, byte_size(Msg)}]),
     gen_tcp:send(Socket, Msg).
 
 connected(Event, State) ->
