@@ -11,10 +11,16 @@
 
 -include("obj.hrl").
 
+% API.
 -export([
-    start/0,
-    start/1,
-    start/2,
+    new/1,
+    new/2,
+    inst/1,
+    inst/2
+    ]).
+
+% Supervisor callbacks.
+-export([
     start_link/0,
     init/1
     ]).
@@ -36,23 +42,62 @@ init([]) ->
 
     {ok, {SupFlags, [ObjSup]}}.
 
-start() ->
-    start(obj).
 
-start(Type) ->
-    supervisor:start_child(?MODULE, [new_state, {type, Type}]).
+%%----------------------------------------------------------------------
+%% @doc
+%% @spec inst(State) ->{ok, Pid}
+%% where
+%%      State = obj()
+%% @end
+%% Instansiate an object with existing state. The State is an #obj 
+%% record.
+%% This function is used to existing objects from disk into the game.
+%%----------------------------------------------------------------------
+inst(#obj{} = State) ->
+    inst(State, []).
 
-start(Type, Nr) when is_number(Nr) ->
-    start_loop(Type, Nr, []);
+%%----------------------------------------------------------------------
+%% @doc
+%% @spec inst(State, NewState) ->{ok, Pid}
+%% where
+%%      State = obj()
+%%      NewState = list()
+%% @end
+%% Instansiate an object with existing state plus an additional
+%% new state.
+%% NewState is a list of {key, val} tuples and will override any
+%% colliding keys in the State.
+%%----------------------------------------------------------------------
+inst(#obj{} = State, NewState) when is_list(NewState) ->
+    supervisor:start_child(?MODULE, [
+        {inst_state, State}, 
+        {new_state, NewState}]).
 
-start(Type, State) ->
-    supervisor:start_child(?MODULE, [{existing_state, State}, 
-        {type, Type}]).
 
-start_loop(_Type, 0, Acc) ->
-    lists:flatten(Acc);
+%%----------------------------------------------------------------------
+%% @doc
+%% @spec new(Type, State) ->{ok, Pid}
+%% where
+%%      Type = atom(),
+%%      State = obj()
+%% @end
+%% Create a new object without default state.
+%%----------------------------------------------------------------------
+new(Type) when is_atom(Type) ->
+    new(Type, []).
 
-start_loop(Type, Nr, Acc) ->
-    {ok, Pid} = supervisor:start_child(
-        ?MODULE, [new_state, {type, Type}]),
-    start_loop(Type, Nr - 1, [Acc | [Pid]]).
+%%----------------------------------------------------------------------
+%% @doc
+%% @spec new(Type, State) ->{ok, Pid}
+%% where
+%%      Type = atom(),
+%%      State = list()
+%% @end
+%% Create a new object with a given state, the State is a list of
+%% {Key, Val} tuples.
+%%----------------------------------------------------------------------
+new(Type, NewState) when is_atom(Type), is_list(NewState) ->
+    supervisor:start_child(?MODULE, [
+        {type, Type},
+        {new_state, NewState}]).
+

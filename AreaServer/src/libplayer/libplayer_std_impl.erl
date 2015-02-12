@@ -20,18 +20,15 @@
     unregister_events/0
     ]).
 
-% Internal exports.
--export([
-    async_create/1,
-    async_login/2
-    ]).
-
 % handlers
 -export([
     create/1,
     login/2,
-    save/2
+    save/4
     ]).
+
+-define(START_POS, #vec{x=117, y=287.5, z=280.0}).
+-define(DEFAULT_NAME, <<"Noname">>).
 
 %%----------------------------------------------------------------------
 %% @spec init() -> ok
@@ -59,25 +56,17 @@ init() ->
 %% @end
 %%----------------------------------------------------------------------
 create(Conn) ->
-    spawn(?MODULE, async_create, [Conn]).
-
-async_create(Conn) ->
-    {ok, Pid} = obj_sup:start(player),
-    obj:call(Pid, set_conn, [Conn]),
-    {ok, Id} = obj:call(Pid, get_id, []),
-    %%{ok, CharSrv} = application:get_env(charsrv),
-    %%case rpc:call(CharSrv, charsrv, get_char_count, []) of
-    %%    0 ->
-    %%        libgod.srv:make_god(Pid);
-    %%    _NotZero ->
-    %%        pass
-    %%end,
-	{ok, {faction, Faction}} = libfaction_srv:assign(),
-	{ok, SpawnPoint} = libfaction_srv:get_spawn_point(Faction),
-    obj:call(Pid, set_faction, [Faction]),
-    obj:call(Pid, set_pos, [SpawnPoint]),
-    obj:async_call(Pid, post_init),
-    Conn ! {char_login, {pid, Pid}, {id, Id}}.
+    {ok, Pid} = obj_sup:new(player, [
+        {conn, Conn},
+        {<<"pos">>, ?START_POS},
+        {<<"name">>, ?DEFAULT_NAME}]),
+    {ok, Id} = obj:trigger_sync_command_chain(Pid, get_id, []),
+    obj:set_tick(Pid, 2000),
+    % TODO: This should be stored on a shared mnesia table on shared server,
+    % not in an ets table.
+    %ets:insert(players, {Id, {?DEFAULT_NAME, Pid}}), 
+    error_logger:info_report([{player, Id, logged_in, Pid}]),
+    {ok, {pid, Pid}, {id, Id}}.
     
 %%----------------------------------------------------------------------
 %% @doc
@@ -91,30 +80,20 @@ async_create(Conn) ->
 %% @end
 %%----------------------------------------------------------------------
 login(Conn, Id) ->
-    spawn(?MODULE, async_login, [Conn, Id]).
-
-async_login(Conn, Id) ->
     {ok, CharSrv} = application:get_env(charsrv),
     {ok, State} = rpc:call(CharSrv, charsrv, load, [Id]),
-    {ok, Pid} = obj_sup:start(player, State),
-    obj:call(Pid, set_conn, [Conn]),
-    obj:call(Pid, post_init),
-    
-    {ok, Pos} = obj:call(Pid, get_pos),
-    Conn ! {new_pos, [Id, Pos]},
-
+    {ok, Pid} = obj_sup:inst(State, [{conn, Conn}]),
     error_logger:info_report([{player, Id, logged_in, Pid}]),
-    Conn ! {char_login, {pid, Pid}, {id, Id}}.
+    {ok, {pid, Pid}, {id, Id}}.
 
 %% @private
 unregister_events() ->
     %areasrv:remove_handler(char_login).
     ok.
 
-save(Id, State) ->
+save(Id, Account, Name, State) ->
     {ok, CharSrv} = application:get_env(charsrv),
-    %io:format("Saving player ~p at node ~p.~n", [State, CharSrv]),
-    rpc:call(CharSrv, charsrv, save, [Id, State]).
-
+    R = rpc:call(CharSrv, charsrv, save, [Id, Account, Name, State]),
+    error_logger:info_report({"Saving player", State, CharSrv, result, R}).
 
 

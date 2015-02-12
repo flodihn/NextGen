@@ -16,16 +16,11 @@
     start_link/2
     ]).
 
-% Interal exports
+% Internal exports
 -export([
-    loop_init/1,
     loop_init/2,
-    loop/1
-    ]).
-
-% Exports used by other modules.
--export([
-    has_fun/3
+    loop/1,
+    handle_msg/2
     ]).
 
 %%----------------------------------------------------------------------
@@ -40,14 +35,12 @@
 %% animal.
 %% @end
 %%----------------------------------------------------------------------
-
-start_link(new_state, {type, Type}) ->
-    Pid = spawn_link(?MODULE, loop_init, [Type]),
+start_link({type, Type}, {new_state, NewState}) ->
+    Pid = spawn_link(?MODULE, loop_init, [Type, NewState]),
     {ok, Pid};
 
-start_link({existing_state, State}, {type, Type}) ->
-    error_logger:info_report([{starting, type, Type, state, State}]),
-    Pid = spawn_link(?MODULE, loop_init, [Type, State]),
+start_link({inst_state, State}, {new_state, NewState}) ->
+    Pid = spawn_link(?MODULE, loop_init, [State, NewState]),
     {ok, Pid}.
 
 %%----------------------------------------------------------------------
@@ -58,10 +51,11 @@ start_link({existing_state, State}, {type, Type}) ->
 %% Starts the object loop with a new state.
 %% @end
 %%----------------------------------------------------------------------
-loop_init(Type) ->
-    {ok, State} = Type:create_state(Type),
-    {ok, InitState} = Type:init(State),
-    loop(InitState).
+loop_init(Type, NewState) when is_atom(Type), is_list(NewState) ->
+    {ok, State} = Type:new(),
+    [obj:set_property(Key, Val) || {Key, Val} <- NewState],
+    {ok, InitState} = Type:init(State#obj{type=Type}),
+    loop(InitState);
 
 %%----------------------------------------------------------------------
 %% @spec loop_init(Type, State) -> ok
@@ -72,8 +66,12 @@ loop_init(Type) ->
 %% Starts the object loop with an existing state.
 %% @end
 %%----------------------------------------------------------------------
-loop_init(Type, State) ->
-    {ok, InitState} = Type:init(State),
+loop_init(#obj{type=Type} = State, NewState) when is_list(NewState)->
+    [obj:set_property(Key, Val) || {Key, Val} <- State#obj.properties],
+    [obj:set_property(Key, Val) || {Key, Val} <- NewState],
+    % Since we put all state in the process dict, it would be a waste
+    % of memory to have it in the state as well.
+    {ok, InitState} = Type:init(State#obj{properties=[]}),
     loop(InitState).
 
 %%----------------------------------------------------------------------
@@ -84,199 +82,58 @@ loop_init(Type, State) ->
 %% Object loop for all types of objects.
 %% @end
 %%----------------------------------------------------------------------
-loop(#obj{properties=Dict} = State) ->
-    HeartBeat = fetch_heart_beat(Dict),
-    NewState = check_heart_beat(State),
+loop(#obj{tick_interval=TickInterval} = State) ->
+    do_tick(State),
     receive
-        % An execute call without an event id calls apply_fun/4
-        % which does not send anything back to the calling process "From".
-        {execute, {from, From}, {call, Fun}, {args, Args}} ->
-			%error_logger:info_report({execute, Fun, Args}),
-            {ok, NewState2} = apply_async_inheritance(
-                From, Fun, Args, NewState),
-            loop(NewState2);
-        % An execute call with an event id will try to send back
-        % the result to the calling process "From".
-        {execute, {from, From}, {call, Fun}, {args, Args}, 
-        		{event_id, EventId}} ->
-			%error_logger:info_report({execute, Fun, Args}),
-            {ok, NewState2} = apply_sync_inheritance(
-                From, Fun, Args, NewState, EventId),
-            loop(NewState2);
-        % Implement some sort of upgrade
-        % {upgrade, From} ->
-        %   ?MODULE:loop(State);
+        Msg ->
+            {ok, NewState} = ?MODULE:handle_msg(Msg, State),
+            ?MODULE:loop(NewState)
+    after TickInterval ->
+            ?MODULE:loop(State)
+    end.
+
+handle_msg(Message, #obj{type=Type} = State) ->
+    case Message of
+        {command, From, Command, Args} ->
+            Type:command_chain(From, Command, Args, State),
+            {ok, State};
+        {sync_command, From, CommandId, Command, Args} ->
+            Result = Type:command_chain(From, Command, Args, State),
+            From ! {CommandId, {result, Result}},
+            {ok, State};
+        {event, From, Event, Args} ->
+            Type:event_chain(From, Event, Args, State),
+            {ok, State};
+        {transform, NewType} ->
+            NewState = State#obj{type=NewType},
+            {ok, NewInitState} = NewType:init(NewState),
+            {ok, NewInitState};
+        {client_request, Request, CharInfo} ->
+            Type:client_request(Request, State, CharInfo),
+            {ok, State};
+        {obj_reply, From, Reply} ->
+            Type:reply_chain(From, Reply, State),
+            {ok, State};
+        {set_tick, {interval, TickInterval}} ->
+            {ok, State#obj{tick_interval=TickInterval}};
+        % Always receiving a wildcard match in the inbox prevents 
+        % memory leaks.
         Other ->
-            error_logger:info_report([{unexpected_message, Other}]),
-            loop(State)
-    after HeartBeat ->
-            NewState2 = call_heart_beat(NewState),
-            loop(NewState2)
+            error_logger:info_report([{?MODULE, unknown_message, Other}]),
+            {ok, State}
     end.
 
-apply_sync_inheritance(From, Fun, Args, #obj{type=Type} = State, EventId) ->
-    ArgLen = length(Args) + 2,
-    case shared_cache:retr({Fun, ArgLen}) of
+do_tick(#obj{type=Type, tick_interval=TickInterval} = State) ->
+    case obj:get_property(last_tick) of 
         undefined ->
-            case has_fun(Type:module_info(exports), Fun, ArgLen) of
+            obj:set_property(last_tick, now());
+        LastTick when is_tuple(LastTick) ->
+            Now = now(),
+            case timer:now_diff(Now, LastTick) > TickInterval of
                 true ->
-                    shared_cache:store({Fun, ArgLen}, Type),
-                    apply_fun(Type, From, Fun, Args, State, EventId);
+                    obj:set_property(last_tick, Now),
+                    Type:tick_chain(LastTick, State);
                 false ->
-                    apply_sync_inheritance(
-                        State#obj.parents, From, Fun, Args, State, EventId)
-            end;
-        CachedType ->
-            apply_fun(CachedType, From, Fun, Args, State, EventId)
-    end.
-            
-
-apply_sync_inheritance([], _From, Fun, Args, #obj{type=Type} = State, 
-    _EventId) ->
-    error_logger:error_report([{Type, sync_undef, Fun, Args}]),
-    {ok, State};
-
-apply_sync_inheritance([Parent | Parents], From, Fun, Args, State, 
-    EventId) ->
-    ArgLen = length(Args) + 2,
-    case shared_cache:retr({Fun, ArgLen}) of
-        undefined ->
-            case has_fun(Parent:module_info(exports), Fun, ArgLen) of
-                true ->
-                    shared_cache:store({Fun, ArgLen}, Parent),
-                    apply_fun(Parent, From, Fun, Args, State, EventId);
-                false ->
-                    apply_sync_inheritance(
-                        Parents, From, Fun, Args, State, EventId)
-            end;
-        CachedType ->
-            apply_fun(CachedType, From, Fun, Args, State)
-    end.
-
-apply_async_inheritance(From, Fun, Args, #obj{type=Type} = State) ->
-    ArgLen = length(Args) + 2,
-    error_logger:info_report(apply_async_inheritance, State#obj.parents),
-    case shared_cache:retr({Fun, ArgLen}) of
-        undefined ->
-            case has_fun(Type:module_info(exports), Fun, ArgLen) of
-                true ->
-                    shared_cache:store({Fun, ArgLen}, Type),
-                    apply_fun(Type, From, Fun, Args, State);
-                false ->
-                    apply_async_inheritance(
-                        State#obj.parents, From, Fun, Args, State)
-            end;
-        CachedType ->
-            apply_fun(CachedType, From, Fun, Args, State)
-    end.
-        
-
-apply_async_inheritance([], _From, Fun, Args, #obj{type=Type} = State) ->
-    error_logger:error_report([{Type, async_undef, Fun, Args, 
-        Type, State#obj.parents}]),
-    {ok, State};
-
-apply_async_inheritance([Parent | Parents], From, Fun, Args, State) ->
-    ArgLen = length(Args) + 2,
-    case has_fun(Parent:module_info(exports), Fun, ArgLen) of
-        true ->
-            shared_cache:store({Fun, ArgLen}, Parent),
-            apply_fun(Parent, From, Fun, Args, State);
-        false ->
-            apply_async_inheritance(Parents, From, Fun, Args, State)
-    end.
-
-%%----------------------------------------------------------------------
-%% @private
-%% @spec apply_fun(Type, From, Event, Args, State) -> {ok, NewState}
-%% where
-%%      Type = atom(),
-%%      From = pid,
-%%      Event = atom(),
-%%      Args = list(),
-%%      State = obj()
-%% @doc
-%% Applies the function Event, with the arguments Args in itself. Ignores
-%% the result.
-%% @end
-%%----------------------------------------------------------------------
-apply_fun(Type, From, Event, Args, State)->
-    case apply(Type, Event, [From] ++ Args ++ [State]) of
-        {noreply, NewState} ->
-            {ok, NewState};
-        {reply, _Reply, NewState} ->
-            {ok, NewState}
-    end.
-
-%%----------------------------------------------------------------------
-%% @spec apply_fun(Type, From, Event, Args, State, EventId) -> {ok, NewState}
-%% where
-%%      Type = atom(),
-%%      From = pid,
-%%      Event = atom(),
-%%      Args = list(),
-%%      State = obj(),
-%%      EventId = ref()
-%% @doc
-%% Applies a function in the object type and sends back the result to the
-%% calling process From.
-%% @end
-%%----------------------------------------------------------------------
-apply_fun(Type, From, Fun, Args, State, EventId)->
-    case apply(Type, Fun, [From] ++ Args ++ [State]) of
-        {noreply, NewState} ->
-            From ! {EventId, noreply},
-            {ok, NewState};
-        {reply, Reply, NewState} ->
-            From ! {EventId, Reply},
-            {ok, NewState}
-    end.
-
-has_fun([], _Fun, _NrArgs) ->
-    false;
-
-has_fun([{Fun, NrArgs} | _Rest], Fun, NrArgs) ->
-    true;
-
-has_fun([{_Fun, _NrArgs} | Rest], Fun, NrArgs) ->
-    has_fun(Rest, Fun, NrArgs).
-
-fetch_heart_beat(Dict) ->
-    case cache:fetch(heart_beat) of
-       	undefined ->
-			infinity;
-        HeartBeat ->
-            HeartBeat
-    end.
-    %case dict:find(heart_beat, Dict) of
-    %    {ok, HeartBeat} ->
-    %        HeartBeat;
-    %    error ->
-    %        infinity
-    %end.
-
-fetch_last_heart_beat(Dict) ->
-    case get(last_heart_beat) of
-        undefined->
-            {0, 0, 0};
-        LastHeartBeat ->
-            LastHeartBeat
-    end.
-
-call_heart_beat(State) ->
-    {ok, NewState} = apply_async_inheritance(
-        self(), heart_beat, [], State),
-    {ok, _Reply, NewState2} = obj:call_self(set_property, 
-        [last_heart_beat, now()], NewState),
-    NewState2.
-
-check_heart_beat(#obj{properties=Dict} = State) ->
-    HeartBeat = fetch_heart_beat(Dict),
-    LastHeartBeat = fetch_last_heart_beat(Dict),
-    Diff = timer:now_diff(now(), LastHeartBeat) / 1000,
-    case Diff > HeartBeat of
-        true ->
-            call_heart_beat(State);
-        false ->
-            State
+                    pass
+            end
     end.
