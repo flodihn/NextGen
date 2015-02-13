@@ -130,7 +130,8 @@ loop() ->
 loop(Socket, Id) ->
     receive 
         {From, char_login} ->   
-            send(Socket, <<?PLAY/integer>>),
+            %send(Socket, <<?PLAY/integer>>),
+            send(Socket, <<?CHAR_LOGIN/integer>>),
             case recv(Socket) of
                 <<?CHAR_LOGIN_SUCCESS, IdLen/integer, 
                     NewId:IdLen/binary>> ->

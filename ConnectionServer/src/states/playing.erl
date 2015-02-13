@@ -1,6 +1,6 @@
 -module(playing).
 
--include("protocol.hrl").
+-include("conn_state.hrl").
 -include("state.hrl").
 -include("charinfo.hrl").
 -include("vec.hrl").
