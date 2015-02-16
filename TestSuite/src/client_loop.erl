@@ -31,8 +31,6 @@ loop() ->
             loop()
     end.
 
-
-
 loop(Socket, Id) ->
     receive 
         {From, account_login, Account, Pass} ->
@@ -41,20 +39,16 @@ loop(Socket, Id) ->
             %io:format("Account login...~n", []),
             send(Socket, <<?ACCOUNT_LOGIN/integer, AccountBin/binary, 
                 PassBin/binary>>),
-            case recv(Socket) of
-                <<?CHAR_LOGIN_SUCCESS, IdLen/integer, 
-                    NewId:IdLen/binary>> ->
-                    From ! {ok, account_login},
-                    From ! {ok, char_login},
-                    loop(Socket, NewId);
-                %<<?ACCOUNT_LOGIN_SUCCESS>> ->
-                %    %io:format("Account login success~n"),
-                %    From ! {ok, account_login};
-                %<<?ACCOUNT_LOGIN_FAIL>> ->
-                %    io:format("Account login fail~n");
-                Data ->
-                    io:format("Account login unknown data: ~p.~n", [Data])
-            end,
+            %case recv(Socket) of
+            %    <<?CHAR_LOGIN_SUCCESS, IdLen:8/integer, 
+            %            NewId:IdLen/binary>> ->
+            %        From ! {ok, account_login},
+            %        loop(Socket, NewId);
+            %    <<?ACCOUNT_LOGIN_FAIL>> ->
+            %        io:format("Account login fail~n");
+            %    Data ->
+            %        io:format("Account login unknown data: ~p.~n", [Data])
+            %end,
             loop(Socket, Id);
         {From, char_login} ->   
             loop(Socket, Id);
@@ -75,6 +69,9 @@ loop(Socket, Id) ->
             gen_tcp:controlling_process(Socket, RecvPid),
             From ! {ok, start_play},
             play_loop(Socket, #client_state{recv_proc=RecvPid});
+        {tcp, Socket, <<?CHAR_LOGIN_SUCCESS, IdLen:8/integer, 
+                NewId:IdLen/binary>>} ->
+            loop(Socket, NewId);
         Data ->
             % While not all clients are has been logged in we might 
             % receive some valid

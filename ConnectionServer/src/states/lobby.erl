@@ -55,7 +55,7 @@ event(<<?CHAR_LOGIN>>, State) ->
     end;
 
 event(Event, State) ->
-    error_logger:info_report([{unknown_event, Event}]),
+    error_logger:info_report([{lobby, unknown_event, Event}]),
     {reply, unknown_command, lobby, State}.
 
 send_char_list([], _State) ->

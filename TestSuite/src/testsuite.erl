@@ -177,7 +177,6 @@ report(ClientPid, Report, NrClients, File) ->
     report(ets:next(test_clients, ClientPid), NewReport, NrClients + 1,
         File).
 
-
 get_calendar_time() ->
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     YearStr = integer_to_list(Year),

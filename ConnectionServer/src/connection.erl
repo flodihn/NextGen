@@ -37,7 +37,7 @@ start_link(Socket) ->
 init(Socket) ->
     State = #state{socket=Socket},
     {ok, DefaultAreaSrv} = application:get_env(start_area),
-	error_logger:info_report({char_login, DefaultAreaSrv}),
+	%error_logger:info_report({char_login, DefaultAreaSrv}),
     rpc:call(DefaultAreaSrv, libplayer_srv, create, [self()]),
     receive 
         {char_login, {pid, Pid}, {id, Id}} ->
@@ -51,7 +51,7 @@ init(Socket) ->
 	end.
 			
 handle_event(Event, StateName, StateData) ->
-    error_logger:info_report([{event, Event, StateName}]),
+    %error_logger:info_report([{event, Event, StateName}]),
     {next_state, StateName, StateData}.
 
 % For now we terminate the gen_fsm, perhaps we should't make it still run
@@ -62,7 +62,7 @@ handle_info({tcp_closed, _Socket}, StateName, StateData) ->
 
 handle_info({tcp, Socket, Data}, StateName, 
     #state{socket=Socket} = State) ->
-    error_logger:info_report([{tcp, Socket, Data}]),
+    %error_logger:info_report([{tcp, Socket, Data}]),
     case apply(StateName, event, [Data, State]) of
         {reply, Reply, NextState, NewState} ->
             socket_send(Socket, Reply),

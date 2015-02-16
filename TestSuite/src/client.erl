@@ -90,21 +90,22 @@ info(Pid) ->
 report(Pid) ->
     Pid ! {self(), report},
     receive 
-        State ->
+        #client_state{} = State ->
             #report{
                 cmds_sent = State#client_state.cmds_sent,
                 cmds_recv = State#client_state.cmds_recv,
                 bytes_sent = State#client_state.bytes_sent,
-                bytes_recv = State#client_state.bytes_recv}
+                bytes_recv = State#client_state.bytes_recv};
+        _Other ->
+            report(Pid)
     end.
 
 % Function that gathers the amount of bytes recevied from the recv_loop 
 % process.
-do_report(From, 
-    #client_state{recv_proc=RecvPid} = State) ->
+do_report(From, #client_state{recv_proc=RecvPid} = State) ->
     RecvPid ! {get_state},
     receive 
-        RecvState ->
+        #recv_state{} = RecvState ->
             CmdsRecv = RecvState#recv_state.cmds_recv,
             BytesRecv = RecvState#recv_state.bytes_recv,
             From ! State#client_state{bytes_recv=BytesRecv, 

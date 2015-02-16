@@ -259,10 +259,8 @@ event(<<?SET_SHOT, Time/binary>>, State) ->
 	rpc:call(node(Pid), obj, async_call, [Pid, set_shot, [Time]]),
     {noreply, playing, State};
 
-
-
 event(Event, State) ->
-    error_logger:info_report([{unknown_event, Event}]),
+    %error_logger:info_report([{playing, unknown_event, Event}]),
     {noreply, playing, State}.
 
 obj_call(Pid, Fun) ->
