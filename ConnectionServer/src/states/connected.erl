@@ -1,9 +1,7 @@
 -module(connected).
 
+-include("conn_state.hrl").
 -include("protocol.hrl").
--include("char.hrl").
-
--record(state, {socket, account, charinfo}).
 
 -export([
     event/2
@@ -24,7 +22,7 @@ event(<<?ACCOUNT_LOGIN:8/integer,
     case Result of
         {ok, match} ->
             {reply, <<?ACCOUNT_LOGIN_SUCCESS>>, lobby, 
-                State#state{account=Account}};
+                State#conn_state{account=Account}};
         Other ->
             error_logger:error_report([Other]),
             {reply, <<?ACCOUNT_LOGIN_FAIL>>, connected, State}
@@ -43,7 +41,7 @@ event(<<?SIGNUP,
             error_logger:info_report([{account_created, Account, Email,
                 Pass}]),
             {reply, <<?ACCOUNT_LOGIN_SUCCESS>>, lobby, 
-                State#state{account=Account}};
+                State#conn_state{account=Account}};
         Error->
             error_logger:info_report([{account_creation_failed, Account, 
                 Error}]),

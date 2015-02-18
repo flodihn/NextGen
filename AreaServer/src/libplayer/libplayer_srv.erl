@@ -65,6 +65,11 @@ handle_call({save, {id, Id}, {obj_state, ObjState}}, _From,
     Result = Mod:save(Id, ObjState),
     {reply, Result, State};
 
+%% @private
+handle_call({create, {connection, Conn}}, _From, #state{mod=Mod} = State) ->
+    {ok, {pid, Pid}, {id, Id}} = Mod:create(Conn),
+    {reply, {char_login, {pid, Pid}, {id, Id}}, State};
+
 handle_call(Call, _From, State) ->
     error_logger:info_report([{Call, State}]),
     {reply, ok, State}.
@@ -73,11 +78,6 @@ handle_call(Call, _From, State) ->
 %% @private
 handle_info(_Info, State) ->
     {nopreply, State}.
-
-%% @private
-handle_cast({create, {connection, Conn}}, #state{mod=Mod} = State) ->
-    Mod:create(Conn),
-    {noreply, State};
 
 handle_cast({login, {conn, Conn}, {id, Id}}, #state{mod=Mod} = State) ->
     Mod:login(Conn, Id),
@@ -106,7 +106,7 @@ terminate(_Reason, #state{mod=Mod}) ->
 %% @end
 %%---------------------------------------------------------------------
 create(Conn) ->
-    gen_server:cast(?MODULE, {create, {connection, Conn}}).
+    gen_server:call(?MODULE, {create, {connection, Conn}}).
 
 %%---------------------------------------------------------------------
 %% @spec login(State) -> {ok, {pid, Pid}} | {error, Reason}

@@ -47,16 +47,6 @@ new() ->
 
 init(#obj{id=Id} = State) ->
     {ok, NewState} = ?PARENT:init(State),
-    %case obj:get_property(<<"pos">>) of
-    %    #vec{} = Pos ->
-    %        IdBin = abydos_protocol:make_str(Id),
-    %        PosBin = abydos_protocol:make_vec(Pos),
-    %        client_reply(<<?NEW_POS, IdBin/binary, PosBin/binary>>);
-    %    undefined ->
-    %        error_logger:error_report({?MODULE, error,
-    %            property, <<"pos">>, undefined})
-    %end,
-    %obj:send_event(shallow_object_info),
     {ok, NewState}.
 
 tick_chain(LastTick, State) ->
@@ -136,8 +126,9 @@ client_request(<<?GET_NAME, IdLen:8/integer, Id:IdLen/binary>>,
 
 client_request(<<?SAVE>>, #obj{id=Id} = State, 
     #conn_state{account=Account}) ->
+    error_logger:info_report({?MODULE, saving, Id}),
     Name = obj:get_property(<<"name">>),
-    libsave_srv:save_player(Id, Account, Name, 
+    libplayer:save(Id, Account, Name, 
         State#obj{properties=obj:get_properties()}),
     {noreply, playing, State};
 

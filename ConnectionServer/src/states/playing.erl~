@@ -1,9 +1,7 @@
 -module(playing).
 
--include("protocol.hrl").
--include("state.hrl").
+-include("conn_state.hrl").
 -include("charinfo.hrl").
--include("vec.hrl").
 
 % States
 -export([
@@ -12,12 +10,6 @@
 
 event(tcp_closed, State) ->
     CharInfo = State#state.charinfo,
-    % For now we logout the player if the connection is lost. Should
-    % be changed to persist in case of reconnect.
-	%CharInfo#charinfo.pid ! {execute, {from, self()}, {call, logout}, 
-    %    {args, []}},
-    %Pid = CharInfo#charinfo.pid, 
-    %rpc:call(node(Pid), obj, async_call, [Pid, logout]),
     Pid = CharInfo#charinfo.pid,
 	rpc:call(node(Pid), obj, async_call, [Pid, logout]), 
     {noreply, playing, State};
@@ -30,11 +22,6 @@ event({terrain, Terrain}, State) ->
 
 event({skybox, SkyBox}, State) ->
 	SkyBoxStr = make_str(SkyBox),
-    %SkyBoxBin = list_to_binary(SkyBox),
-    %Len = byte_size(SkyBoxBin),
-    %Reply = <<?SKYBOX, Len, SkyBoxBin/binary>>,
-    %error_logger:info_report([{sending, ?SKYBOX, SkyBox, 
-    %    byte_size(Reply)}]),
     {reply, <<?SKYBOX, SkyBoxStr/binary>>, playing, State};
 
 event({new_pos, [Id, #vec{x=X, y=Y, z=Z}]}, State) ->

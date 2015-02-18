@@ -1,9 +1,7 @@
 -module(playing).
 
 -include("conn_state.hrl").
--include("state.hrl").
 -include("charinfo.hrl").
--include("vec.hrl").
 
 % States
 -export([
@@ -15,7 +13,6 @@ event({client_reply, Data}, State) ->
     {reply, Data, playing, State};
 
 event(tcp_closed, State) ->
-    game_obj_send(State, tcp_closed),
     {stop, normal, State};
 
 % All data received on the socket is sent to the player for 
@@ -25,7 +22,7 @@ event(BinarySocketData, State) ->
     {noreply, playing, State}.
 
 game_obj_send(
-    #conn_state{charinfo=#charinfo{pid=P}} = ConnState, 
+    #conn_state{charinfo=#charinfo{pid=P} = ConnState}, 
     BinarySocketData) ->
     P ! {client_request, BinarySocketData, ConnState}.
 
@@ -33,7 +30,8 @@ validate_id(<<Bin/binary>>, #state{validate_id_regexp=undefined} = State) ->
 	{ok, RegExp} = re:compile("^[a-zA-Z0-9-_]+@[a-zA-Z0-9_-]+#[0-9]+"),
 	validate_id(Bin, State#state{validate_id_regexp=RegExp});
 
-validate_id(<<_IdLen:8, Id/binary>>, #state{validate_id_regexp=RegExp} = State) ->
+validate_id(
+    <<_IdLen:8, Id/binary>>, #state{validate_id_regexp=RegExp} = State) ->
 	error_logger:info_report({invalid_id, Id, RegExp}),
 	case re:run(Id, RegExp) of
 		nomatch ->

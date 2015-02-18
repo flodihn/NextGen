@@ -51,7 +51,7 @@ handle_info({tcp_closed, _Socket}, StateName, StateData) ->
 
 handle_info({tcp, Socket, Data}, StateName, 
     	#state{socket=Socket} = State) ->
-    %error_logger:info_report([{tcp, Socket, Data}]),
+    error_logger:info_report([{tcp, Socket, Data}]),
     case apply(StateName, event, [Data, State]) of
         {reply, Reply, NextState, NewState} ->
             socket_send(Socket, Reply),
