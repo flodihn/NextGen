@@ -128,7 +128,7 @@ client_request(<<?SAVE>>, #obj{id=Id} = State,
     #conn_state{account=Account}) ->
     error_logger:info_report({?MODULE, saving, Id}),
     Name = obj:get_property(<<"name">>),
-    libplayer:save(Id, Account, Name, 
+    libplayer_srv:save(Id, Account, Name, 
         State#obj{properties=obj:get_properties()}),
     {noreply, playing, State};
 

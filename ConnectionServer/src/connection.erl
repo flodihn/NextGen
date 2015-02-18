@@ -5,8 +5,7 @@
 
 -include("protocol.hrl").
 -include("charinfo.hrl").
--include("state.hrl").
--include("char.hrl").
+-include("conn_state.hrl").
 
 % States
 -export([
@@ -36,7 +35,7 @@ start_link(Socket) ->
     gen_fsm:start_link(?MODULE, Socket, []).
 
 init(Socket) ->
-    State = #state{socket=Socket},
+    State = #conn_state{socket=Socket},
     {ok, connected, State}.
 
 handle_event(Event, StateName, StateData) ->
@@ -50,7 +49,7 @@ handle_info({tcp_closed, _Socket}, StateName, StateData) ->
     {stop, normal, StateData}; 
 
 handle_info({tcp, Socket, Data}, StateName, 
-    	#state{socket=Socket} = State) ->
+    	#conn_state{socket=Socket} = State) ->
     error_logger:info_report([{tcp, Socket, Data}]),
     case apply(StateName, event, [Data, State]) of
         {reply, Reply, NextState, NewState} ->
@@ -66,11 +65,11 @@ handle_info({tcp, Socket, Data}, StateName,
     end;
 
 handle_info({set_char_pid, Pid}, playing, 
-		#state{charinfo=CharInfo} = StateData) ->
+		#conn_state{charinfo=CharInfo} = StateData) ->
 	NewCharInfo = CharInfo#charinfo{pid=Pid},
-	{next_state, playing, StateData#state{charinfo=NewCharInfo}};
+	{next_state, playing, StateData#conn_state{charinfo=NewCharInfo}};
 
-handle_info(Info, playing, #state{socket=Socket} = State) ->
+handle_info(Info, playing, #conn_state{socket=Socket} = State) ->
     case apply(playing, event, [Info, State]) of
         {reply, Reply, StateName, NewState} ->
             socket_send(Socket, Reply),
@@ -79,7 +78,8 @@ handle_info(Info, playing, #state{socket=Socket} = State) ->
             {next_state, StateName, NewState}
     end;
 
-handle_info(Info, observing=StateName, #state{socket=Socket} = State) ->
+handle_info(Info, observing=StateName, 
+        #conn_state{socket=Socket} = State) ->
     case apply(StateName, event, [Info, State]) of
         {reply, Reply, NextState, NewState} ->
             socket_send(Socket, Reply),

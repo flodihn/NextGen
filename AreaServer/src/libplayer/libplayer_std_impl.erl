@@ -91,9 +91,9 @@ unregister_events() ->
     %areasrv:remove_handler(char_login).
     ok.
 
-save(Id, Account, Name, State) ->
+save(Id, Account, Name, ObjState) ->
     {ok, CharSrv} = application:get_env(charsrv),
-    R = rpc:call(CharSrv, charsrv, save, [Id, Account, Name, State]),
+    R = rpc:call(CharSrv, charsrv, save, [Id, Account, Name, ObjState]),
     error_logger:info_report({"Saving player", State, CharSrv, result, R}).
 
 

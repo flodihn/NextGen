@@ -16,7 +16,7 @@
 -export([
     create/1,
     login/2,
-    save/2
+    save/4
     ]).
 
 %external exports
@@ -60,9 +60,10 @@ init(Module) ->
 
 %% @doc
 %% @private
-handle_call({save, {id, Id}, {obj_state, ObjState}}, _From, 
+handle_call({save, {id, Id}, {account, Account}, {name, Name},
+        {obj_state, ObjState}}, _From, 
     #state{mod=Mod} = State) ->
-    Result = Mod:save(Id, ObjState),
+    Result = Mod:save(Id, Account, Name, ObjState),
     {reply, Result, State};
 
 %% @private
@@ -120,5 +121,9 @@ create(Conn) ->
 login(Conn, Id) ->
     gen_server:cast(?MODULE, {login, {conn, Conn}, {id, Id}}).
 
-save(Id, ObjState) ->
-    gen_server:call(?MODULE, {save, {id, Id}, {obj_state, ObjState}}).
+save(Id, Account, Name, ObjState) ->
+    gen_server:call(?MODULE, {save,
+        {id, Id},
+        {account, Account},
+        {name, Name},
+        {obj_state, ObjState}}).

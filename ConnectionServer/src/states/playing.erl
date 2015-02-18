@@ -22,20 +22,22 @@ event(BinarySocketData, State) ->
     {noreply, playing, State}.
 
 game_obj_send(
-    #conn_state{charinfo=#charinfo{pid=P} = ConnState}, 
+    #conn_state{charinfo=#charinfo{pid=P}} = ConnState, 
     BinarySocketData) ->
     P ! {client_request, BinarySocketData, ConnState}.
 
-validate_id(<<Bin/binary>>, #state{validate_id_regexp=undefined} = State) ->
-	{ok, RegExp} = re:compile("^[a-zA-Z0-9-_]+@[a-zA-Z0-9_-]+#[0-9]+"),
-	validate_id(Bin, State#state{validate_id_regexp=RegExp});
+%validate_id(<<Bin/binary>>, 
+%        #conn_state{validate_id_regexp=undefined} = State) ->
+%	{ok, RegExp} = re:compile("^[a-zA-Z0-9-_]+@[a-zA-Z0-9_-]+#[0-9]+"),
+%	validate_id(Bin, State#state{validate_id_regexp=RegExp});
 
-validate_id(
-    <<_IdLen:8, Id/binary>>, #state{validate_id_regexp=RegExp} = State) ->
-	error_logger:info_report({invalid_id, Id, RegExp}),
-	case re:run(Id, RegExp) of
-		nomatch ->
-			{false, State};
-		{match, _} ->
-			{true, State}
-	end.
+%validate_id(
+%    <<_IdLen:8, Id/binary>>, 
+%        #conn_state{validate_id_regexp=RegExp} = State) ->
+%	error_logger:info_report({invalid_id, Id, RegExp}),
+%	case re:run(Id, RegExp) of
+%		nomatch ->
+%			{false, State};
+%		{match, _} ->
+%			{true, State}
+%	end.
