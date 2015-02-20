@@ -89,8 +89,9 @@ load(Id) ->
     gen_server:call(?MODULE, {load , {char_id, Id}}).
 
 save(Id, Account, Name, ObjState) ->
-    gen_server:call(?MODULE, {save, {id, Id}, {account, Account}, 
-        {name, Name}, {obj_state, ObjState}}).
-    
+    %gen_server:call(?MODULE, {save, {id, Id}, {account, Account}, 
+    %    {name, Name}, {obj_state, ObjState}}).
+    ok.
+
 get_list(Account) ->
     gen_server:call(?MODULE, {get_list, {account, Account}}).
