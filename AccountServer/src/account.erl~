@@ -6,7 +6,7 @@
 
 -export([
     init/0,
-    %init_tables/0,
+    init_tables/0,
     stop/0,
     ping/0,
     lookup/1,
@@ -23,7 +23,7 @@
 
 init() ->
     %init_tables(),
-    {ok, Pid} = riakc_pb_socket:start("127.0.0.1",8087),
+    riakc_pb_socket:start("127.0.0.1",8087),
     error_logger:info_report("Riak DB started").
 
 stop() ->

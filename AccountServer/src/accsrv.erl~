@@ -43,7 +43,7 @@ start_link(ServerName, Module) ->
         {error, {already_started, OldPid}} ->
             {ok, OldPid};
         Error ->
-            error_logger:error_report([{"start_link/2:", Error}, "Error Here"])
+            error_logger:error_report([{"start_link/2:", Error}])
     end.
 
 init([Module]) ->

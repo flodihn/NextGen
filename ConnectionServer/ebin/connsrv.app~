@@ -7,9 +7,9 @@
      {mod, {connsrv_app, []}},
      {start_phases, []},
      {env, [
-        {accsrv, 'accsrv@Leader1'},
-        {start_area, 'start_area@Leader1'},
-        {charsrv, 'charsrv@Leader1'}
+        {accsrv, 'accsrv@macbook-2'},
+        {start_area, 'areasrv@macbook-2'},
+        {charsrv, 'charsrv@macbook-2'}
      ]}
     ]}.
 
