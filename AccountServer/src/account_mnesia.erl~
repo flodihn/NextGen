@@ -1,4 +1,4 @@
--module(account).
+-module(account_mnesia).
 
 -include("account.hrl").
 
@@ -6,7 +6,7 @@
 
 -export([
     init/0,
-    %init_tables/0,
+    init_tables/0,
     stop/0,
     ping/0,
     lookup/1,
@@ -15,19 +15,19 @@
     validate/2
     ]).
 
-%init_tables() ->
-%    mnesia:create_schema([node()]),
-%    mnesia:start(),
-%    Result = mnesia:create_table(account, [{attributes, record_info(fields, account)},{disc_copies, [node()]}]),
-%    Result.
+init_tables() ->
+    mnesia:create_schema([node()]),
+    mnesia:start(),
+    Result = mnesia:create_table(account, [{attributes, record_info(fields, account)},{disc_copies, [node()]}]),
+    Result.
 
 init() ->
-    %init_tables(),
-    {ok, Pid} = riakc_pb_socket:start("127.0.0.1",8087),
-    error_logger:info_report("Riak DB started").
+    init_tables(),
+    mnesia:start(),
+    {ok, []}.
 
 stop() ->
-    riakc_pb_socket:stop(Pid).
+    mnesia:stop().
 
 read(Q) ->
     F = fun() ->

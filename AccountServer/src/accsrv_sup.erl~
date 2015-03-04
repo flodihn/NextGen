@@ -23,7 +23,7 @@ start_link(Args) ->
 init([]) ->
     {ok, {{one_for_one, 3, 10},
         [{tag1,
-            {accsrv, start_link, [account_riak]},
+            {accsrv, start_link, [account_mnesia]},
             permanent,
             10000,
             worker,
