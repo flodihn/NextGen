@@ -7,12 +7,12 @@
 -export([
     init/0,
     init_tables/0,
-    stop/0,
+    stop/1,
     ping/0,
-    lookup/1,
-    delete/2,
-    create/3,
-    validate/2
+    lookup/2,
+    delete/3,
+    create/4,
+    validate/3
     ]).
 
 init_tables() ->
@@ -26,7 +26,7 @@ init() ->
     mnesia:start(),
     {ok, []}.
 
-stop() ->
+stop(_State) ->
     mnesia:stop().
 
 read(Q) ->
@@ -44,8 +44,8 @@ delete(Q) ->
 ping() ->
     alive.
 
-create(Name, Email, Passwd) ->
-    case lookup(Name) of 
+create(Name, Email, Passwd, State) ->
+    case lookup(Name, State) of 
         {ok, false} ->
             Row = #account{name=Name, email=Email, passwd=Passwd, characters=[]},
             F = fun() ->
@@ -63,7 +63,7 @@ create(Name, Email, Passwd) ->
             {error, node_not_running}
     end.
 
-lookup(Name) ->
+lookup(Name, _State) ->
     case read({account, Name}) of 
         {atomic, []} ->
             {ok, false};
@@ -73,7 +73,7 @@ lookup(Name) ->
             {error, Result}
     end.
 
-delete(Name, Pass) ->
+delete(Name, Pass, _State) ->
     case read({account, Name}) of 
         {atomic, []} ->
             {error, wrong_username_or_password};
@@ -86,7 +86,7 @@ delete(Name, Pass) ->
             {error, node_not_running}
     end.
 
-validate(Name, Pass) ->
+validate(Name, Pass, _State) ->
     case read({account, Name}) of 
         {atomic, [{account, Name, _Mail, Pass, _Characters}]} ->
              {ok, match};

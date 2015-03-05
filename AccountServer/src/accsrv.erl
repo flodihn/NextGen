@@ -12,8 +12,7 @@
     create/3,
     delete/2,
     lookup/1,
-    validate/2,
-    init_tables/0
+    validate/2
     ]).
     
 % Gen server callbacks
@@ -62,30 +61,26 @@ handle_cast(Cast, State) ->
     error_logger:info_report([{"Cast:", Cast}]),
     {nopreply, State}.
 
-
 handle_call({create, {Name, Email, Pass}}, _From, State) ->
     Module = State#state.module,
-    Result = Module:create(Name, Email, Pass),
-    {reply, Result, State};
+    ModState = State#state.mod_state,
+    {ok, Result, NewModState} = Module:create(Name, Email, Pass, ModState),
+    {reply, Result, State#state{mod_state = NewModState}};
 
 handle_call({delete, {Name, Password}}, _From, State) ->
     Module = State#state.module,
     Result = Module:delete(Name, Password),
     {reply, Result, State};
 
-handle_call({lookup, Name}, _From, State) ->
+handle_call({lookup, Email}, _From, State) ->
     Module = State#state.module,
-    Result = Module:lookup(Name),
-    {reply, Result, State};
+    ModState = State#state.mod_state,
+    {ok, Result, NewModState} = Module:lookup(Email, ModState),
+    {reply, Result, State#state{mod_state = NewModState}};
 
 handle_call({validate, {Name, Password}}, _From, State) ->
     Module = State#state.module,
     Result = Module:validate(Name, Password),
-    {reply, Result, State};
-
-handle_call(init_tables, _From,  State) ->
-    Module = State#state.module,
-    Result = Module:init_tables(),
     {reply, Result, State};
 
 handle_call(stop, _From, State) ->
@@ -106,12 +101,9 @@ create(Name, Email, Pass) ->
 delete(Name, Pass) ->
     gen_server:call(?MODULE, {create, {Name, Pass}}).
 
-lookup(Name) ->
-    gen_server:call(?MODULE, {lookup, Name}).
+lookup(Email) ->
+    gen_server:call(?MODULE, {lookup, Email}).
 
 validate(Name, Pass) ->
     gen_server:call(?MODULE, {validate, {Name, Pass}}).
-
-init_tables() ->
-    gen_server:call(?MODULE, init_tables).
 
