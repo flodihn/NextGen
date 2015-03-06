@@ -17,9 +17,11 @@
 init() ->
     {ok, Pid} = riakc_pb_socket:start("127.0.0.1", 8087),
     {ok, #riak_state{riak_client_pid = Pid}}.
+    %error_logger:info_report("Database Initialized", Pid).
 
 stop(#riak_state{riak_client_pid = Pid}) ->
-    riakc_pb_socket:stop(Pid).
+    riakc_pb_socket:stop(Pid),
+    error_logger:info_report("Database Stopped").
     
 ping() ->
     alive.
@@ -66,7 +68,10 @@ lookup(Email, RiakState) ->
         RiakState#riak_state.riak_client_pid,
         <<"accounts">>,
         Email),
-    {ok, GetObj , RiakState}.
+    Value = riakc_obj:get_value(GetObj),
+    {Name, Passwd} = binary_to_term(Value),
+    error_logger:info_report({Name, Passwd}),
+    {ok, RiakState}.
 
 delete(Name, Pass, RiakState) ->
 %    case read({account, Name}) of 
