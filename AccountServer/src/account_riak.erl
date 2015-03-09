@@ -66,8 +66,10 @@ lookup(Email, RiakState) ->
         <<"accounts">>,Email),
 
     case FetchedObj of
-        {error, notfound} -> {ok, false, RiakState};
-        {_,_} -> {ok,true, RiakState}
+        {error, notfound} -> 
+            {ok, false, RiakState};
+        {_,_} -> 
+            {ok,true, RiakState}
     end.
 
 %    Value = riakc_obj:get_value(FetchedObj),
@@ -86,12 +88,24 @@ delete(Email, Pass, RiakState) ->
 %        {aborted, {node_not_running, _Node}} ->
 %            {error, node_not_running}
 %    end.
-    riakc_pb_socket:delete(
+
+    {ok, FetchedObj} = riakc_pb_socket:get(
         RiakState#riak_state.riak_client_pid,
-        <<"accounts">>,
-        Email),
-        
-    {ok, RiakState}.
+        <<"accounts">>,Email),
+
+    Value = binary_to_term(riakc_obj:get_value(FetchedObj)),
+
+    case Value of
+        {_, Pass} -> 
+            riakc_pb_socket:delete(
+                RiakState#riak_state.riak_client_pid,
+                <<"accounts">>,
+                Email),
+            {ok, account_deleted, RiakState};
+        {_,_} -> 
+            {ok, wrong_password, RiakState}
+    end.
+
 
 validate(Name, Pass, RiakState) ->
 %    case read({account, Name}) of 

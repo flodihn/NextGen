@@ -69,8 +69,9 @@ handle_call({create, {Name, Email, Pass}}, _From, State) ->
 
 handle_call({delete, {Name, Password}}, _From, State) ->
     Module = State#state.module,
-    Result = Module:delete(Name, Password),
-    {reply, Result, State};
+    ModState = State#state.mod_state,
+    {ok, Result, NewModState} = Module:delete(Name, Password, ModState),
+    {reply, Result, State#state{mod_state = NewModState}};
 
 handle_call({lookup, Email}, _From, State) ->
     Module = State#state.module,
