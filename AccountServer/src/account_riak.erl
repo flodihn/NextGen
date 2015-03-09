@@ -65,13 +65,15 @@ lookup(Email, RiakState) ->
         RiakState#riak_state.riak_client_pid,
         <<"accounts">>,Email),
 
+    %error_logger:info_report({"retrieved Value " , readvalue(FetchedObj)}),
+
     case FetchedObj of
         {error, notfound} -> 
             {ok, false, RiakState};
-        {_,_} -> 
+        _ -> 
             {ok,true, RiakState}
     end.
-
+    
 %    Value = riakc_obj:get_value(FetchedObj),
 %    {Name, Passwd} = binary_to_term(Value),
 %    error_logger:info_report({Name, Passwd}),
@@ -89,13 +91,13 @@ delete(Email, Pass, RiakState) ->
 %            {error, node_not_running}
 %    end.
 
-    {ok, FetchedObj} = riakc_pb_socket:get(
+    FetchedObj = riakc_pb_socket:get(
         RiakState#riak_state.riak_client_pid,
         <<"accounts">>,Email),
 
-    Value = binary_to_term(riakc_obj:get_value(FetchedObj)),
+    Result = readvalue(FetchedObj),
 
-    case Value of
+    case Result of
         {_, Pass} -> 
             riakc_pb_socket:delete(
                 RiakState#riak_state.riak_client_pid,
@@ -103,19 +105,31 @@ delete(Email, Pass, RiakState) ->
                 Email),
             {ok, account_deleted, RiakState};
         {_,_} -> 
-            {ok, wrong_password, RiakState}
+            {ok, wrong_email_or_password, RiakState}
     end.
 
 
-validate(Name, Pass, RiakState) ->
-%    case read({account, Name}) of 
-%        {atomic, [{account, Name, _Mail, Pass, _Characters}]} ->
-%             {ok, match};
-%        {atomic, Error} ->
-%            error_logger:info_report([{validate, Name, Pass, Error}]),
-%            {error, wrong_username_or_password};
-%        {aborted, {node_not_running, _Node}} ->
-%            {error, node_not_running}
-%    end.
-    {ok, RiakState}.
+validate(Email, Pass, RiakState) ->
+
+    FetchedObj = riakc_pb_socket:get(
+        RiakState#riak_state.riak_client_pid,
+        <<"accounts">>,Email),
+
+    Result = readvalue(FetchedObj),
+
+    case Result of
+        {_, Pass} -> 
+            {ok, match, RiakState};
+        {_,_} -> 
+            {ok, wrong_email_or_password, RiakState}
+    end.
+
+readvalue(FetchedObj)->
+case FetchedObj of
+    {error, notfound}->
+        {ok, could_not_read};
+    _ ->
+        {_, Value} = FetchedObj,
+        binary_to_term(riakc_obj:get_value(Value))    
+    end.
 

@@ -81,8 +81,9 @@ handle_call({lookup, Email}, _From, State) ->
 
 handle_call({validate, {Name, Password}}, _From, State) ->
     Module = State#state.module,
-    Result = Module:validate(Name, Password),
-    {reply, Result, State};
+    ModState = State#state.mod_state,
+    {ok, Result, NewModState} = Module:validate(Name, Password, ModState),
+    {reply, Result, State#state{mod_state = NewModState}};
 
 handle_call(stop, _From, State) ->
     {stop, requested, State}.
@@ -101,7 +102,7 @@ create(Name, Email, Pass) ->
     gen_server:call(?MODULE, {create, {Name, Email, Pass}}).
 
 delete(Name, Pass) ->
-    gen_server:call(?MODULE, {create, {Name, Pass}}).
+    gen_server:call(?MODULE, {delete, {Name, Pass}}).
 
 lookup(Email) ->
     gen_server:call(?MODULE, {lookup, Email}).
