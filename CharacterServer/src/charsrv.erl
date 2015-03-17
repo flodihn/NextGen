@@ -86,7 +86,8 @@ code_change(OldVsn, State, Extra) ->
 
 terminate(Reason, State) ->
     Module = State#state.module,
-    Module:stop(),
+    ModState = State#state.mod_state,
+    Module:stop(ModState),
     error_logger:info_report([{"terminate:", Reason}]).
 
 load(Id) ->
