@@ -26,7 +26,10 @@
     ]).
 
 % Server state
--record(state, {module}).
+-record(state, {
+    module,
+    mod_state
+    }).
 
 start_link(Module) ->
     start_link(?MODULE, Module).
@@ -65,8 +68,9 @@ handle_call({load, {char_id, Id}}, _From, State) ->
 handle_call({save, {id, Id}, {account, Account}, {name, Name}, 
     {obj_state, ObjState}}, _From, State) ->
     Module = State#state.module,
-    Result = Module:save(Id, Account, Name, ObjState),
-    {reply, Result, State};
+    ModState = State#state.mod_state,
+    {ok, Result, NewModState} = Module:save(Id, Account, Name, ObjState, ModState),
+    {reply, Result, State#state{mod_state = NewModState}};
 
 handle_call({get_list, {account, Account}}, _From, State) ->
     Module = State#state.module,
@@ -89,9 +93,8 @@ load(Id) ->
     gen_server:call(?MODULE, {load , {char_id, Id}}).
 
 save(Id, Account, Name, ObjState) ->
-    %gen_server:call(?MODULE, {save, {id, Id}, {account, Account}, 
-    %    {name, Name}, {obj_state, ObjState}}).
-    ok.
+    gen_server:call(?MODULE, {save, {id, Id}, {account, Account}, 
+        {name, Name}, {obj_state, ObjState}}).
 
 get_list(Account) ->
     gen_server:call(?MODULE, {get_list, {account, Account}}).

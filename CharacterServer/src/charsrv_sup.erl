@@ -12,7 +12,7 @@ start_link(Args) ->
 init([]) ->
     {ok, {{one_for_one, 3, 10},
         [{charsrv,
-            {charsrv, start_link, [mnesia_char]},
+            {charsrv, start_link, [riak_char]},
             permanent,
             10000,
             worker,

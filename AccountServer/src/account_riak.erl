@@ -27,51 +27,27 @@ ping() ->
     alive.
 
 create(Name, Email, Passwd, RiakState) ->
-    NewAccount = riakc_obj:new(<<"accounts">>, Email, term_to_binary({Name, Passwd})),
-    riakc_pb_socket:put(
-        RiakState#riak_state.riak_client_pid,
-        NewAccount, 
-        [{w, 1}, {dw, 1}, return_body]),
-%    case lookup(Name) of 
-%        {ok, false} ->
-%            Row = #account{name=Name, email=Email, passwd=Passwd, characters=[]},
-%            F = fun() ->
-%                mnesia:write(Row)
-%            end,
-%            case mnesia:transaction(F) of
-%                {atomic, ok} ->
-%                    {ok, account_created};
-%               {error, Reason} ->
-%                    {error, Reason}
-%            end;
-%        {ok, true} ->
-%            {error, account_name_exists};
-%        {aborted, {node_not_running, _Node}} ->
-%            {error, node_not_running}
-%    end.
-    {ok, lookup(Email, RiakState), RiakState}.
+    case lookup(Email, RiakState) of
+        {ok, false, _} ->
+            NewAccount = riakc_obj:new(<<"accounts">>, Email, term_to_binary({Name, Passwd})),
+            riakc_pb_socket:put(
+                RiakState#riak_state.riak_client_pid,
+                NewAccount, 
+                [{w, 1}, {dw, 1}, return_body]),
+            {ok, account_created, RiakState};
+        {ok, true, _} ->            
+            {ok, account_already_exist, RiakState}
+    end.
 
 lookup(Email, RiakState) ->
-%    case read({account, Name}) of 
-%        {atomic, []} ->
-%            {ok, false};
-%        {atomic, _Record} ->
-%            {ok, true};
-%        Result ->
-%            {error, Result}
-%    end.
-
- FetchedObj = riakc_pb_socket:get(
+    FetchedObj = riakc_pb_socket:get(
         RiakState#riak_state.riak_client_pid,
         <<"accounts">>,Email),
-
-    %error_logger:info_report({"retrieved Value " , readvalue(FetchedObj)}),
-
     case FetchedObj of
         {error, notfound} -> 
             {ok, false, RiakState};
         _ -> 
-            {ok,true, RiakState}
+            {ok, true, RiakState}
     end.
     
 %    Value = riakc_obj:get_value(FetchedObj),
@@ -94,9 +70,7 @@ delete(Email, Pass, RiakState) ->
     FetchedObj = riakc_pb_socket:get(
         RiakState#riak_state.riak_client_pid,
         <<"accounts">>,Email),
-
     Result = readvalue(FetchedObj),
-
     case Result of
         {_, Pass} -> 
             riakc_pb_socket:delete(
@@ -110,13 +84,10 @@ delete(Email, Pass, RiakState) ->
 
 
 validate(Email, Pass, RiakState) ->
-
     FetchedObj = riakc_pb_socket:get(
         RiakState#riak_state.riak_client_pid,
         <<"accounts">>,Email),
-
     Result = readvalue(FetchedObj),
-
     case Result of
         {_, Pass} -> 
             {ok, match, RiakState};
