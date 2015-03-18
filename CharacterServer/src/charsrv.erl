@@ -46,8 +46,8 @@ start_link(ServerName, Module) ->
     end.
 
 init([Module]) ->
-    Module:init(),
-    {ok, #state{module = Module}}.
+    {ok, ModState} = Module:init(),
+    {ok, #state{module = Module, mod_state = ModState}}.
 
 stop(Server) ->
     gen_server:call(Server, stop).

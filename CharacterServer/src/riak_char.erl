@@ -31,20 +31,7 @@ stop(#riak_state{riak_client_pid = Pid}) ->
 %execute(Q) ->
 %    F = fun() -> qlc:e(Q) end,
 %    {atomic, Val} = mnesia:transaction(F),
-%    Val.
-
-write(AvatarData, RiakState) ->
-    Id = AvatarData#char_save.id,
-    Account = AvatarData#char_save.account,
-    Name = AvatarData#char_save.name,
-    ObjState = AvatarData#char_save.obj_state,
-    NewAvatar = riakc_obj:new(<<"avatars">>, Id, term_to_binary({Account, Name, ObjState})),
-    riakc_pb_socket:put(
-        RiakState#riak_state.riak_client_pid,
-        NewAvatar, 
-        [{w, 1}, {dw, 1}, return_body]),
-    {ok, saved, RiakState}.
-    
+%    Val.    
 
 %load(Id) ->
 %    case read({char_save, Id}) of 
@@ -58,16 +45,39 @@ write(AvatarData, RiakState) ->
 %    end.
 
 save(Id, Account, Name, ObjState, RiakState) ->
-    CharSave = #char_save{id=Id, account=Account, name=Name, 
-        obj_state=ObjState},
-    case write(CharSave, RiakState) of
-        {atomic, ok, NewRiakState} ->
-            {ok, saved, NewRiakState};
-        Error ->
-            error_logger:info_report([{?MODULE, char_save_error, Error}]),
-            {error, not_saved, RiakState}
+    case lookup(Id, RiakState) of
+        {ok, avatar_does_not_exist} ->
+             NewAvatar = riakc_obj:new(<<"avatars">>, Id, term_to_binary({Account, Name, ObjState})),
+             riakc_pb_socket:put(
+                RiakState#riak_state.riak_client_pid,
+                NewAvatar, 
+                [{w, 1}, {dw, 1}, return_body]),
+            {ok, saved, RiakState};
+        {ok, avatar_exists}->
+            save(Id, ObjState, RiakState)
     end.
+            
 
+save(Id, ObjState, RiakState) ->
+    {ok, FetchedObj} = riakc_pb_socket:get(RiakState#riak_state.riak_client_pid, <<"avatars">>, Id),
+    Value = binary_to_term(riakc_obj:get_value(FetchedObj)),
+    NewValue = setelement(3, Value, ObjState),
+    UpdatedObj = riakc_obj:update_value(FetchedObj, NewValue),
+    riakc_pb_socket:put(
+            RiakState#riak_state.riak_client_pid,
+            UpdatedObj, 
+            [{w, 1}, {dw, 1}, return_body]),
+        {ok, saved, RiakState}.
+    
+lookup(Id, RiakState)->
+    FetchedObj = riakc_pb_socket:get(RiakState#riak_state.riak_client_pid, <<"avatars">>, Id),
+    case FetchedObj of
+        {error, notfound} ->
+            {ok, avatar_does_not_exist};
+        {ok, _} ->
+            {ok, avatar_exists}
+    end.
+        
 get_list(Account) ->
     % This is same as:
     % SELECT id from char_save where account=Account
