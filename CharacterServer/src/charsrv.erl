@@ -62,8 +62,9 @@ handle_cast(Cast, State) ->
 
 handle_call({load, {char_id, Id}}, _From, State) ->
     Module = State#state.module,
-    Result = Module:load(Id),
-    {reply, Result, State};
+    ModState = State#state.mod_state,
+    {ok ,Result, NewModState} = Module:load(Id, ModState),
+    {reply, Result, State#state{mod_state = NewModState}};
 
 handle_call({save, {id, Id}, {account, Account}, {name, Name}, 
     {obj_state, ObjState}}, _From, State) ->
@@ -74,8 +75,9 @@ handle_call({save, {id, Id}, {account, Account}, {name, Name},
 
 handle_call({get_list, {account, Account}}, _From, State) ->
     Module = State#state.module,
-    Result = Module:get_list(Account),
-    {reply, Result, State};
+    ModState = State#state.mod_state,
+    {ok, Result, NewModState} = Module:get_list(Account, ModState),
+    {reply, Result, State#state{mod_state = NewModState}};
 
 handle_call(stop, _From, State) ->
     {stop, requested, State}.
