@@ -8,7 +8,7 @@
      {mod, {charsrv_app, []}},
      {start_phases, []},
      {env, [
-        {start_area, 'areasrv@Leader1'}
+        {start_area, 'areasrv@macbook'}
      ]}
     ]}.
 
