@@ -1,3 +1,6 @@
 [submodule "AccountServer/deps/riak-erlang-client"]
 	path = AccountServer/deps/riak-erlang-client
 	url = https://github.com/basho/riak-erlang-client.git
+[submodule "CharacterServer/deps/riak-erlang-client"]
+	path = CharacterServer/deps/riak-erlang-client
+	url = https://github.com/basho/riak-erlang-client.git
