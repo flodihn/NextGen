@@ -37,6 +37,8 @@ start_link(Socket) ->
 
 init(Socket) ->
     State = #state{socket=Socket},
+    socket_send(Socket, <<"Hello world">>),
+     socket_send(Socket, <<"Hello world again">>),
     {ok, connected, State}.
 
 handle_event(Event, StateName, StateData) ->
@@ -56,8 +58,8 @@ handle_info({tcp, Socket, Data}, StateName,
         {reply, Reply, NextState, NewState} ->
             socket_send(Socket, Reply),
             {next_state, NextState, NewState};
-		{noreply, exit, State} ->
-    		{stop, normal, State}; 
+        {noreply, exit, State} ->
+            {stop, normal, State}; 
         {noreply, NextState, NewState} ->
             {next_state, NextState, NewState};
         Error ->
@@ -84,8 +86,8 @@ handle_info(Info, observing=StateName, #state{socket=Socket} = State) ->
         {reply, Reply, NextState, NewState} ->
             socket_send(Socket, Reply),
             {next_state, NextState, NewState};
-		{noreply, exit, State} ->
-    		{stop, normal, State}; 
+        {noreply, exit, State} ->
+            {stop, normal, State}; 
         {noreply, NextState, NewState} ->
             {next_state, NextState, NewState};
         Error ->
