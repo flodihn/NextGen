@@ -1,3 +1,7 @@
+THIS PROJECT IS DEPRECATED
+========
+This project has been moved to: https://github.com/nxtfr
+
 Overview
 ========
 The NextGen MMO architecture is a proof of concept that high scalability for a online game can be achieved rather easily when choosing Erlang as programming language.
